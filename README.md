@@ -1,15 +1,15 @@
 # MAZEND
 *Games Engineering Coursework*
 
-## Getting started from git cloned repo
-### Update existing submodules
-git submodule update --init --recursive
-### Get Submodules
-git submodule add https://github.com/SFML/SFML.git lib/sfml
-git submodule init
-git submodule update
+### Getting started from git cloned repo
+#### Update existing submodules
+- `git submodule update --init --recursive`
+#### Get Submodules
+- `git submodule add https://github.com/SFML/SFML.git lib/sfml`
+- `git submodule init`
+- `git submodule update`
 
-## Compiling with CMake
+### Compiling with CMake
 - Create a build folde outside of this folder
 - Select this *MAZEND* folder as the *source code*
 - Select the new created build folder as the *binaries*
