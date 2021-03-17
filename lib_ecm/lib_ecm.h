@@ -15,9 +15,9 @@ protected:
 	vector<shared_ptr<Component>> _components;
 	Vector2f _position;
 	float _rotation;
-	bool _alive; // should be update
-	bool _visible; // should be rendered
-	bool _fordeletion = false; //should be deleted
+	bool _alive; 
+	bool _visible; 
+	bool _fordeletion = false; 
 
 public:
 	Entity();
@@ -36,6 +36,7 @@ public:
 	bool is_fordeletion() const;
 	void setForDelete();
 
+	// Add a new component
 	template <typename T, typename... Targs>
 	shared_ptr<T> addComponent(Targs... params) {
 		static_assert(is_base_of<Component, T>::value, "T != component");
@@ -44,6 +45,7 @@ public:
 		return sp;
 	}
 
+	// Get list of specific components
 	template <typename T>
 	const vector<shared_ptr<T>> get_components() const {
 		static_assert(is_base_of<Component, T>::value, "T != component");
@@ -56,6 +58,7 @@ public:
 		return std::move(ret);
 	}
 
+	// Get even child components
 	template <typename T>
 	const vector<shared_ptr<T>> GetCompatibleComponent() {
 		static_assert(is_base_of<Component, T>::value, "T != component");
