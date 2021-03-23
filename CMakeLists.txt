@@ -28,6 +28,12 @@ add_library(lib_ecm STATIC ${SOURCE_FILES})
 target_include_directories(lib_ecm INTERFACE "${CMAKE_SOURCE_DIR}/lib_ecm" )
 target_link_libraries(lib_ecm PRIVATE lib_maths)
 
+## Tile map lib
+file(GLOB_RECURSE SOURCE_FILES lib_tile_level_system/*.cpp lib_tile_level_system/*.h)
+add_library(lib_tile_level_system STATIC ${SOURCE_FILES})
+target_include_directories(lib_tile_level_system INTERFACE "${CMAKE_SOURCE_DIR}/lib_tile_level_system/" )
+target_link_libraries(lib_tile_level_system lib_maths sfml-graphics)
+
 
 #### THE MAIN MAZEND GAME VS PROJECT ####
 file(GLOB_RECURSE SOURCES mazend_game/*.cpp mazend_game/*.h)
