@@ -1,6 +1,6 @@
 #include "game_scene.h"
-#include "system_renderer.h"
 #include "game.h"
+#include "system_renderer.h"
 
 // Scenes
 shared_ptr<Scene> gameScene;

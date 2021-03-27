@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
-#include "system_renderer.h"
 #include "game.h"
 #include "game_scene.h"
+#include "system_renderer.h"
 
 using namespace std;
 using namespace sf;

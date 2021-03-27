@@ -1,5 +1,4 @@
 #include "scene.h"
-#include "system_renderer.h"
 #include "game.h"
 
 
