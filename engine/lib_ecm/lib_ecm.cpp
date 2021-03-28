@@ -84,3 +84,16 @@ void Component::Update(double dt) {
 		this->~Component();
 	}
 }
+
+// EntityManager
+void EntityManager::Render() {
+	for (const auto& e : list) {
+		e->Render();
+	}
+}
+
+void EntityManager::Update(double dt) {
+	for (auto& e : list) {
+		e->Update(dt);
+	}
+}

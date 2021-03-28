@@ -86,3 +86,10 @@ public:
 	virtual void Render() = 0;
 	virtual ~Component();
 };
+
+// Entity Manager
+struct EntityManager {
+	vector<shared_ptr<Entity>> list;
+	void Update(double dt);
+	void Render();
+};
