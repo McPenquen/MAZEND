@@ -62,7 +62,7 @@ add_executable(MAZEND_GAME ${SOURCES} ${CMPNTS} ${SCENES})
 source_group("components" FILES ${CMPNTS})
 source_group("scenes" FILES ${SCENES})
 target_include_directories(MAZEND_GAME PRIVATE ${SFML_INCS})
-target_link_libraries(MAZEND_GAME sfml-graphics lib_ecm)
+target_link_libraries(MAZEND_GAME lib_engine)
 # Add res file
 set(EXECUTABLES ${EXECUTABLES} MAZEND_GAME)
 set_target_properties(MAZEND_GAME 

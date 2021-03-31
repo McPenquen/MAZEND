@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include "system_renderer.h"
 #include <maths.h>
+#include "../mazend_game/scenes/menu_scenes.h"
 
 // Scene
 void Scene::Update(const double dt) { 
@@ -125,6 +126,9 @@ void Engine::Start(unsigned int width, unsigned int height, const string& gameNa
 			if (event.type == Event::Closed) {
 				window.close();
 			}
+		}
+		if (typeid(_activeScene) == typeid(MainMenuScene) && (Keyboard::isKeyPressed(Keyboard::Num3))) {
+			window.close();
 		}
 		window.clear();
 		Update();

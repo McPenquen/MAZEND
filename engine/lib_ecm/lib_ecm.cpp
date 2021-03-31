@@ -77,8 +77,6 @@ string Entity::getNameTag() {
 }
 
 // Component
-Component::Component() : _parent(nullptr) {}
-
 Component::~Component() {}
 
 bool Component::is_fordeletion() const {

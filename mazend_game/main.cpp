@@ -3,15 +3,16 @@
 #include "../engine/engine.h"
 
 // Menu
-Scene mainMenu;
-Scene options;
-Scene levels;
-Scene pauseMenu;
+MainMenuScene mainMenu;
+OptionsScene options;
+LevelsScene levels;
+PauseMenuScene pauseMenu;
+
 
 // Levels
-Scene level1;
-Scene level2;
-Scene level3;
+Level1Scene level1;
+//Scene level2;
+//Scene level3;
 
 int main(){
 	Engine::Start(gameWidth, gameHeight, "MAZEND", &mainMenu);
