@@ -12,6 +12,8 @@ using namespace std;
 namespace sf {
     // Create a defintion for af::vector
     typedef Vector2<size_t> Vector2ul;
+
+    // Return vector length
     template <typename T> double length(const Vector2<T> &v) {
         return sqrt(pow(v.x, 2) + pow(v.y, 2));
     }
@@ -48,6 +50,16 @@ namespace sf {
     // Allow vectors to be in cout
     template <typename T> ostream &operator<<(ostream &os, const Vector2<T> &v) {
         os << "(" << v.x << ", " << v.y << ")";
+        return os;
+    }
+
+    template <typename T>
+    ostream& operator<<(std::ostream& os, const std::vector<T>& v) {
+        os << "vec[";
+        for (const auto& a : v) {
+            os << a << ',';
+        }
+        os << ']';
         return os;
     }
 

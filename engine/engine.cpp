@@ -59,7 +59,9 @@ static float loadingTime;
 static RenderWindow* _window;
 
 void LoadingUpdate(double dt, const Scene* const scene) {
+	cout << "Eng: Loading Screen\n";
 	if (scene->isLoaded()) {
+		cout << "Eng: Exiting Loading Screen\n";
 		loading = false;
 	}
 	else {
@@ -71,17 +73,18 @@ void LoadingUpdate(double dt, const Scene* const scene) {
 static Font loadingFont;
 
 void LoadingRender() {
+	cout << "Eng: Loading Screen Render\n";
 	static CircleShape octagon(80, 8);
 	octagon.setOrigin(80, 80);
 	octagon.setRotation(loadingProgress);
-	octagon.setPosition(sf::Vcast<float>(Engine::getWindowSize()) * .5f);
+	octagon.setPosition(sf::Vcast<float>(Engine::GetWindowSize()) * .5f);
 	octagon.setFillColor(Color(255, 255, 255, min(255.f, 40.f * loadingTime)));
 	static Text t;
 	t.setString("Loading Level");
 	loadingFont.loadFromFile("res/fonts/Roboto-Bold.ttf");
 	t.setFont(loadingFont);
 	t.setFillColor(Color(255, 255, 255, min(255.f, 40.f * loadingTime)));
-	Vector2f winPos = sf::Vcast<float>(Engine::getWindowSize());
+	Vector2f winPos = sf::Vcast<float>(Engine::GetWindowSize());
 	t.setPosition(winPos * Vector2f(0.4f, 0.3f));
 	Renderer::Queue(&t);
 	Renderer::Queue(&octagon);
@@ -140,6 +143,7 @@ void Engine::setVsync(bool bo) {
 }
 
 void Engine::ChangeScene(Scene* s) {
+	cout << "Eng: changing scene: " << s << endl;
 	auto oldS = _activeScene;
 	_activeScene = s;
 
@@ -148,6 +152,7 @@ void Engine::ChangeScene(Scene* s) {
 	}
 
 	if (!s->isLoaded()) {
+		cout << "Eng: Entering Loading Screen\n";
 		loadingTime = 0;
 		_activeScene->LoadAsync();
 		loading = true;

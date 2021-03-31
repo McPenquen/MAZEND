@@ -68,6 +68,14 @@ void Entity::setForDelete() {
 	_fordeletion = true;
 }
 
+void Entity::setNameTag(const string s) {
+	_nameTag = s;
+}
+
+string Entity::getNameTag() {
+	return _nameTag;
+}
+
 // Component
 Component::Component() : _parent(nullptr) {}
 
@@ -96,4 +104,26 @@ void EntityManager::Update(double dt) {
 	for (auto& e : list) {
 		e->Update(dt);
 	}
+}
+
+vector<shared_ptr<Entity>> EntityManager::find(const string& tag) const {
+	vector<shared_ptr<Entity>> result;
+	for (auto& e : list) {
+		if (e->getNameTag() == tag) {
+			result.push_back(e);
+		}
+	}
+	return result;
+}
+
+vector<shared_ptr<Entity>> EntityManager::find(const vector<string>& tags) const {
+	vector<shared_ptr<Entity>> result;
+	for (auto& e : list) {
+		for (auto tag : tags) {
+			if (e->getNameTag() == tag) {
+				result.push_back(e);
+			}
+		}
+	}
+	return result;
 }
