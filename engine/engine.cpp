@@ -44,7 +44,7 @@ Scene::~Scene() {
 }
 
 shared_ptr<Entity> Scene::makeEntity() {
-	auto en = make_shared<Entity>(this);
+	auto en = make_shared<Entity>();
 	ents.list.push_back(en);
 	return move(en);
 }

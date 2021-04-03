@@ -26,7 +26,6 @@ link_directories("${CMAKE_BINARY_DIR}/lib/sfml/lib")
 
 # BOX2D
 add_subdirectory("lib/b2d/Box2D")
-#include_directories("lib/b2d/Box2D/")
 set(B2D_INCS "lib/b2d/Box2D/")
 link_directories("${CMAKE_BINARY_DIR}/lib/sfml/lib")
 
@@ -61,9 +60,7 @@ file(GLOB_RECURSE SCENES mazend_game/scenes/*.cpp mazend_game/scenes/*.h)
 add_executable(MAZEND_GAME ${SOURCES} ${CMPNTS} ${SCENES})
 source_group("components" FILES ${CMPNTS})
 source_group("scenes" FILES ${SCENES})
-target_include_directories(MAZEND_GAME PRIVATE ${SFML_INCS})
 target_link_libraries(MAZEND_GAME lib_engine)
-# Add res file
 set(EXECUTABLES ${EXECUTABLES} MAZEND_GAME)
 set_target_properties(MAZEND_GAME 
     PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY
