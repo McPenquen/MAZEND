@@ -8,6 +8,7 @@ void MainMenuScene::Load() {
 	auto t = txt->addComponent<TextComponent>(
 		"MAIN MENU\n\nPlay Levels - Press 1\nOptions - Press 2\nExit - Press 3"
 		);
+	setSceneName("mainMenu");
 	setLoaded(true);
 }
 
@@ -27,6 +28,7 @@ void OptionsScene::Load() {
 	auto t = txt->addComponent<TextComponent>(
 		"OPTIONS\n\nBack - Press 1"
 		);
+	setSceneName("options");
 	setLoaded(true);
 }
 
@@ -43,6 +45,7 @@ void LevelsScene::Load() {
 	auto t = txt->addComponent<TextComponent>(
 		"LEVELS\n\nLevel 1 - Press 1\nBack - Press 2"
 		);
+	setSceneName("levels");
 	setLoaded(true);
 }
 
@@ -60,8 +63,9 @@ void LevelsScene::Update(const double dt) {
 void PauseMenuScene::Load() {
 	auto txt = makeEntity();
 	auto t = txt->addComponent<TextComponent>(
-		"PAUSE\n\nResume - Press 1\Back - Press 2"
+		"PAUSE\n\nResume - Press 1\nLeave the level - Press 2"
 		);
+	setSceneName("pauseMenu");
 	setLoaded(true);
 }
 

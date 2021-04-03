@@ -6,6 +6,8 @@
 #include "system_renderer.h"
 #include <maths.h>
 #include "../mazend_game/scenes/menu_scenes.h"
+// The amount of dt that scenes will wait in order to siwtch to another scene 
+#define sceneSwithTime 1
 
 // Scene
 void Scene::Update(const double dt) { 
@@ -47,6 +49,18 @@ shared_ptr<Entity> Scene::makeEntity() {
 	auto en = make_shared<Entity>();
 	ents.list.push_back(en);
 	return move(en);
+}
+
+EntityManager Scene::getEnts() {
+	return ents;
+}
+
+string Scene::getSceneName() const {
+	return _sceneName;
+}
+
+void Scene::setSceneName(const string s) {
+	_sceneName = s;
 }
 
 // Engine
@@ -96,6 +110,8 @@ void Engine::Update() {
 	static Clock clock;
 	float dt = clock.restart().asSeconds();
 
+	scnSwitchTimer += dt;
+
 	if (loading) {
 		LoadingUpdate(dt, _activeScene);
 	}
@@ -127,7 +143,7 @@ void Engine::Start(unsigned int width, unsigned int height, const string& gameNa
 				window.close();
 			}
 		}
-		if (typeid(_activeScene) == typeid(MainMenuScene) && (Keyboard::isKeyPressed(Keyboard::Num3))) {
+		if (_activeScene->getSceneName() == "mainMenu" && (Keyboard::isKeyPressed(Keyboard::Num3))) {
 			window.close();
 		}
 		window.clear();
@@ -147,19 +163,22 @@ void Engine::setVsync(bool bo) {
 }
 
 void Engine::ChangeScene(Scene* s) {
-	cout << "Eng: changing scene: " << s << endl;
-	auto oldS = _activeScene;
-	_activeScene = s;
+	if (scnSwitchTimer >= sceneSwithTime) {
+		scnSwitchTimer = 0;
+		cout << "Eng: changing scene: " << s << endl;
+		auto oldS = _activeScene;
+		_activeScene = s;
 
-	if (oldS != nullptr) {
-		oldS->UnLoad();
-	}
+		if (oldS != nullptr) {
+			oldS->UnLoad();
+		}
 
-	if (!s->isLoaded()) {
-		cout << "Eng: Entering Loading Screen\n";
-		loadingTime = 0;
-		_activeScene->LoadAsync();
-		loading = true;
+		if (!s->isLoaded()) {
+			cout << "Eng: Entering Loading Screen\n";
+			loadingTime = 0;
+			_activeScene->LoadAsync();
+			loading = true;
+		}
 	}
 }
 
@@ -170,7 +189,6 @@ Vector2u Engine::GetWindowSize() {
 RenderWindow& Engine::GetWindow() {
 	return *_window;
 }
-
 
 // Timing
 namespace timing {

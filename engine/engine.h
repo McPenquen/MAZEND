@@ -4,6 +4,9 @@
 #include <future>
 #include "lib_ecm.h"
 
+// Scene switch timer
+static float scnSwitchTimer = 1;
+
 // Parent Scene
 class Scene {
 public:
@@ -21,6 +24,10 @@ public:
 	EntityManager getEnts();
 	shared_ptr<Entity> makeEntity();
 
+	string getSceneName() const;
+	void setSceneName(const string);
+
+
 protected:
 	void setLoaded(bool);
 
@@ -29,6 +36,7 @@ private:
 	mutable bool _loaded;
 	mutable future<void> _loaded_future;
 	mutable mutex _loaded_mtx;
+	string _sceneName;
 };
 
 class Engine {
