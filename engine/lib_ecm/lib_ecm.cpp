@@ -68,9 +68,15 @@ void Entity::setForDelete() {
 	_fordeletion = true;
 }
 
-// Component
-Component::Component() : _parent(nullptr) {}
+void Entity::setNameTag(const string s) {
+	_nameTag = s;
+}
 
+string Entity::getNameTag() {
+	return _nameTag;
+}
+
+// Component
 Component::~Component() {}
 
 bool Component::is_fordeletion() const {
@@ -83,4 +89,39 @@ void Component::Update(double dt) {
 	if (_fordeletion) {
 		this->~Component();
 	}
+}
+
+// EntityManager
+void EntityManager::Render() {
+	for (const auto& e : list) {
+		e->Render();
+	}
+}
+
+void EntityManager::Update(double dt) {
+	for (auto& e : list) {
+		e->Update(dt);
+	}
+}
+
+vector<shared_ptr<Entity>> EntityManager::find(const string& tag) const {
+	vector<shared_ptr<Entity>> result;
+	for (auto& e : list) {
+		if (e->getNameTag() == tag) {
+			result.push_back(e);
+		}
+	}
+	return result;
+}
+
+vector<shared_ptr<Entity>> EntityManager::find(const vector<string>& tags) const {
+	vector<shared_ptr<Entity>> result;
+	for (auto& e : list) {
+		for (auto tag : tags) {
+			if (e->getNameTag() == tag) {
+				result.push_back(e);
+			}
+		}
+	}
+	return result;
 }

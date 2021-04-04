@@ -18,6 +18,7 @@ protected:
 	bool _alive; 
 	bool _visible; 
 	bool _fordeletion = false; 
+	string _nameTag;
 
 public:
 	Entity();
@@ -35,6 +36,8 @@ public:
 	void setVisible(bool new_visible);
 	bool is_fordeletion() const;
 	void setForDelete();
+	void setNameTag(const string s);
+	string getNameTag();
 
 	// Add a new component
 	template <typename T, typename... Targs>
@@ -47,7 +50,7 @@ public:
 
 	// Get list of specific components
 	template <typename T>
-	const vector<shared_ptr<T>> get_components() const {
+	const vector<shared_ptr<T>> GetComponents() const {
 		static_assert(is_base_of<Component, T>::value, "T != component");
 		vector<shared_ptr<T>> ret;
 		for (const auto c : _components) {
@@ -80,9 +83,19 @@ protected:
 	explicit Component(Entity* const p);
 
 public:
-	Component();
+	Component() = delete;
 	bool is_fordeletion() const;
 	virtual void Update(double dt) = 0;
 	virtual void Render() = 0;
 	virtual ~Component();
+};
+
+// Entity Manager
+struct EntityManager {
+	vector<shared_ptr<Entity>> list;
+	void Update(double dt);
+	void Render();
+
+	vector<shared_ptr<Entity>> find(const string& tag) const;
+	vector<shared_ptr<Entity>> find(const vector<string>& tags) const;
 };

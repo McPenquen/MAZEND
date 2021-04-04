@@ -12,6 +12,8 @@ using namespace std;
 namespace sf {
     // Create a defintion for af::vector
     typedef Vector2<size_t> Vector2ul;
+
+    // Return vector length
     template <typename T> double length(const Vector2<T> &v) {
         return sqrt(pow(v.x, 2) + pow(v.y, 2));
     }
@@ -28,7 +30,7 @@ namespace sf {
     }
 
     // Allow casting to one vector to another
-    template <typename T, typename U> Vector2<T> Vcast(const Vector2<U> &v) {
+    template <typename T, typename U> Vector2<T> Vcast(const Vector2<U>& v) {
         return Vector2<T>(static_cast<T>(v.x), static_cast<T>(v.y));
     }
 
@@ -49,5 +51,23 @@ namespace sf {
     template <typename T> ostream &operator<<(ostream &os, const Vector2<T> &v) {
         os << "(" << v.x << ", " << v.y << ")";
         return os;
+    }
+
+    template <typename T>
+    ostream& operator<<(std::ostream& os, const std::vector<T>& v) {
+        os << "vec[";
+        for (const auto& a : v) {
+            os << a << ',';
+        }
+        os << ']';
+        return os;
+    }
+
+    // Allow vector multiplication
+    template <typename T> Vector2<T> operator*(const Vector2<T>& left, const Vector2<T>& right) {
+        Vector2<T> r = left;
+        r.x *= right.x;
+        r.y *= right.y;
+        return r;
     }
 }
