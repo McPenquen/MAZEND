@@ -20,23 +20,26 @@ void PlayerMovementComponent::Update(double dt) {
 			direction.y = -_speed * dt;
 		}
 
-		if (_parent->getPosition().x - tileBounds > 0 &&
-			_parent->getPosition().x + tileBounds < gameWidth &&
-			_parent->getPosition().y - tileBounds > 0 &&
-			_parent->getPosition().y + tileBounds < gameHeight) {
+		float sectorXLoc = gameWidth / 2 - sectorBounds.x / 2;
+		float sectorYLoc = gameHeight / 2 - sectorBounds.y / 2;
+
+		if (_parent->getPosition().x - tileBounds > sectorXLoc &&
+			_parent->getPosition().x + tileBounds < (sectorXLoc + sectorBounds.x) &&
+			_parent->getPosition().y - tileBounds > sectorYLoc &&
+			_parent->getPosition().y + tileBounds < (sectorYLoc + sectorBounds.y)) {
 			move(direction);
 		}
 		else {
-			if (_parent->getPosition().x - 15.f <= 0 && direction.x < 0) {
+			if (_parent->getPosition().x - tileBounds <= sectorXLoc && direction.x < 0) {
 				direction.x = 0;
 			}
-			else if (_parent->getPosition().x + 15.f >= gameWidth && direction.x > 0) {
+			else if (_parent->getPosition().x + tileBounds >= (sectorXLoc + sectorBounds.x) && direction.x > 0) {
 				direction.x = 0;
 			}
-			if (_parent->getPosition().y - 15.f <= 0 && direction.y < 0) {
+			if (_parent->getPosition().y - tileBounds <= sectorYLoc && direction.y < 0) {
 				direction.y = 0;
 			}
-			else if (_parent->getPosition().y + 15.f >= gameHeight && direction.y > 0) {
+			else if (_parent->getPosition().y + tileBounds >= (sectorYLoc + sectorBounds.y) && direction.y > 0) {
 				direction.y = 0;
 			}
 			move(direction);
