@@ -35,6 +35,32 @@ void LevelScene::Load() {
 	auto plM = pl->addComponent<PlayerMovementComponent>();
 	plM->setSpeed(500.f);
 	_player = pl;
+
+	// Create black frame
+	auto frame1 = makeEntity(4);
+	auto sf1 = frame1->addComponent<ShapeComponent>();
+	sf1->setShape<RectangleShape>(Vector2f(tileBounds * 2, sectorBounds.y));
+	sf1->getShape().setFillColor(Color::Black);
+	sf1->getShape().setOrigin(Vector2f(tileBounds, sectorBounds.y/2));
+	frame1->setPosition(Vector2f((gameWidth / 2 - sectorBounds.x / 2 - tileBounds - 5.f), gameHeight / 2));
+	auto frame2 = makeEntity(4);
+	auto sf2 = frame2->addComponent<ShapeComponent>();
+	sf2->setShape<RectangleShape>(Vector2f(tileBounds * 2, sectorBounds.y));
+	sf2->getShape().setFillColor(Color::Black);
+	sf2->getShape().setOrigin(Vector2f(tileBounds, sectorBounds.y / 2));
+	frame2->setPosition(Vector2f((gameWidth / 2 + sectorBounds.x / 2 + tileBounds + 5.f), gameHeight / 2));
+	auto frame3 = makeEntity(4);
+	auto sf3 = frame3->addComponent<ShapeComponent>();
+	sf3->setShape<RectangleShape>(Vector2f(sectorBounds.x, tileBounds * 2));
+	sf3->getShape().setFillColor(Color::Black);
+	sf3->getShape().setOrigin(Vector2f(sectorBounds.x / 2, tileBounds));
+	frame3->setPosition(Vector2f((gameWidth / 2), gameHeight / 2 - sectorBounds.y / 2 - tileBounds - 5.f));
+	auto frame4 = makeEntity(4);
+	auto sf4 = frame4->addComponent<ShapeComponent>();
+	sf4->setShape<RectangleShape>(Vector2f(sectorBounds.x, tileBounds * 2));
+	sf4->getShape().setFillColor(Color::Black);
+	sf4->getShape().setOrigin(Vector2f(sectorBounds.x / 2, tileBounds));
+	frame4->setPosition(Vector2f((gameWidth / 2), gameHeight / 2 + sectorBounds.y / 2 + tileBounds + 5.f));
 }
 
 void LevelScene::Update(double const dt) {
@@ -76,15 +102,15 @@ Vector2i LevelScene::getNewSector() {
 		return Vector2i(_activeSector.x, _activeSector.y - 1);
 	}
 	// Bottom border collision
-	if (plyPos.y + tileBounds >= bottomYBorder && _activeSector.y < 3) {
+	else if (plyPos.y + tileBounds >= bottomYBorder && _activeSector.y < 3) {
 		return Vector2i(_activeSector.x, _activeSector.y + 1);
 	}
 	// Left border collision
-	if (plyPos.x - tileBounds <= leftXBorder && _activeSector.x > 1) {
+	else if (plyPos.x - tileBounds <= leftXBorder && _activeSector.x > 1) {
 		return Vector2i(_activeSector.x - 1, _activeSector.y);
 	}
 	// Right border collision
-	if (plyPos.x + tileBounds >= rightXBorder && _activeSector.x < 3) {
+	else if (plyPos.x + tileBounds >= rightXBorder && _activeSector.x < 3) {
 		return Vector2i(_activeSector.x + 1, _activeSector.y);
 	}
 	return Vector2i(0, 0);
