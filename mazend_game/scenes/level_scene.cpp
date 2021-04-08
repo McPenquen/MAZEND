@@ -3,11 +3,17 @@
 #include "../game.h"
 #include "../components/cmp_player_movement.h"
 
+void CheckSectorChange() {
+
+}
+
 void LevelScene::Load() {
-	// Identify active sector
+	//Load the initial sector
+	//TODO: get position of the player to start at
+	ChangeSector(Vector2f(1,1));
 
 	// Create the mid sector
-	auto sector = makeEntity(1);
+	auto sector = makeEntity(4);
 	auto ss = sector->addComponent<ShapeComponent>();
 	ss->setShape<RectangleShape>(sectorBounds);
 	ss->getShape().setFillColor(Color::Black);
@@ -17,7 +23,7 @@ void LevelScene::Load() {
 	sector->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
 
 	// Create the player
-	auto pl = makeEntity(3);
+	auto pl = makeEntity(4);
 	pl->setNameTag("player");
 	auto plS = pl->addComponent<ShapeComponent>();
 	float plRad = tileBounds;
@@ -33,13 +39,19 @@ void LevelScene::Load() {
 	_player = pl;
 }
 
-void LevelScene::Render() {
-	// TODO change the rendering order so the player can be rendered in between layers
-	_activeSector->Render();
-	Scene::Render();
+void LevelScene::Update(double const dt) {
+	Scene::Update(dt);
+	CheckSectorChange();
 }
 
-// Sector
-void Sector::Render() {
+void LevelScene::ChangeSector(Vector2f sectorId) {
+	_activeSector = sectorId;
+	UnLoadSector();
+	//TODO: render the appropriate sector from the id
+}
 
+void LevelScene::UnLoadSector() {
+	ents.floor1_list.clear();
+	ents.floor2_list.clear();
+	ents.floor3_list.clear();
 }

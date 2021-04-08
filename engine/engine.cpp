@@ -55,8 +55,11 @@ shared_ptr<Entity> Scene::makeEntity(int orderNum) {
 	else if (orderNum == 2) {
 		ents.floor2_list.push_back(en);
 	}
-	else {
+	else if (orderNum == 3) {
 		ents.floor3_list.push_back(en);
+	}
+	else {
+		ents.floor4_list.push_back(en);
 	}
 	return move(en);
 }

@@ -1,7 +1,7 @@
 #include "lib_ecm.h"
 
 // Entity
-Entity::Entity(int orderNum) : _orderNum(orderNum) {}
+Entity::Entity(int orderNum) : _orderNum(orderNum), _alive(true), _visible(true), _rotation(1.f) {}
 
 Entity::~Entity() {
 	for (const auto& c : _components) {
@@ -102,6 +102,9 @@ void EntityManager::Render() {
 	for (const auto& e : floor3_list) {
 		e->Render();
 	}
+	for (const auto& e : floor4_list) {
+		e->Render();
+	}
 }
 
 void EntityManager::Update(double dt) {
@@ -112,6 +115,9 @@ void EntityManager::Update(double dt) {
 		e->Update(dt);
 	}
 	for (auto& e : floor3_list) {
+		e->Update(dt);
+	}
+	for (auto& e : floor4_list) {
 		e->Update(dt);
 	}
 }
@@ -132,8 +138,15 @@ vector<shared_ptr<Entity>> EntityManager::find(const string& tag, int floor) con
 			}
 		}
 	}
-	else {
+	else if (floor == 3) {
 		for (auto& e : floor3_list) {
+			if (e->getNameTag() == tag) {
+				result.push_back(e);
+			}
+		}
+	}
+	else {
+		for (auto& e : floor4_list) {
 			if (e->getNameTag() == tag) {
 				result.push_back(e);
 			}
@@ -162,8 +175,17 @@ vector<shared_ptr<Entity>> EntityManager::find(const vector<string>& tags, int f
 			}
 		}
 	}
-	else {
+	else if (floor == 3){
 		for (auto& e : floor3_list) {
+			for (auto tag : tags) {
+				if (e->getNameTag() == tag) {
+					result.push_back(e);
+				}
+			}
+		}
+	}
+	else {
+		for (auto& e : floor4_list) {
 			for (auto tag : tags) {
 				if (e->getNameTag() == tag) {
 					result.push_back(e);

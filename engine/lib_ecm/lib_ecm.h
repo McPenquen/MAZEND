@@ -97,6 +97,7 @@ struct EntityManager {
 	vector<shared_ptr<Entity>> floor1_list;
 	vector<shared_ptr<Entity>> floor2_list;
 	vector<shared_ptr<Entity>> floor3_list;
+	vector<shared_ptr<Entity>> floor4_list;
 	void Update(double dt);
 	void Render();
 

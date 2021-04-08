@@ -1,11 +1,6 @@
 #pragma once
 #include "engine.h"
 
-// Sector
-struct Sector {
-	Vector2f id;
-	void Render();
-};
 
 class LevelScene : public Scene {
 public:
@@ -13,10 +8,13 @@ public:
 	~LevelScene() = default;
 
 	void Load() override;
-	void Render() override;
+	void Update(const double dt) override;
+
+	void UnLoadSector();
+	void ChangeSector(Vector2f);
 
 protected:
 	shared_ptr<Entity> _player;
-	shared_ptr<Sector> _activeSector;
-	map<Vector2f, shared_ptr<Sector>> _sectors;
+	Vector2f _activeSector;
+	vector<Vector2f> _sectors;
 };
