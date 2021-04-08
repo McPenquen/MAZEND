@@ -11,10 +11,14 @@ public:
 	void Update(const double dt) override;
 
 	void UnLoadSector();
-	void ChangeSector(Vector2f);
+	void ChangeSector(Vector2i);
+	void DisplaySector();
+
+	Vector2i getNewSector();
+	void MovePlayerOnNewSector(Vector2i, Vector2i);
 
 protected:
 	shared_ptr<Entity> _player;
-	Vector2f _activeSector;
-	vector<Vector2f> _sectors;
+	Vector2i _activeSector;
+	
 };

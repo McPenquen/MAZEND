@@ -2,15 +2,13 @@
 #include "../components/cmp_shape.h"
 #include "../game.h"
 #include "../components/cmp_player_movement.h"
-
-void CheckSectorChange() {
-
-}
+#include "../components/cmp_text.h"
 
 void LevelScene::Load() {
 	//Load the initial sector
 	//TODO: get position of the player to start at
-	ChangeSector(Vector2f(1,1));
+	_activeSector = Vector2i(1, 1);
+	DisplaySector();
 
 	// Create the mid sector
 	auto sector = makeEntity(4);
@@ -41,17 +39,75 @@ void LevelScene::Load() {
 
 void LevelScene::Update(double const dt) {
 	Scene::Update(dt);
-	CheckSectorChange();
+	Vector2i nv = getNewSector();
+	if (nv != Vector2i(0, 0)) {
+		ChangeSector(nv);
+	}
 }
 
-void LevelScene::ChangeSector(Vector2f sectorId) {
-	_activeSector = sectorId;
-	UnLoadSector();
+void LevelScene::DisplaySector() {
 	//TODO: render the appropriate sector from the id
+	auto txt = makeEntity(1);
+	txt->setPosition(Vector2f((gameWidth / 2) + 50, 100));
+	string str = "                                                      Sector " + to_string(_activeSector.x) + ", " + to_string(_activeSector.y);
+	auto t = txt->addComponent<TextComponent>(str);
+}
+
+void LevelScene::ChangeSector(Vector2i sectorId) {
+	// Reset the path tiles and collectables
+	UnLoadSector();
+	DisplaySector();
+	// Move player to the other side of the square
+	MovePlayerOnNewSector(_activeSector, sectorId);
+	_activeSector = sectorId;
 }
 
 void LevelScene::UnLoadSector() {
 	ents.floor1_list.clear();
 	ents.floor2_list.clear();
 	ents.floor3_list.clear();
+}
+
+// If there is a change in sectors it eturns the id of the new sector, with no change returns {0,0}
+Vector2i LevelScene::getNewSector() {
+	Vector2f plyPos = _player->getPosition();
+	// Top border collision
+	if (plyPos.y - tileBounds <= topYBorder && _activeSector.y > 1) {
+		return Vector2i(_activeSector.x, _activeSector.y - 1);
+	}
+	// Bottom border collision
+	if (plyPos.y + tileBounds >= bottomYBorder && _activeSector.y < 3) {
+		return Vector2i(_activeSector.x, _activeSector.y + 1);
+	}
+	// Left border collision
+	if (plyPos.x - tileBounds <= leftXBorder && _activeSector.x > 1) {
+		return Vector2i(_activeSector.x - 1, _activeSector.y);
+	}
+	// Right border collision
+	if (plyPos.x + tileBounds >= rightXBorder && _activeSector.x < 3) {
+		return Vector2i(_activeSector.x + 1, _activeSector.y);
+	}
+	return Vector2i(0, 0);
+}
+
+// Move player to the other side of the screen simulating continuous movement
+void LevelScene::MovePlayerOnNewSector(Vector2i oldS, Vector2i newS) {
+	Vector2f newPos = _player->getPosition();
+	// Top > down
+	if (oldS.y < newS.y) {
+		newPos.y -= sectorBounds.y;
+	}
+	// Bottom > up
+	else if (oldS.y > newS.y) {
+		newPos.y += sectorBounds.y;
+	}
+	// Left > right
+	else if (oldS.x < newS.x) {
+		newPos.x -= sectorBounds.x;
+	}
+	// Right > left
+	else if (oldS.x > newS.x) {
+		newPos.x += sectorBounds.x;
+	}
+	_player->setPosition(newPos);
 }
