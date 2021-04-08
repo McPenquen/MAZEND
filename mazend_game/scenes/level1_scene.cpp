@@ -3,7 +3,7 @@
 #include "../game.h"
 
 void Level1Scene::Load() {
-	auto txt = makeEntity();
+	auto txt = makeEntity(1);
 	auto t = txt->addComponent<TextComponent>(
 		"LEVEL 1\n\nPause - ESC"
 		);

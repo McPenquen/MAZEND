@@ -22,7 +22,7 @@ public:
 	bool isLoaded() const;
 
 	EntityManager getEnts();
-	shared_ptr<Entity> makeEntity();
+	shared_ptr<Entity> makeEntity(int orderNum);
 
 	string getSceneName() const;
 	void setSceneName(const string);
@@ -30,9 +30,9 @@ public:
 
 protected:
 	void setLoaded(bool);
+	EntityManager ents;
 
 private:
-	EntityManager ents;
 	mutable bool _loaded;
 	mutable future<void> _loaded_future;
 	mutable mutex _loaded_mtx;
