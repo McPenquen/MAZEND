@@ -3,6 +3,10 @@
 #include "../game.h"
 #include "../components/cmp_player_movement.h"
 #include "../components/cmp_text.h"
+// The amount of dt allowed between sector switches
+#define SECTOR_SWITCH_COUNTER 0.5f
+
+static float secSwitchTimer = 0.0f;
 
 void LevelScene::Load() {
 	//Load the initial sector
@@ -65,8 +69,13 @@ void LevelScene::Load() {
 
 void LevelScene::Update(double const dt) {
 	Scene::Update(dt);
-	Vector2i nv = getNewSector();
+	// Control Sector Switch Motion
+	if (secSwitchTimer > 0.0f) { 
+		secSwitchTimer -= dt; 
+	}
+	Vector2i nv = secSwitchTimer <= 0.0f ?  getNewSector() : Vector2i(0, 0);
 	if (nv != Vector2i(0, 0)) {
+		secSwitchTimer = SECTOR_SWITCH_COUNTER;
 		ChangeSector(nv);
 	}
 }
