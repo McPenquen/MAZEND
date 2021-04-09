@@ -73,7 +73,9 @@ void LevelScene::Update(double const dt) {
 	if (secSwitchTimer > 0.0f) { 
 		secSwitchTimer -= dt; 
 	}
-	Vector2i nv = secSwitchTimer <= 0.0f ?  getNewSector() : Vector2i(0, 0);
+	// If the sector switch timer has reached a value bellow zero 
+	// and if the player is colliding with a wall leading to a next sector, a switch is allowed
+	Vector2i nv = secSwitchTimer <= 0.0f ? getNewSector() : Vector2i(0, 0);
 	if (nv != Vector2i(0, 0)) {
 		secSwitchTimer = SECTOR_SWITCH_COUNTER;
 		ChangeSector(nv);
@@ -91,10 +93,10 @@ void LevelScene::DisplaySector() {
 void LevelScene::ChangeSector(Vector2i sectorId) {
 	// Reset the path tiles and collectables
 	UnLoadSector();
-	DisplaySector();
 	// Move player to the other side of the square
 	MovePlayerOnNewSector(_activeSector, sectorId);
 	_activeSector = sectorId;
+	DisplaySector();
 }
 
 void LevelScene::UnLoadSector() {
@@ -130,19 +132,19 @@ void LevelScene::MovePlayerOnNewSector(Vector2i oldS, Vector2i newS) {
 	Vector2f newPos = _player->getPosition();
 	// Top > down
 	if (oldS.y < newS.y) {
-		newPos.y -= sectorBounds.y;
+		newPos.y -= sectorBounds.y; // +2 * tileBounds + 2.0f;
 	}
 	// Bottom > up
 	else if (oldS.y > newS.y) {
-		newPos.y += sectorBounds.y;
+		newPos.y += sectorBounds.y; // -2 * tileBounds - 2.0f;
 	}
 	// Left > right
 	else if (oldS.x < newS.x) {
-		newPos.x -= sectorBounds.x;
+		newPos.x -= sectorBounds.x; // +2 * tileBounds + 2.0f;
 	}
 	// Right > left
 	else if (oldS.x > newS.x) {
-		newPos.x += sectorBounds.x;
+		newPos.x += sectorBounds.x; // -2 * tileBounds - 2.0f;
 	}
 	_player->setPosition(newPos);
 }
