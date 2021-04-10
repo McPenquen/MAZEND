@@ -36,6 +36,7 @@ void Scene::UnLoad() {
 	ents.floor1_list.clear();
 	ents.floor2_list.clear();
 	ents.floor3_list.clear();
+	ents.floor4_list.clear();
 	setLoaded(false);
 }
 
@@ -78,6 +79,7 @@ void Scene::setSceneName(const string s) {
 
 // Engine
 Scene* Engine::_activeScene = nullptr;
+Scene* Engine::_previousScene = nullptr;
 string Engine::_gameName;
 
 // - Loading
@@ -168,6 +170,10 @@ void Engine::Start(unsigned int width, unsigned int height, const string& gameNa
 		_activeScene->UnLoad();
 		_activeScene = nullptr;
 	}
+	if (_previousScene != nullptr) {
+		_previousScene->UnLoad();
+		_previousScene = nullptr;
+	}
 	window.close();
 }
 
@@ -179,11 +185,11 @@ void Engine::ChangeScene(Scene* s) {
 	if (scnSwitchTimer >= sceneSwithTime) {
 		scnSwitchTimer = 0;
 		cout << "Eng: changing scene: " << s << endl;
-		auto oldS = _activeScene;
+		_previousScene = _activeScene;
 		_activeScene = s;
 
-		if (oldS != nullptr) {
-			oldS->UnLoad();
+		if (_previousScene != nullptr) {
+			_previousScene->UnLoad();
 		}
 
 		if (!s->isLoaded()) {
@@ -192,6 +198,28 @@ void Engine::ChangeScene(Scene* s) {
 			_activeScene->LoadAsync();
 			loading = true;
 		}
+	}
+}
+
+void Engine::PauseScene(Scene* s) {
+	if (scnSwitchTimer >= sceneSwithTime) {
+		scnSwitchTimer = 0;
+		cout << "Eng: changing scene: " << s << endl;
+		_previousScene = _activeScene;
+		_activeScene = s;
+
+		if (!s->isLoaded()) {
+			cout << "Eng: Entering Loading Screen\n";
+			loadingTime = 0;
+			_activeScene->LoadAsync();
+			loading = true;
+		}
+	}
+}
+
+void Engine::UnloadPreviousScene() {
+	if (_previousScene != nullptr) {
+		_previousScene->UnLoad();
 	}
 }
 

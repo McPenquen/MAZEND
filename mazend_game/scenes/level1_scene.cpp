@@ -16,7 +16,7 @@ void Level1Scene::Load() {
 
 void Level1Scene::Update(const double dt) {
 	if (Keyboard::isKeyPressed(Keyboard::Escape)) {
-		Engine::ChangeScene(&pauseMenu);
+		Engine::PauseScene(&pauseMenu);
 	}
 	LevelScene::Update(dt);
 }
