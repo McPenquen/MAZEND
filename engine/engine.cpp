@@ -7,7 +7,7 @@
 #include <maths.h>
 #include "../mazend_game/scenes/menu_scenes.h"
 // The amount of dt that scenes will wait in order to siwtch to another scene 
-#define sceneSwithTime 1
+#define sceneSwithTime 0.5
 
 // Scene
 void Scene::Update(const double dt) { 
@@ -15,7 +15,7 @@ void Scene::Update(const double dt) {
 }
 
 void Scene::Render() { 
-	ents.Render(); 
+	ents.Render();
 }
 
 bool Scene::isLoaded() const {
@@ -33,7 +33,9 @@ void Scene::setLoaded(bool new_bool) {
 }
 
 void Scene::UnLoad() {
-	ents.list.clear();
+	ents.floor1_list.clear();
+	ents.floor2_list.clear();
+	ents.floor3_list.clear();
 	setLoaded(false);
 }
 
@@ -45,9 +47,20 @@ Scene::~Scene() {
 	UnLoad();
 }
 
-shared_ptr<Entity> Scene::makeEntity() {
-	auto en = make_shared<Entity>();
-	ents.list.push_back(en);
+shared_ptr<Entity> Scene::makeEntity(int orderNum) {
+	auto en = make_shared<Entity>(orderNum);
+	if (orderNum == 1) {
+		ents.floor1_list.push_back(en);
+	}
+	else if (orderNum == 2) {
+		ents.floor2_list.push_back(en);
+	}
+	else if (orderNum == 3) {
+		ents.floor3_list.push_back(en);
+	}
+	else {
+		ents.floor4_list.push_back(en);
+	}
 	return move(en);
 }
 

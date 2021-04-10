@@ -19,9 +19,11 @@ protected:
 	bool _visible; 
 	bool _fordeletion = false; 
 	string _nameTag;
+	int _orderNum;
 
 public:
-	Entity();
+	Entity() = delete;
+	Entity(int orderNum);
 	virtual ~Entity();
 	virtual void Update(double dt);
 	virtual void Render();
@@ -92,10 +94,13 @@ public:
 
 // Entity Manager
 struct EntityManager {
-	vector<shared_ptr<Entity>> list;
+	vector<shared_ptr<Entity>> floor1_list;
+	vector<shared_ptr<Entity>> floor2_list;
+	vector<shared_ptr<Entity>> floor3_list;
+	vector<shared_ptr<Entity>> floor4_list;
 	void Update(double dt);
 	void Render();
 
-	vector<shared_ptr<Entity>> find(const string& tag) const;
-	vector<shared_ptr<Entity>> find(const vector<string>& tags) const;
+	vector<shared_ptr<Entity>> find(const string& tag, int floor) const;
+	vector<shared_ptr<Entity>> find(const vector<string>& tags, int floor) const;
 };

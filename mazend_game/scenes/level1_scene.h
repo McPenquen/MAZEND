@@ -1,7 +1,8 @@
 #pragma once
 #include "engine.h"
+#include "level_scene.h"
 
-class Level1Scene : public Scene {
+class Level1Scene : public LevelScene {
 public:
 	Level1Scene() = default;
 	~Level1Scene() = default;
