@@ -19,13 +19,13 @@ public:
 
     static void loadLevelFile(const string &, float tileSize=100.f);
     static void Render(RenderWindow &window);
+    static void UnLoad();
+
     static Color getColor(TILE t);
     static void setColor(TILE t, Color c);
 
     static Vector2f getTexture(TILE t);
    // static void setTexture(TILE t, Texture x);
-
-
 
     static TILE getTile(Vector2ul); // get tile at grid coordinate
     static Vector2f getTilePosition(Vector2ul); // get screenspace coordinate of tile 
@@ -39,6 +39,8 @@ public:
 
     static float getTileSize();
 
+    static void buildSprites();
+
 protected:
     static unique_ptr<TILE[]> _tiles; // internal array of tiles
     static size_t _width; // how many tiles the level is wide
@@ -48,7 +50,6 @@ protected:
     static map<TILE, Color> _colours; // color to render each tile type
     static map<TILE, Vector2f> _textures; // what sprite should be used
     static vector<unique_ptr<RectangleShape>> _sprites; // array of sfml sprites of each tile
-    static void buildSprites();
     
     static void addTilePosition(TILE, Vector2ul);
     static map<TILE, vector<Vector2ul>> _tile_positions;

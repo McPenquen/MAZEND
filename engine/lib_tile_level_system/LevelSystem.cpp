@@ -277,3 +277,12 @@ vector<Vector2ul> LevelSystem::findTiles(TILE tile)
 {
     return _tile_positions[tile];
 }
+
+void LevelSystem::UnLoad() {
+    cout << "LevelSystem unloading\n";
+    _sprites.clear();
+    _tiles.reset();
+    _width = 0;
+    _height = 0;
+    _offset = { 0, 0 };
+}

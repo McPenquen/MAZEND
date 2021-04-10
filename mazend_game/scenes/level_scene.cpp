@@ -82,6 +82,18 @@ void LevelScene::Update(double const dt) {
 	}
 }
 
+void LevelScene::Render() {
+	LS::Render(Engine::GetWindow());
+	Scene::Render();
+}
+
+
+void LevelScene::UnLoad() {
+	cout << "Level Unload" << endl;
+	Scene::UnLoad();
+	LS::UnLoad();
+}
+
 void LevelScene::DisplaySector() {
 	//TODO: render the appropriate sector from the id
 	auto txt = makeEntity(1);
