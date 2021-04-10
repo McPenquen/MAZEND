@@ -74,6 +74,7 @@ void PauseMenuScene::Update(const double dt) {
 		Engine::ChangeScene(&level1);
 	}
 	else if (Keyboard::isKeyPressed(Keyboard::Num2)) {
+		Engine::UnloadPreviousScene();
 		Engine::ChangeScene(&levels);
 	}
 	Scene::Update(dt);

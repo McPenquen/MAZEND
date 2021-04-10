@@ -46,6 +46,8 @@ public:
 	static void Start(unsigned int winWidth, unsigned int winHeight,
 		const string& gameName, Scene* scene);
 	static void ChangeScene(Scene*);
+	static void PauseScene(Scene*);
+	static void UnloadPreviousScene();
 
 	static RenderWindow& GetWindow();
 	static Vector2u GetWindowSize();
@@ -53,6 +55,7 @@ public:
 
 private:
 	static Scene* _activeScene;
+	static Scene* _previousScene;
 	static string _gameName;
 	static void Update();
 	static void Render(RenderWindow& window);
