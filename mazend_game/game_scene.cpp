@@ -1,5 +1,6 @@
 #include "game_scene.h"
 #include "system_renderer.h"
+#include "LevelSystem.h"
 #include "game.h"
 
 // Scenes
@@ -122,6 +123,7 @@ void GameScene::Update(double dt) {
 
 void GameScene::Render() {
 	Renderer::Queue(&text);
+	LS::Render(Renderer::getWindow());
 	Scene::Render();
 }
 
@@ -130,4 +132,5 @@ void GameScene::Load() {
 	text.setFont(font);
 	text.setCharacterSize(30);
 	text.setPosition((gameWidth * .4f) - (text.getLocalBounds().width * .4f), 0);
+	LS::loadLevelFile("res/maps/lvl1/topMap.txt", 20.0f);
 }
