@@ -13,12 +13,19 @@ using namespace sf;
 
 class LevelSystem {
 public:
-    enum TILE {EMPTY, START, END, WALL, ENEMY, WAYPOINT};
+    enum TILE {EMPTY, TOPHORIZONTAL, TOPVERTICAL, TOPSTAIRUP, TOPSTAIRDOWN, TOPSTAIRRIGHT, TOPSTAIRLEFT, TOPCORNERLEFT, TOPCORNERRIGHT, TOPCORNERUP, TOPCORNERDOWN, TTUP, TTDOWN, TTLEFT, TTRIGHT, TXJUNCTION
+       , MIDHORIZONTAL, MIDVERTICAL, MIDSTAIRUP, MIDSTAIRDOWN, MIDSTAIRRIGHT, MIDSTAIRLEFT, MIDCORNERLEFT, MIDCORNERRIGHT, MIDCORNERUP, MIDCORNERDOWN, MTUP, MTDOWN, MTLEFT, MTRIGHT, MXJUNCTION,
+        BOTHORIZONTAL, BOTVERTICAL, BOTSTAIRUP, BOTSTAIRDOWN, BOTSTAIRRIGHT, BOTSTAIRLEFT, BOTCORNERLEFT, BOTCORNERRIGHT, BOTCORNERUP, BOTCORNERDOWN, BTUP, BTDOWN, BTLEFT, BTRIGHT, BXJUNCTION};
 
     static void loadLevelFile(const string &, float tileSize=100.f);
     static void Render(RenderWindow &window);
     static Color getColor(TILE t);
     static void setColor(TILE t, Color c);
+
+    static Vector2f getTexture(TILE t);
+   // static void setTexture(TILE t, Texture x);
+
+
 
     static TILE getTile(Vector2ul); // get tile at grid coordinate
     static Vector2f getTilePosition(Vector2ul); // get screenspace coordinate of tile 
@@ -39,7 +46,7 @@ protected:
     static Vector2f _offset; // screenspace offset of level, when rendered
     static float _tileSize; // screenspace size of each tile, when rendered
     static map<TILE, Color> _colours; // color to render each tile type
-
+    static map<TILE, Vector2f> _textures; // what sprite should be used
     static vector<unique_ptr<RectangleShape>> _sprites; // array of sfml sprites of each tile
     static void buildSprites();
     
