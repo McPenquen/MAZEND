@@ -12,7 +12,7 @@ size_t LevelSystem::_height;
 Vector2f LevelSystem::_offset(0.0f, 0.0f);
 
 float LevelSystem::_tileSize(100.f);
-vector<map<Vector2i,vector<unique_ptr<RectangleShape>>>> LevelSystem::_sprites;
+vector<map<int,vector<shared_ptr<RectangleShape>>>> LevelSystem::_sprites;
 
 map<LevelSystem::TILE, Color> LevelSystem::_colours{ {TOPHORIZONTAL, Color::Blue },{TOPVERTICAL, Color::Blue} };
 Texture spriteSheet;
@@ -35,19 +35,25 @@ int level = 0;
 size_t LevelSystem::getHeight() {return _height;}
 size_t LevelSystem::getWidth() {return _width;}
 
-vector<map<Vector2i,map<LevelSystem::TILE, vector<Vector2ul>>>> LevelSystem::_tile_positions;
+vector<map<int,map<LevelSystem::TILE, vector<Vector2ul>>>> LevelSystem::_tile_positions;
+
+// Helper function to get int sector id from Vector2i sector id
+int getIntSectorId(Vector2i vecID) {
+    int answer = vecID.x * 10 + vecID.y;
+    return answer;
+}
 
 void LevelSystem::addTilePosition(TILE tile, Vector2ul pos, int levelNum, Vector2i sectorId) 
 {
-    if (_tile_positions[levelNum][sectorId].find(tile) == _tile_positions[levelNum][sectorId].end()) 
+    if (_tile_positions[levelNum][getIntSectorId(sectorId)].find(tile) == _tile_positions[levelNum][getIntSectorId(sectorId)].end())
     {
         vector<Vector2ul> oneList;
         oneList.push_back(pos);
-        _tile_positions[levelNum][sectorId].insert({ tile, oneList });
+        _tile_positions[levelNum][getIntSectorId(sectorId)].insert({ tile, oneList });
     }
     else 
     {
-        _tile_positions[levelNum][sectorId][tile].push_back(pos);
+        _tile_positions[levelNum][getIntSectorId(sectorId)][tile].push_back(pos);
     }
 
 }
@@ -82,12 +88,18 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
 {
     // If sprites are empty initialise first 3 empty vectors and di the same for _tile_positions
     if (_sprites.size() == 0) {
-        _sprites.push_back(map<Vector2i, vector<unique_ptr<RectangleShape>>>());
-        _sprites.push_back(map<Vector2i, vector<unique_ptr<RectangleShape>>>());
-        _sprites.push_back(map<Vector2i, vector<unique_ptr<RectangleShape>>>());
-        _tile_positions.push_back(map<Vector2i, map<TILE, vector<Vector2ul>>>());
-        _tile_positions.push_back(map<Vector2i, map<TILE, vector<Vector2ul>>>());
-        _tile_positions.push_back(map<Vector2i, map<TILE, vector<Vector2ul>>>());
+        //map<int, vector<unique_ptr<RectangleShape>>> m;
+        //_sprites.push_back({});
+        //_sprites.resize(3);
+
+        for (int i = 0; i < 3; i++) {
+            map<int, vector<shared_ptr<RectangleShape>>> m;
+            auto s = make_shared<RectangleShape>();
+            m[44].push_back(move(s));
+            _sprites.push_back(m);
+
+            _tile_positions.push_back(map<int, map<TILE, vector<Vector2ul>>>());
+        }
     }
 
     _tileSize = tileSize;
@@ -212,10 +224,10 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
                     if (sectorYswitch == 3) {
                         sectorYswitch = 0;
                         sectorId.y++;
-                        // Reset X value
-                        sectorXswitch = 0;
-                        sectorId.x = 1;
                     }
+                    // Reset X value
+                    sectorXswitch = 0;
+                    sectorId.x = 1;
                     sectorYswitch++;
                     break;
                 default:
@@ -248,6 +260,7 @@ void LevelSystem::buildSprites(int levelNum)
     {
         cout << "ERROR" << endl;
     }
+
     _sprites[levelNum].clear();
 
     // Vector2i sector id generator
@@ -259,7 +272,7 @@ void LevelSystem::buildSprites(int levelNum)
     {
         for (size_t x = 0; x < LevelSystem::getWidth(); ++x) 
         {
-            auto s = make_unique<RectangleShape>();
+            auto s = make_shared<RectangleShape>();
             s->setPosition(getTilePosition({x, y}));
             s->setSize(Vector2f(_tileSize, _tileSize));
             s->setTexture(&spriteSheet);
@@ -268,7 +281,7 @@ void LevelSystem::buildSprites(int levelNum)
             float p = getTexture(getTile({ x, y })).y;
             s->setTextureRect(IntRect(g, p ,64,64));
             //s->setFillColor(getColor(getTile({x, y})));
-            _sprites[levelNum][sectorId].push_back(move(s));
+            _sprites[levelNum][getIntSectorId(sectorId)].push_back(move(s));
             
             // Update sector Id X counter
             if (sectorXswitch==3) {
@@ -344,7 +357,7 @@ void LevelSystem::Render(RenderWindow& window, int floor, Vector2i sectorId) {
     if (_sprites.size() > 0) {
         if (_sprites[floor].size() > 0) {
             for (size_t i = 0; i < _width * _height; ++i) {
-                window.draw(*_sprites[floor][sectorId][i]);
+                window.draw(*_sprites[floor][getIntSectorId(sectorId)][i]);
             }
         }
         else {
@@ -356,7 +369,7 @@ void LevelSystem::Render(RenderWindow& window, int floor, Vector2i sectorId) {
 
 vector<Vector2ul> LevelSystem::findTiles(TILE tile, int levelNum, Vector2i sectorId) 
 {
-    return _tile_positions[levelNum][sectorId][tile];
+    return _tile_positions[levelNum][getIntSectorId(sectorId)][tile];
 }
 
 void LevelSystem::UnLoad() {
