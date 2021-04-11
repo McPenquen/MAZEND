@@ -6,6 +6,7 @@
 #include "system_renderer.h"
 #include <maths.h>
 #include "../mazend_game/scenes/menu_scenes.h"
+#include "LevelSystem.h"
 // The amount of dt that scenes will wait in order to siwtch to another scene 
 #define sceneSwithTime 0.5
 

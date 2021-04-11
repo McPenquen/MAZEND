@@ -4,14 +4,15 @@
 #include "LevelSystem.h"
 
 void Level1Scene::Load() {
+
+	LevelScene::Load("res/maps/lvl1/topMap.txt");
+
 	auto txt = makeEntity(4);
 	auto t = txt->addComponent<TextComponent>(
 		"LEVEL 1\n\nPause - ESC"
 		);
 	setSceneName("level1");
 
-	LevelScene::Load();
-	LS::loadLevelFile("res/maps/lvl1/topMap.txt", 40.0f);
 	setLoaded(true);
 }
 

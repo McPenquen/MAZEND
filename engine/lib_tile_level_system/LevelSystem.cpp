@@ -286,3 +286,7 @@ void LevelSystem::UnLoad() {
     _height = 0;
     _offset = { 0, 0 };
 }
+
+void LevelSystem::SetOffset(const Vector2f& new_offset) {
+    _offset = new_offset;
+}

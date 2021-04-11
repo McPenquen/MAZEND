@@ -7,9 +7,8 @@ public:
 	LevelScene() = default;
 	~LevelScene() = default;
 
-	void Load() override;
+	void Load(string const s);
 	void Update(const double dt) override;
-	void Render() override;
 	void UnLoad() override;
 
 	void UnLoadSector();

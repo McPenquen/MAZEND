@@ -24,6 +24,8 @@ public:
     static Color getColor(TILE t);
     static void setColor(TILE t, Color c);
 
+    static void SetOffset(const Vector2f& _offset);
+
     static Vector2f getTexture(TILE t);
    // static void setTexture(TILE t, Texture x);
 
