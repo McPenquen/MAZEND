@@ -38,7 +38,7 @@ public:
     static size_t getHeight();
     static size_t getWidth();
 
-    static vector<Vector2ul> findTiles(TILE, int);
+    static vector<Vector2ul> findTiles(TILE, int, Vector2i);
 
     static float getTileSize();
 
@@ -54,11 +54,11 @@ protected:
     static map<TILE, Color> _colours; // color to render each tile type
     static map<TILE, Vector2f> _textures; // what sprite should be used;
 
-    // Division into layers vector[0]/[1]/[2]
-    static vector<vector<unique_ptr<RectangleShape>>> _sprites; // array of sfml sprites of each tile
-    static vector<map<TILE, vector<Vector2ul>>> _tile_positions; // positions of the tiles
+    // Division into 3 layers vector[0]/[1]/[2], and each into sectoins with Vector2i id
+    static vector<map<Vector2i, vector<unique_ptr<RectangleShape>>>> _sprites; // array of sfml sprites of each tile
+    static vector<map<Vector2i, map<TILE, vector<Vector2ul>>>> _tile_positions; // positions of the tiles
     
-    static void addTilePosition(TILE, Vector2ul, int);
+    static void addTilePosition(TILE, Vector2ul, int, Vector2i);
     
 private:
     LevelSystem() = delete;

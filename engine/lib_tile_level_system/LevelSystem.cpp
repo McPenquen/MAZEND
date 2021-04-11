@@ -12,7 +12,7 @@ size_t LevelSystem::_height;
 Vector2f LevelSystem::_offset(0.0f, 0.0f);
 
 float LevelSystem::_tileSize(100.f);
-vector<vector<unique_ptr<RectangleShape>>> LevelSystem::_sprites;
+vector<map<Vector2i,vector<unique_ptr<RectangleShape>>>> LevelSystem::_sprites;
 
 map<LevelSystem::TILE, Color> LevelSystem::_colours{ {TOPHORIZONTAL, Color::Blue },{TOPVERTICAL, Color::Blue} };
 Texture spriteSheet;
@@ -35,19 +35,19 @@ int level = 0;
 size_t LevelSystem::getHeight() {return _height;}
 size_t LevelSystem::getWidth() {return _width;}
 
-vector<map<LevelSystem::TILE, vector<Vector2ul>>> LevelSystem::_tile_positions;
+vector<map<Vector2i,map<LevelSystem::TILE, vector<Vector2ul>>>> LevelSystem::_tile_positions;
 
-void LevelSystem::addTilePosition(TILE tile, Vector2ul pos, int levelNum) 
+void LevelSystem::addTilePosition(TILE tile, Vector2ul pos, int levelNum, Vector2i sectorId) 
 {
-    if (_tile_positions[levelNum].find(tile) == _tile_positions[levelNum].end()) 
+    if (_tile_positions[levelNum][sectorId].find(tile) == _tile_positions[levelNum][sectorId].end()) 
     {
         vector<Vector2ul> oneList;
         oneList.push_back(pos);
-        _tile_positions[levelNum].insert({ tile, oneList });
+        _tile_positions[levelNum][sectorId].insert({ tile, oneList });
     }
     else 
     {
-        _tile_positions[levelNum][tile].push_back(pos);
+        _tile_positions[levelNum][sectorId][tile].push_back(pos);
     }
 
 }
@@ -82,12 +82,12 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
 {
     // If sprites are empty initialise first 3 empty vectors and di the same for _tile_positions
     if (_sprites.size() == 0) {
-        _sprites.push_back(vector<unique_ptr<RectangleShape>>());
-        _sprites.push_back(vector<unique_ptr<RectangleShape>>());
-        _sprites.push_back(vector<unique_ptr<RectangleShape>>());
-        _tile_positions.push_back(map<TILE, vector<Vector2ul>>());
-        _tile_positions.push_back(map<TILE, vector<Vector2ul>>());
-        _tile_positions.push_back(map<TILE, vector<Vector2ul>>());
+        _sprites.push_back(map<Vector2i, vector<unique_ptr<RectangleShape>>>());
+        _sprites.push_back(map<Vector2i, vector<unique_ptr<RectangleShape>>>());
+        _sprites.push_back(map<Vector2i, vector<unique_ptr<RectangleShape>>>());
+        _tile_positions.push_back(map<Vector2i, map<TILE, vector<Vector2ul>>>());
+        _tile_positions.push_back(map<Vector2i, map<TILE, vector<Vector2ul>>>());
+        _tile_positions.push_back(map<Vector2i, map<TILE, vector<Vector2ul>>>());
     }
 
     _tileSize = tileSize;
@@ -109,6 +109,11 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
     }
 
     vector<TILE> temp_tiles;
+    // Vector2i sector id generator
+    Vector2i sectorId = { 1, 1 };
+    int sectorXswitch = 1;
+    int sectorYswitch = 1;
+
     for (int i = 0; i < buffer.size(); ++i) 
     {
         const char c = buffer[i];
@@ -116,17 +121,17 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
         switch (c) 
         {
             case '1':
-                addTilePosition(TILE::EMPTY, ulPos, 0);
+                addTilePosition(TILE::EMPTY, ulPos, 0, sectorId);
                 temp_tiles.push_back(EMPTY);
                 level = 1;
                 break;
             case '2':
-                addTilePosition(TILE::EMPTY, ulPos, 1);
+                addTilePosition(TILE::EMPTY, ulPos, 1, sectorId);
                 temp_tiles.push_back(EMPTY);
                 level = 2;
                 break;
             case '3':
-                addTilePosition(TILE::EMPTY, ulPos, 2);
+                addTilePosition(TILE::EMPTY, ulPos, 2, sectorId);
                 temp_tiles.push_back(EMPTY);
                 level = 3;
                 break;
@@ -135,67 +140,67 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
                 {
  
                 case '-':
-                    addTilePosition(TILE::TOPHORIZONTAL, ulPos, level - 1);
+                    addTilePosition(TILE::TOPHORIZONTAL, ulPos, level - 1, sectorId);
                     temp_tiles.push_back(TOPHORIZONTAL);
                     break;
                 case '|':
-                    addTilePosition(TILE::TOPVERTICAL, ulPos, level - 1);
+                    addTilePosition(TILE::TOPVERTICAL, ulPos, level - 1, sectorId);
                     temp_tiles.push_back(TOPVERTICAL);
                     break;
                 case '/':
-                    addTilePosition(TILE::TOPCORNERLEFT, ulPos, level - 1); //left to right turn 
+                    addTilePosition(TILE::TOPCORNERLEFT, ulPos, level - 1, sectorId); //left to right turn 
                     temp_tiles.push_back(TOPCORNERLEFT);
                     break;
                 case '¬':
-                    addTilePosition(TILE::TOPCORNERRIGHT, ulPos, level - 1);//left to right turn
+                    addTilePosition(TILE::TOPCORNERRIGHT, ulPos, level - 1, sectorId);//left to right turn
                     temp_tiles.push_back(TOPCORNERRIGHT);
                     break;
                 case ']':
-                    addTilePosition(TILE::TOPCORNERUP, ulPos, level - 1);//left to right turn
+                    addTilePosition(TILE::TOPCORNERUP, ulPos, level - 1, sectorId);//left to right turn
                     temp_tiles.push_back(TOPCORNERUP);
                     break;
                 case 'L':
-                    addTilePosition(TILE::TOPCORNERDOWN, ulPos, level - 1);//left to right turn
+                    addTilePosition(TILE::TOPCORNERDOWN, ulPos, level - 1, sectorId);//left to right turn
                     temp_tiles.push_back(TOPCORNERDOWN);
                     break;
                 case '^':
-                    addTilePosition(TILE::TTUP, ulPos, level - 1);//left to right turn
+                    addTilePosition(TILE::TTUP, ulPos, level - 1, sectorId);//left to right turn
                     temp_tiles.push_back(TTUP);
                     break;
                 case '<':
-                    addTilePosition(TILE::TTLEFT, ulPos, level - 1);//left to right turn
+                    addTilePosition(TILE::TTLEFT, ulPos, level - 1, sectorId);//left to right turn
                     temp_tiles.push_back(TTLEFT);
                     break;
                 case 'V':
-                    addTilePosition(TILE::TTDOWN, ulPos, level - 1);//left to right turn
+                    addTilePosition(TILE::TTDOWN, ulPos, level - 1, sectorId);//left to right turn
                     temp_tiles.push_back(TTDOWN);
                     break;
                 case '>':
-                    addTilePosition(TILE::TTRIGHT, ulPos, level - 1);//left to right turn
+                    addTilePosition(TILE::TTRIGHT, ulPos, level - 1, sectorId);//left to right turn
                     temp_tiles.push_back(TTRIGHT);
                     break;
                 case '+':
-                    addTilePosition(TILE::TXJUNCTION, ulPos, level - 1); //cross section
+                    addTilePosition(TILE::TXJUNCTION, ulPos, level - 1, sectorId); //cross section
                     temp_tiles.push_back(TXJUNCTION);
                     break;
                 case 'D':
-                    addTilePosition(TILE::TOPSTAIRDOWN, ulPos, level - 1);
+                    addTilePosition(TILE::TOPSTAIRDOWN, ulPos, level - 1, sectorId);
                     temp_tiles.push_back(TOPSTAIRDOWN);
                     break;
                 case 'U':
-                    addTilePosition(TILE::TOPSTAIRUP, ulPos, level - 1);
+                    addTilePosition(TILE::TOPSTAIRUP, ulPos, level - 1, sectorId);
                     temp_tiles.push_back(TOPSTAIRUP);
                     break;
                 case 'R':
-                    addTilePosition(TILE::TOPSTAIRRIGHT, ulPos, level - 1);
+                    addTilePosition(TILE::TOPSTAIRRIGHT, ulPos, level - 1, sectorId);
                     temp_tiles.push_back(TOPSTAIRRIGHT);
                     break;
                 case 'C':
-                    addTilePosition(TILE::TOPSTAIRLEFT, ulPos, level - 1);
+                    addTilePosition(TILE::TOPSTAIRLEFT, ulPos, level - 1, sectorId);
                     temp_tiles.push_back(TOPSTAIRLEFT);
                     break;
                 case ' ':
-                    addTilePosition(TILE::EMPTY, ulPos, level - 1);
+                    addTilePosition(TILE::EMPTY, ulPos, level - 1, sectorId);
                     temp_tiles.push_back(EMPTY);
                     break;
                 case '\n':
@@ -203,11 +208,27 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
                         w = i;
                     }
                     h++;
+                    // Update the sector Id generating Y value
+                    if (sectorYswitch == 3) {
+                        sectorYswitch = 0;
+                        sectorId.y++;
+                        // Reset X value
+                        sectorXswitch = 0;
+                        sectorId.x = 1;
+                    }
+                    sectorYswitch++;
                     break;
                 default:
                     std::cout << i << " - Unknown tile: " << c << endl;
                 }
         }
+        // Update sector Id generating X value
+        if (sectorXswitch == 3) {
+            sectorXswitch = 0;
+            sectorId.x++;
+        }
+        sectorXswitch++;
+        
     }
     if (temp_tiles.size() != (w*h)) 
     {
@@ -228,6 +249,12 @@ void LevelSystem::buildSprites(int levelNum)
         cout << "ERROR" << endl;
     }
     _sprites[levelNum].clear();
+
+    // Vector2i sector id generator
+    Vector2i sectorId = Vector2i(1, 1);
+    int sectorXswitch = 1;
+    int sectorYswitch = 1;
+
     for (size_t y = 0; y < LevelSystem::getHeight(); ++y) 
     {
         for (size_t x = 0; x < LevelSystem::getWidth(); ++x) 
@@ -241,8 +268,22 @@ void LevelSystem::buildSprites(int levelNum)
             float p = getTexture(getTile({ x, y })).y;
             s->setTextureRect(IntRect(g, p ,64,64));
             //s->setFillColor(getColor(getTile({x, y})));
-            _sprites[levelNum].push_back(move(s));
+            _sprites[levelNum][sectorId].push_back(move(s));
+            
+            // Update sector Id X counter
+            if (sectorXswitch==3) {
+                sectorXswitch = 0;
+                sectorId.x++;
+            }
+            sectorXswitch++;
         }
+        // Update sector Id Y counter
+        if (sectorYswitch == 3) {
+            sectorYswitch = 0;
+            sectorId.y++;
+        }
+        sectorYswitch++;
+        sectorId.x = 1;
     }
 }
 
@@ -276,7 +317,7 @@ LevelSystem::TILE LevelSystem::getTileAt(Vector2f v)
 }
 
 void LevelSystem::Render(RenderWindow& window)
-{
+{/*
     if (_sprites.size() > 0) {
         if (_sprites[0].size() > 0) {
             for (size_t i = 0; i < _width * _height; ++i)
@@ -296,20 +337,30 @@ void LevelSystem::Render(RenderWindow& window)
                 window.draw(*_sprites[2][i]);
             }
         }
-    }
+    }*/
 }
 
 void LevelSystem::Render(RenderWindow& window, int floor, Vector2i sectorId) {
-
+    if (_sprites.size() > 0) {
+        if (_sprites[floor].size() > 0) {
+            for (size_t i = 0; i < _width * _height; ++i) {
+                window.draw(*_sprites[floor][sectorId][i]);
+            }
+        }
+        else {
+            throw string("Couldn't render sector: " + to_string(sectorId.x) + ", " + to_string(sectorId.y)
+                + " of floor number " + to_string(floor));
+        }
+    }
 }
 
-vector<Vector2ul> LevelSystem::findTiles(TILE tile, int levelNum) 
+vector<Vector2ul> LevelSystem::findTiles(TILE tile, int levelNum, Vector2i sectorId) 
 {
-    return _tile_positions[levelNum][tile];
+    return _tile_positions[levelNum][sectorId][tile];
 }
 
 void LevelSystem::UnLoad() {
-    cout << "LevelSystem unloading\n";
+    cout << "LevelSystem unloading" << endl;
     _sprites.clear();
     _tiles.reset();
     _width = 0;
