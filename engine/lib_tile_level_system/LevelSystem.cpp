@@ -12,7 +12,7 @@ size_t LevelSystem::_height;
 Vector2f LevelSystem::_offset(0.0f, 0.0f);
 
 float LevelSystem::_tileSize(100.f);
-vector<unique_ptr<RectangleShape>> LevelSystem::_sprites;
+vector<vector<unique_ptr<RectangleShape>>> LevelSystem::_sprites;
 
 map<LevelSystem::TILE, Color> LevelSystem::_colours{ {TOPHORIZONTAL, Color::Blue },{TOPVERTICAL, Color::Blue} };
 Texture spriteSheet;
@@ -35,19 +35,19 @@ int level = 0;
 size_t LevelSystem::getHeight() {return _height;}
 size_t LevelSystem::getWidth() {return _width;}
 
-map<LevelSystem::TILE, vector<Vector2ul>> LevelSystem::_tile_positions;
+vector<map<LevelSystem::TILE, vector<Vector2ul>>> LevelSystem::_tile_positions;
 
-void LevelSystem::addTilePosition(TILE tile, Vector2ul pos) 
+void LevelSystem::addTilePosition(TILE tile, Vector2ul pos, int levelNum) 
 {
-    if (_tile_positions.find(tile) == _tile_positions.end()) 
+    if (_tile_positions[levelNum].find(tile) == _tile_positions[levelNum].end()) 
     {
         vector<Vector2ul> oneList;
         oneList.push_back(pos);
-        _tile_positions.insert({ tile, oneList });
+        _tile_positions[levelNum].insert({ tile, oneList });
     }
     else 
     {
-        _tile_positions[tile].push_back(pos);
+        _tile_positions[levelNum][tile].push_back(pos);
     }
 
 }
@@ -80,6 +80,16 @@ float LevelSystem::getTileSize()
 
 void LevelSystem::loadLevelFile(const string &path, float tileSize) 
 {
+    // If sprites are empty initialise first 3 empty vectors and di the same for _tile_positions
+    if (_sprites.size() == 0) {
+        _sprites.push_back(vector<unique_ptr<RectangleShape>>());
+        _sprites.push_back(vector<unique_ptr<RectangleShape>>());
+        _sprites.push_back(vector<unique_ptr<RectangleShape>>());
+        _tile_positions.push_back(map<TILE, vector<Vector2ul>>());
+        _tile_positions.push_back(map<TILE, vector<Vector2ul>>());
+        _tile_positions.push_back(map<TILE, vector<Vector2ul>>());
+    }
+
     _tileSize = tileSize;
     size_t w = 0, h = 0;
     string buffer;
@@ -106,17 +116,17 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
         switch (c) 
         {
             case '1':
-                addTilePosition(TILE::EMPTY, ulPos);
+                addTilePosition(TILE::EMPTY, ulPos, 0);
                 temp_tiles.push_back(EMPTY);
                 level = 1;
                 break;
             case '2':
-                addTilePosition(TILE::EMPTY, ulPos);
+                addTilePosition(TILE::EMPTY, ulPos, 1);
                 temp_tiles.push_back(EMPTY);
                 level = 2;
                 break;
             case '3':
-                addTilePosition(TILE::EMPTY, ulPos);
+                addTilePosition(TILE::EMPTY, ulPos, 2);
                 temp_tiles.push_back(EMPTY);
                 level = 3;
                 break;
@@ -125,67 +135,67 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
                 {
  
                 case '-':
-                    addTilePosition(TILE::TOPHORIZONTAL, ulPos);
+                    addTilePosition(TILE::TOPHORIZONTAL, ulPos, level - 1);
                     temp_tiles.push_back(TOPHORIZONTAL);
                     break;
                 case '|':
-                    addTilePosition(TILE::TOPVERTICAL, ulPos);
+                    addTilePosition(TILE::TOPVERTICAL, ulPos, level - 1);
                     temp_tiles.push_back(TOPVERTICAL);
                     break;
                 case '/':
-                    addTilePosition(TILE::TOPCORNERLEFT, ulPos); //left to right turn 
+                    addTilePosition(TILE::TOPCORNERLEFT, ulPos, level - 1); //left to right turn 
                     temp_tiles.push_back(TOPCORNERLEFT);
                     break;
                 case '¬':
-                    addTilePosition(TILE::TOPCORNERRIGHT, ulPos);//left to right turn
+                    addTilePosition(TILE::TOPCORNERRIGHT, ulPos, level - 1);//left to right turn
                     temp_tiles.push_back(TOPCORNERRIGHT);
                     break;
                 case ']':
-                    addTilePosition(TILE::TOPCORNERUP, ulPos);//left to right turn
+                    addTilePosition(TILE::TOPCORNERUP, ulPos, level - 1);//left to right turn
                     temp_tiles.push_back(TOPCORNERUP);
                     break;
                 case 'L':
-                    addTilePosition(TILE::TOPCORNERDOWN, ulPos);//left to right turn
+                    addTilePosition(TILE::TOPCORNERDOWN, ulPos, level - 1);//left to right turn
                     temp_tiles.push_back(TOPCORNERDOWN);
                     break;
                 case '^':
-                    addTilePosition(TILE::TTUP, ulPos);//left to right turn
+                    addTilePosition(TILE::TTUP, ulPos, level - 1);//left to right turn
                     temp_tiles.push_back(TTUP);
                     break;
                 case '<':
-                    addTilePosition(TILE::TTLEFT, ulPos);//left to right turn
+                    addTilePosition(TILE::TTLEFT, ulPos, level - 1);//left to right turn
                     temp_tiles.push_back(TTLEFT);
                     break;
                 case 'V':
-                    addTilePosition(TILE::TTDOWN, ulPos);//left to right turn
+                    addTilePosition(TILE::TTDOWN, ulPos, level - 1);//left to right turn
                     temp_tiles.push_back(TTDOWN);
                     break;
                 case '>':
-                    addTilePosition(TILE::TTRIGHT, ulPos);//left to right turn
+                    addTilePosition(TILE::TTRIGHT, ulPos, level - 1);//left to right turn
                     temp_tiles.push_back(TTRIGHT);
                     break;
                 case '+':
-                    addTilePosition(TILE::TXJUNCTION, ulPos); //cross section
+                    addTilePosition(TILE::TXJUNCTION, ulPos, level - 1); //cross section
                     temp_tiles.push_back(TXJUNCTION);
                     break;
                 case 'D':
-                    addTilePosition(TILE::TOPSTAIRDOWN, ulPos);
+                    addTilePosition(TILE::TOPSTAIRDOWN, ulPos, level - 1);
                     temp_tiles.push_back(TOPSTAIRDOWN);
                     break;
                 case 'U':
-                    addTilePosition(TILE::TOPSTAIRUP, ulPos);
+                    addTilePosition(TILE::TOPSTAIRUP, ulPos, level - 1);
                     temp_tiles.push_back(TOPSTAIRUP);
                     break;
                 case 'R':
-                    addTilePosition(TILE::TOPSTAIRRIGHT, ulPos);
+                    addTilePosition(TILE::TOPSTAIRRIGHT, ulPos, level - 1);
                     temp_tiles.push_back(TOPSTAIRRIGHT);
                     break;
                 case 'C':
-                    addTilePosition(TILE::TOPSTAIRLEFT, ulPos);
+                    addTilePosition(TILE::TOPSTAIRLEFT, ulPos, level - 1);
                     temp_tiles.push_back(TOPSTAIRLEFT);
                     break;
                 case ' ':
-                    addTilePosition(TILE::EMPTY, ulPos);
+                    addTilePosition(TILE::EMPTY, ulPos, level - 1);
                     temp_tiles.push_back(EMPTY);
                     break;
                 case '\n':
@@ -208,16 +218,16 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
     _height = h;
     std::copy(temp_tiles.begin(), temp_tiles.end(), &_tiles[0]);
     std::cout << "Level " << path << " loaded. " << w << "x" << h << endl;
-    buildSprites();
+    buildSprites(level - 1);
 }
 
-void LevelSystem::buildSprites() 
+void LevelSystem::buildSprites(int levelNum) 
 {
     if (!spriteSheet.loadFromFile("res/sprites/spriteSheet.png"))
     {
         cout << "ERROR" << endl;
     }
-    _sprites.clear();
+    _sprites[levelNum].clear();
     for (size_t y = 0; y < LevelSystem::getHeight(); ++y) 
     {
         for (size_t x = 0; x < LevelSystem::getWidth(); ++x) 
@@ -231,7 +241,7 @@ void LevelSystem::buildSprites()
             float p = getTexture(getTile({ x, y })).y;
             s->setTextureRect(IntRect(g, p ,64,64));
             //s->setFillColor(getColor(getTile({x, y})));
-            _sprites.push_back(move(s));
+            _sprites[levelNum].push_back(move(s));
         }
     }
 }
@@ -265,17 +275,37 @@ LevelSystem::TILE LevelSystem::getTileAt(Vector2f v)
     return getTile(Vector2ul((v - _offset) / (_tileSize)));
 }
 
-void LevelSystem::Render(RenderWindow &window) 
+void LevelSystem::Render(RenderWindow& window)
 {
-    for (size_t i = 0; i < _width * _height; ++i) 
-    {
-        window.draw(*_sprites[i]);
+    if (_sprites.size() > 0) {
+        if (_sprites[0].size() > 0) {
+            for (size_t i = 0; i < _width * _height; ++i)
+            {
+                window.draw(*_sprites[0][i]);
+            }
+        }
+        if (_sprites[1].size() > 0) {
+            for (size_t i = 0; i < _width * _height; ++i)
+            {
+                window.draw(*_sprites[1][i]);
+            }
+        }
+        if (_sprites[2].size() > 0) {
+            for (size_t i = 0; i < _width * _height; ++i)
+            {
+                window.draw(*_sprites[2][i]);
+            }
+        }
     }
 }
 
-vector<Vector2ul> LevelSystem::findTiles(TILE tile) 
+void LevelSystem::Render(RenderWindow& window, int floor, Vector2i sectorId) {
+
+}
+
+vector<Vector2ul> LevelSystem::findTiles(TILE tile, int levelNum) 
 {
-    return _tile_positions[tile];
+    return _tile_positions[levelNum][tile];
 }
 
 void LevelSystem::UnLoad() {

@@ -19,6 +19,7 @@ public:
 
     static void loadLevelFile(const string &, float tileSize=100.f);
     static void Render(RenderWindow &window);
+    static void Render(RenderWindow& window, int floor, Vector2i sectorId);
     static void UnLoad();
 
     static Color getColor(TILE t);
@@ -37,11 +38,11 @@ public:
     static size_t getHeight();
     static size_t getWidth();
 
-    static vector<Vector2ul> findTiles(TILE);
+    static vector<Vector2ul> findTiles(TILE, int);
 
     static float getTileSize();
 
-    static void buildSprites();
+    static void buildSprites(int levelNum);
 
 protected:
     static unique_ptr<TILE[]> _tiles; // internal array of tiles
@@ -49,12 +50,16 @@ protected:
     static size_t _height; // how many tiles the level is high
     static Vector2f _offset; // screenspace offset of level, when rendered
     static float _tileSize; // screenspace size of each tile, when rendered
+
     static map<TILE, Color> _colours; // color to render each tile type
-    static map<TILE, Vector2f> _textures; // what sprite should be used
-    static vector<unique_ptr<RectangleShape>> _sprites; // array of sfml sprites of each tile
+    static map<TILE, Vector2f> _textures; // what sprite should be used;
+
+    // Division into layers vector[0]/[1]/[2]
+    static vector<vector<unique_ptr<RectangleShape>>> _sprites; // array of sfml sprites of each tile
+    static vector<map<TILE, vector<Vector2ul>>> _tile_positions; // positions of the tiles
     
-    static void addTilePosition(TILE, Vector2ul);
-    static map<TILE, vector<Vector2ul>> _tile_positions;
+    static void addTilePosition(TILE, Vector2ul, int);
+    
 private:
     LevelSystem() = delete;
     ~LevelSystem() = delete;
