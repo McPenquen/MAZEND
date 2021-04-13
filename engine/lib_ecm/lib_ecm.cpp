@@ -1,4 +1,6 @@
 #include "lib_ecm.h"
+#include "../engine.h"
+#include "LevelSystem.h"
 
 // Entity
 Entity::Entity(int orderNum) : _orderNum(orderNum), _alive(true), _visible(true), _rotation(1.f) {}
@@ -102,6 +104,7 @@ void EntityManager::Render() {
 	for (const auto& e : floor3_list) {
 		e->Render();
 	}
+	LS::Render(Engine::GetWindow());
 	for (const auto& e : floor4_list) {
 		e->Render();
 	}

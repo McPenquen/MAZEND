@@ -8,7 +8,10 @@
 
 static float secSwitchTimer = 0.0f;
 
-void LevelScene::Load() {
+void LevelScene::Load(string const s) {
+	auto ho = Engine::GetWindowSize().y - (LS::getHeight() * 40.f);
+	LS::SetOffset(Vector2f(0, ho));
+
 	//Load the initial sector
 	//TODO: get position of the player to start at
 	_activeSector = Vector2i(1, 1);
@@ -16,13 +19,17 @@ void LevelScene::Load() {
 
 	// Create the mid sector
 	auto sector = makeEntity(4);
+	sector->setNameTag("sectorFrame");
 	auto ss = sector->addComponent<ShapeComponent>();
 	ss->setShape<RectangleShape>(sectorBounds);
-	ss->getShape().setFillColor(Color::Black);
+	ss->getShape().setFillColor(Color::Transparent);
 	ss->getShape().setOrigin(sectorBounds / 2.f);
 	ss->getShape().setOutlineColor(Color::White);
 	ss->getShape().setOutlineThickness(5.f);
 	sector->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
+
+	// Load the tiles
+	LS::loadLevelFile(s, 40.0f);
 
 	// Create the player
 	auto pl = makeEntity(4);
@@ -80,6 +87,13 @@ void LevelScene::Update(double const dt) {
 		secSwitchTimer = SECTOR_SWITCH_COUNTER;
 		ChangeSector(nv);
 	}
+}
+
+
+void LevelScene::UnLoad() {
+	cout << "Level Unload" << endl;
+	Scene::UnLoad();
+	LS::UnLoad();
 }
 
 void LevelScene::DisplaySector() {

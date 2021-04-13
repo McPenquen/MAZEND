@@ -7,12 +7,13 @@ public:
 	LevelScene() = default;
 	~LevelScene() = default;
 
-	void Load() override;
+	void Load(string const s);
 	void Update(const double dt) override;
+	void UnLoad() override;
 
 	void UnLoadSector();
 	void ChangeSector(Vector2i);
-	void DisplaySector();
+	virtual void DisplaySector();
 
 	Vector2i getNewSector();
 	void MovePlayerOnNewSector(Vector2i, Vector2i);
