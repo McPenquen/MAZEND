@@ -10,6 +10,7 @@ public:
 	void Load(string const s);
 	void Update(const double dt) override;
 	void UnLoad() override;
+	void Render() override;
 
 	void UnLoadSector();
 	void ChangeSector(Vector2i);

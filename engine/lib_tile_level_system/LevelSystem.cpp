@@ -337,30 +337,6 @@ LevelSystem::TILE LevelSystem::getTileAt(Vector2f v)
     return getTile(Vector2ul((v - _offset) / (_tileSize)));
 }
 
-void LevelSystem::Render(RenderWindow& window)
-{/*
-    if (_sprites.size() > 0) {
-        if (_sprites[0].size() > 0) {
-            for (size_t i = 0; i < _width * _height; ++i)
-            {
-                window.draw(*_sprites[0][i]);
-            }
-        }
-        if (_sprites[1].size() > 0) {
-            for (size_t i = 0; i < _width * _height; ++i)
-            {
-                window.draw(*_sprites[1][i]);
-            }
-        }
-        if (_sprites[2].size() > 0) {
-            for (size_t i = 0; i < _width * _height; ++i)
-            {
-                window.draw(*_sprites[2][i]);
-            }
-        }
-    }*/
-}
-
 void LevelSystem::Render(RenderWindow& window, int floor, Vector2i sectorId) {
     auto floorIndex = floor-1;
     if (_sprites.size() > 0) {

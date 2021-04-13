@@ -18,7 +18,6 @@ public:
         BOTHORIZONTAL, BOTVERTICAL, BOTSTAIRUP, BOTSTAIRDOWN, BOTSTAIRRIGHT, BOTSTAIRLEFT, BOTCORNERLEFT, BOTCORNERRIGHT, BOTCORNERUP, BOTCORNERDOWN, BTUP, BTDOWN, BTLEFT, BTRIGHT, BXJUNCTION};
 
     static void loadLevelFile(const string &, float tileSize=100.f);
-    static void Render(RenderWindow &window);
     static void Render(RenderWindow& window, int floor, Vector2i sectorId);
     static void UnLoad();
 

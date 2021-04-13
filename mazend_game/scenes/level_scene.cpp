@@ -74,6 +74,10 @@ void LevelScene::Load(string const s) {
 	frame4->setPosition(Vector2f((gameWidth / 2), gameHeight / 2 + sectorBounds.y / 2 + tileBounds + 5.f));
 }
 
+void LevelScene::Render() {
+	ents.Render(_activeSector);
+}
+
 void LevelScene::Update(double const dt) {
 	Scene::Update(dt);
 	// Control Sector Switch Motion
