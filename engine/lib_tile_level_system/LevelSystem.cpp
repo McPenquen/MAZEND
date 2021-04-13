@@ -88,10 +88,6 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
 {
     // If sprites are empty initialise first 3 empty vectors and di the same for _tile_positions
     if (_sprites.size() == 0) {
-        //map<int, vector<unique_ptr<RectangleShape>>> m;
-        //_sprites.push_back({});
-        //_sprites.resize(3);
-
         for (int i = 0; i < 3; i++) {
             map<int, vector<shared_ptr<RectangleShape>>> m;
             auto s = make_shared<RectangleShape>();
@@ -125,6 +121,7 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
     Vector2i sectorId = { 1, 1 };
     int sectorXswitch = 1;
     int sectorYswitch = 1;
+    int oneSectorWidth = 10;
 
     for (int i = 0; i < buffer.size(); ++i) 
     {
@@ -163,7 +160,7 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
                     addTilePosition(TILE::TOPCORNERLEFT, ulPos, level - 1, sectorId); //left to right turn 
                     temp_tiles.push_back(TOPCORNERLEFT);
                     break;
-                case '¬':
+                case 'ï¿½':
                     addTilePosition(TILE::TOPCORNERRIGHT, ulPos, level - 1, sectorId);//left to right turn
                     temp_tiles.push_back(TOPCORNERRIGHT);
                     break;
@@ -221,7 +218,7 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
                     }
                     h++;
                     // Update the sector Id generating Y value
-                    if (sectorYswitch == 3) {
+                    if (sectorYswitch == oneSectorWidth) {
                         sectorYswitch = 0;
                         sectorId.y++;
                     }
@@ -235,7 +232,7 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
                 }
         }
         // Update sector Id generating X value
-        if (sectorXswitch == 3) {
+        if (sectorXswitch == oneSectorWidth) {
             sectorXswitch = 0;
             sectorId.x++;
         }
