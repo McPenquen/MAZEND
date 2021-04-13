@@ -45,17 +45,50 @@ int getIntSectorId(Vector2i vecID) {
     return answer;
 }
 
+// Helper function to get the uniform location of the sprites (starting at {0,0})
+Vector2ul getNormalisedSectorPositions(Vector2ul pos, Vector2i sectorID, float posPadding) {
+    Vector2ul answer = {pos.x, pos.y};
+    if (sectorID.x == 2) {
+        answer.x -= float(sectorTilesNumber) * posPadding;
+    }
+    if (sectorID.x == 3) {
+        answer.x -= 2 * float(sectorTilesNumber) * posPadding;
+    }
+    if (sectorID.y == 2) {
+        answer.y -= float(sectorTilesNumber) * posPadding;
+    }
+    if (sectorID.y == 3) {
+        answer.y -= 2 * float(sectorTilesNumber) * posPadding;
+    }
+    return answer;
+}
+
 void LevelSystem::addTilePosition(TILE tile, Vector2ul pos, int levelNum, Vector2i sectorId) 
 {
+    Vector2ul screenPos = pos;
+    //Convert the Vector2ul into the screen space + centerlise it
+    if (sectorId.x == 2) {
+        screenPos.x -= float(sectorTilesNumber) * getTileSize();
+    }
+    if (sectorId.x == 3) {
+        screenPos.x -= 2 * float(sectorTilesNumber) * getTileSize();
+    }
+    if (sectorId.y == 2) {
+        screenPos.y -= float(sectorTilesNumber) * getTileSize();
+    }
+    if (sectorId.y == 3) {
+        screenPos.y -= 2 * float(sectorTilesNumber) * getTileSize();
+    }
+
     if (_tile_positions[levelNum][getIntSectorId(sectorId)].find(tile) == _tile_positions[levelNum][getIntSectorId(sectorId)].end())
     {
         vector<Vector2ul> oneList;
-        oneList.push_back(pos);
+        oneList.push_back(screenPos);
         _tile_positions[levelNum][getIntSectorId(sectorId)].insert({ tile, oneList });
     }
     else 
     {
-        _tile_positions[levelNum][getIntSectorId(sectorId)][tile].push_back(pos);
+        _tile_positions[levelNum][getIntSectorId(sectorId)][tile].push_back(screenPos);
     }
 
 }
@@ -272,14 +305,19 @@ void LevelSystem::buildSprites(int levelNum)
     Vector2i sectorId = Vector2i(1, 1);
     int sectorXswitch = 1;
     int sectorYswitch = 1;
-    auto hw = LevelSystem::getHeight();
-    auto ww = LevelSystem::getWidth();
+
     for (size_t y = 0; y < LevelSystem::getHeight(); ++y) 
     {
         for (size_t x = 0; x < LevelSystem::getWidth(); ++x) 
         {
+            Vector2ul normalisedPos = getNormalisedSectorPositions(Vector2ul(x, y), sectorId, 1.0f);
+            Vector2f tilePos = getTilePosition(normalisedPos);
+            // Centralise the position
+            tilePos.x += _offset.x;
+            tilePos.y += _offset.y;
+
             auto s = make_shared<RectangleShape>();
-            s->setPosition(getTilePosition({x, y}));
+            s->setPosition(tilePos);
             s->setSize(Vector2f(_tileSize, _tileSize));
             s->setTexture(&spriteSheet);
             

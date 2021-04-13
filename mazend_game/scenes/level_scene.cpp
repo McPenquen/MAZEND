@@ -9,8 +9,7 @@
 static float secSwitchTimer = 0.0f;
 
 void LevelScene::Load(string const s) {
-	auto ho = Engine::GetWindowSize().y - (LS::getHeight() * 40.f);
-	LS::SetOffset(Vector2f(0, ho));
+	LS::SetOffset(Vector2f(leftXBorder, topYBorder));
 
 	//Load the initial sector
 	//TODO: get position of the player to start at
