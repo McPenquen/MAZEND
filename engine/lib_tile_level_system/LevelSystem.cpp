@@ -122,11 +122,14 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
     int sectorXswitch = 1;
     int sectorYswitch = 1;
     int oneSectorWidth = 10;
+    bool unknownTile = false;
+    int realI = 0;
 
     for (int i = 0; i < buffer.size(); ++i) 
     {
+        unknownTile = false;
         const char c = buffer[i];
-        Vector2ul ulPos = w == 0 ? Vector2ul(i, 0) : Vector2ul(i - ((w+1)*h), h);
+        Vector2ul ulPos = w == 0 ? Vector2ul(realI, 0) : Vector2ul(realI - ((w+1)*h), h);
         switch (c) 
         {
             case '1':
@@ -160,7 +163,7 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
                     addTilePosition(TILE::TOPCORNERLEFT, ulPos, level - 1, sectorId); //left to right turn 
                     temp_tiles.push_back(TOPCORNERLEFT);
                     break;
-                case '�':
+                case '~':
                     addTilePosition(TILE::TOPCORNERRIGHT, ulPos, level - 1, sectorId);//left to right turn
                     temp_tiles.push_back(TOPCORNERRIGHT);
                     break;
@@ -228,16 +231,20 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
                     sectorYswitch++;
                     break;
                 default:
+                    unknownTile = true;
+                    realI--;
                     std::cout << i << " - Unknown tile: " << c << endl;
                 }
         }
-        // Update sector Id generating X value
-        if (sectorXswitch == oneSectorWidth) {
-            sectorXswitch = 0;
-            sectorId.x++;
+        if (!unknownTile) {
+            // Update sector Id generating X value
+            if (sectorXswitch == oneSectorWidth) {
+                sectorXswitch = 0;
+                sectorId.x++;
+            }
+            sectorXswitch++;
+            realI++;
         }
-        sectorXswitch++;
-        
     }
     if (temp_tiles.size() != (w*h)) 
     {
