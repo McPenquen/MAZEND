@@ -2,6 +2,8 @@
 #include <fstream>
 #include <iostream>
 #include <memory>
+//Size of one sector
+#define sectorTilesNumber 10
 
 using namespace std;
 using namespace sf;
@@ -121,7 +123,6 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
     Vector2i sectorId = { 1, 1 };
     int sectorXswitch = 1;
     int sectorYswitch = 1;
-    int oneSectorWidth = 10;
     bool unknownTile = false;
     int realI = 0;
 
@@ -221,7 +222,7 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
                     }
                     h++;
                     // Update the sector Id generating Y value
-                    if (sectorYswitch == oneSectorWidth) {
+                    if (sectorYswitch == sectorTilesNumber) {
                         sectorYswitch = 0;
                         sectorId.y++;
                     }
@@ -238,7 +239,7 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
         }
         if (!unknownTile) {
             // Update sector Id generating X value
-            if (sectorXswitch == oneSectorWidth) {
+            if (sectorXswitch == sectorTilesNumber) {
                 sectorXswitch = 0;
                 sectorId.x++;
             }
@@ -271,7 +272,8 @@ void LevelSystem::buildSprites(int levelNum)
     Vector2i sectorId = Vector2i(1, 1);
     int sectorXswitch = 1;
     int sectorYswitch = 1;
-
+    auto hw = LevelSystem::getHeight();
+    auto ww = LevelSystem::getWidth();
     for (size_t y = 0; y < LevelSystem::getHeight(); ++y) 
     {
         for (size_t x = 0; x < LevelSystem::getWidth(); ++x) 
@@ -288,19 +290,21 @@ void LevelSystem::buildSprites(int levelNum)
             _sprites[levelNum][getIntSectorId(sectorId)].push_back(move(s));
             
             // Update sector Id X counter
-            if (sectorXswitch==3) {
+            if (sectorXswitch == sectorTilesNumber) {
                 sectorXswitch = 0;
                 sectorId.x++;
             }
             sectorXswitch++;
         }
         // Update sector Id Y counter
-        if (sectorYswitch == 3) {
+        if (sectorYswitch == sectorTilesNumber) {
             sectorYswitch = 0;
             sectorId.y++;
         }
-        sectorYswitch++;
+        // Reset X value
+        sectorXswitch = 1;
         sectorId.x = 1;
+        sectorYswitch++;
     }
 }
 
@@ -358,10 +362,11 @@ void LevelSystem::Render(RenderWindow& window)
 }
 
 void LevelSystem::Render(RenderWindow& window, int floor, Vector2i sectorId) {
+    auto floorIndex = floor-1;
     if (_sprites.size() > 0) {
-        if (_sprites[floor].size() > 0) {
-            for (size_t i = 0; i < _width * _height; ++i) {
-                window.draw(*_sprites[floor][getIntSectorId(sectorId)][i]);
+        if (_sprites[floorIndex].size() > 0) {
+            for (size_t i = 0; i < sectorTilesNumber * sectorTilesNumber; ++i) {
+                window.draw(*_sprites[floorIndex][getIntSectorId(sectorId)][i]);
             }
         }
         else {

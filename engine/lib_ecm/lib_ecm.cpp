@@ -104,7 +104,7 @@ void EntityManager::Render() {
 	for (const auto& e : floor3_list) {
 		e->Render();
 	}
-	LS::Render(Engine::GetWindow());
+	LS::Render(Engine::GetWindow(), 3, Vector2i(3,3));
 	for (const auto& e : floor4_list) {
 		e->Render();
 	}
