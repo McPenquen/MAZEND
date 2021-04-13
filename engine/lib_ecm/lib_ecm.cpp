@@ -94,7 +94,7 @@ void Component::Update(double dt) {
 }
 
 // EntityManager
-void EntityManager::Render() {
+void EntityManager::Render(Vector2i sectorID) {
 	for (const auto& e : floor1_list) {
 		e->Render();
 	}
@@ -104,7 +104,7 @@ void EntityManager::Render() {
 	for (const auto& e : floor3_list) {
 		e->Render();
 	}
-	LS::Render(Engine::GetWindow());
+	LS::Render(Engine::GetWindow(), 3, sectorID);
 	for (const auto& e : floor4_list) {
 		e->Render();
 	}

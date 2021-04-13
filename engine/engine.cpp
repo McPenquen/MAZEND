@@ -15,8 +15,9 @@ void Scene::Update(const double dt) {
 	ents.Update(dt); 
 }
 
-void Scene::Render() { 
-	ents.Render();
+void Scene::Render() {
+	//Default sector render is {1,1} 
+	ents.Render(Vector2i(1,1));
 }
 
 bool Scene::isLoaded() const {

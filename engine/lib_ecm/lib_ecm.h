@@ -99,7 +99,7 @@ struct EntityManager {
 	vector<shared_ptr<Entity>> floor3_list;
 	vector<shared_ptr<Entity>> floor4_list;
 	void Update(double dt);
-	void Render();
+	void Render(Vector2i sectorId);
 
 	vector<shared_ptr<Entity>> find(const string& tag, int floor) const;
 	vector<shared_ptr<Entity>> find(const vector<string>& tags, int floor) const;

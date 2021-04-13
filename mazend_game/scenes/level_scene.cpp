@@ -9,8 +9,7 @@
 static float secSwitchTimer = 0.0f;
 
 void LevelScene::Load(string const s) {
-	auto ho = Engine::GetWindowSize().y - (LS::getHeight() * 40.f);
-	LS::SetOffset(Vector2f(0, ho));
+	LS::SetOffset(Vector2f(leftXBorder, topYBorder));
 
 	//Load the initial sector
 	//TODO: get position of the player to start at
@@ -72,6 +71,10 @@ void LevelScene::Load(string const s) {
 	sf4->getShape().setFillColor(Color::Black);
 	sf4->getShape().setOrigin(Vector2f(sectorBounds.x / 2, tileBounds));
 	frame4->setPosition(Vector2f((gameWidth / 2), gameHeight / 2 + sectorBounds.y / 2 + tileBounds + 5.f));
+}
+
+void LevelScene::Render() {
+	ents.Render(_activeSector);
 }
 
 void LevelScene::Update(double const dt) {
