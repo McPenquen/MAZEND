@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <memory>
+#include "../system_renderer.h"
 //Size of one sector
 #define sectorTilesNumber 10
 
@@ -626,7 +627,8 @@ void LevelSystem::Render(RenderWindow& window, int floor, Vector2i sectorId) {
     if (_sprites.size() > 0) {
         if (_sprites[floorIndex].size() > 0) {
             for (size_t i = 0; i < sectorTilesNumber * sectorTilesNumber; ++i) {
-                window.draw(*_sprites[floorIndex][getIntSectorId(sectorId)][i]);
+                Drawable *d = _sprites[floorIndex][getIntSectorId(sectorId)][i].get();
+                Renderer::Queue(d);
             }
         }
         else {
