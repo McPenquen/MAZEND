@@ -74,7 +74,7 @@ void LevelScene::Load(string const s) {
 
 	// Create a time limit var
 	auto timeLim = makeEntity(4);
-	timeLim->setPosition(Vector2f((gameWidth / 2) + 50, 100));
+	timeLim->setPosition(Vector2f((gameWidth / 2) - 30, 100));
 	timeLim->setNameTag("timeLimit");
 	auto tL = timeLim->addComponent<TextComponent>("");
 	_timeLimit = timeLim;
@@ -97,7 +97,7 @@ void LevelScene::Update(double const dt) {
 	}
 	// Set the component to contain the new value
 	auto tLStr = _timeLimit->GetComponents<TextComponent>();
-	tLStr[0]->SetText("\n\n                                                                                " + to_string(int(_timeLimitValue.minutes)) + ":" + to_string(int(_timeLimitValue.seconds)));
+	tLStr[0]->SetText(to_string(int(_timeLimitValue.minutes)) + ":" + to_string(int(_timeLimitValue.seconds)));
 
 	// Control Sector Switch Motion
 	if (secSwitchTimer > 0.0f) { 
@@ -122,7 +122,7 @@ void LevelScene::DisplaySector() {
 	//TODO: render the appropriate sector from the id
 	auto txt = makeEntity(1);
 	txt->setPosition(Vector2f((gameWidth / 2) + 50, 100));
-	string str = "                                                      Sector " + to_string(_activeSector.x) + ", " + to_string(_activeSector.y);
+	string str = "Sector " + to_string(_activeSector.x) + ", " + to_string(_activeSector.y);
 	auto t = txt->addComponent<TextComponent>(str);
 }
 
@@ -168,19 +168,19 @@ void LevelScene::MovePlayerOnNewSector(Vector2i oldS, Vector2i newS) {
 	Vector2f newPos = _player->getPosition();
 	// Top > down
 	if (oldS.y < newS.y) {
-		newPos.y -= sectorBounds.y; // +2 * tileBounds + 2.0f;
+		newPos.y -= sectorBounds.y;
 	}
 	// Bottom > up
 	else if (oldS.y > newS.y) {
-		newPos.y += sectorBounds.y; // -2 * tileBounds - 2.0f;
+		newPos.y += sectorBounds.y;
 	}
 	// Left > right
 	else if (oldS.x < newS.x) {
-		newPos.x -= sectorBounds.x; // +2 * tileBounds + 2.0f;
+		newPos.x -= sectorBounds.x; 
 	}
 	// Right > left
 	else if (oldS.x > newS.x) {
-		newPos.x += sectorBounds.x; // -2 * tileBounds - 2.0f;
+		newPos.x += sectorBounds.x; 
 	}
 	_player->setPosition(newPos);
 }

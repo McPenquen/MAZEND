@@ -2,7 +2,9 @@
 #include <system_renderer.h>
 #include <resources_system.h>
 
-void TextComponent::Update(double dt) {}
+void TextComponent::Update(double dt) {
+    _text.setPosition(_parent->getPosition());
+}
 
 void TextComponent::Render() { 
     Renderer::Queue(&_text); 

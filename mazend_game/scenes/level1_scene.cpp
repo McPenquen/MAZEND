@@ -29,7 +29,7 @@ void Level1Scene::Update(const double dt) {
 void Level1Scene::DisplaySector() {
 	//TODO: render the appropriate sector from the id
 	auto txt = makeEntity(1);
-	txt->setPosition(Vector2f((gameWidth / 2) + 50, 100));
-	string str = "                                                                           Sector " + to_string(_activeSector.x) + ", " + to_string(_activeSector.y);
+	txt->setPosition(Vector2f((gameWidth / 2) - 80,0));
+	string str = "Sector " + to_string(_activeSector.x) + ", " + to_string(_activeSector.y);
 	auto t = txt->addComponent<TextComponent>(str);
 }
