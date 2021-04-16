@@ -8,11 +8,13 @@ OptionsScene options;
 LevelsScene levels;
 PauseMenuScene pauseMenu;
 
-
 // Levels
 Level1Scene level1;
 //Scene level2;
 //Scene level3;
+
+// Game
+GameOverScene gameOverScn;
 
 int main(){
 	Engine::Start(gameWidth, gameHeight, "MAZEND", &mainMenu);

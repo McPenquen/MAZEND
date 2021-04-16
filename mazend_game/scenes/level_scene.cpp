@@ -86,6 +86,12 @@ void LevelScene::Render() {
 
 void LevelScene::Update(double const dt) {
 	Scene::Update(dt);
+
+	// Check if the time limit has reached 0
+	if (_timeLimitValue.minutes <= 0.0f && (_timeLimitValue.seconds - dt) <= 0.0f) {
+		Engine::ChangeScene(&gameOverScn);
+	}
+
 	// Update the time limit
 	float tDif = _timeLimitValue.seconds - dt;
 	if (tDif >= 0) {
@@ -95,7 +101,7 @@ void LevelScene::Update(double const dt) {
 		_timeLimitValue.minutes -= 1;
 		_timeLimitValue.seconds = 60 + tDif;
 	}
-	// Set the component to contain the new value
+	// Set the time limit string to contain the new time value
 	auto tLStr = _timeLimit->GetComponents<TextComponent>();
 	tLStr[0]->SetText(to_string(int(_timeLimitValue.minutes)) + ":" + to_string(int(_timeLimitValue.seconds)));
 
