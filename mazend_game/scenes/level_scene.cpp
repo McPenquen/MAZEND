@@ -71,6 +71,13 @@ void LevelScene::Load(string const s) {
 	sf4->getShape().setFillColor(Color::Black);
 	sf4->getShape().setOrigin(Vector2f(sectorBounds.x / 2, tileBounds));
 	frame4->setPosition(Vector2f((gameWidth / 2), gameHeight / 2 + sectorBounds.y / 2 + tileBounds + 5.f));
+
+	// Create a time limit var
+	auto timeLim = makeEntity(4);
+	timeLim->setPosition(Vector2f((gameWidth / 2) + 50, 100));
+	timeLim->setNameTag("timeLimit");
+	auto tL = timeLim->addComponent<TextComponent>("");
+	_timeLimit = timeLim;
 }
 
 void LevelScene::Render() {
@@ -79,6 +86,19 @@ void LevelScene::Render() {
 
 void LevelScene::Update(double const dt) {
 	Scene::Update(dt);
+	// Update the time limit
+	float tDif = _timeLimitValue.seconds - dt;
+	if (tDif >= 0) {
+		_timeLimitValue.seconds = tDif;
+	}
+	else {
+		_timeLimitValue.minutes -= 1;
+		_timeLimitValue.seconds = 60 + tDif;
+	}
+	// Set the component to contain the new value
+	auto tLStr = _timeLimit->GetComponents<TextComponent>();
+	tLStr[0]->SetText("\n\n                                                                                " + to_string(int(_timeLimitValue.minutes)) + ":" + to_string(int(_timeLimitValue.seconds)));
+
 	// Control Sector Switch Motion
 	if (secSwitchTimer > 0.0f) { 
 		secSwitchTimer -= dt; 
@@ -91,7 +111,6 @@ void LevelScene::Update(double const dt) {
 		ChangeSector(nv);
 	}
 }
-
 
 void LevelScene::UnLoad() {
 	cout << "Level Unload" << endl;

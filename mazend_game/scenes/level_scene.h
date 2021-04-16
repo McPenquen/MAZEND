@@ -1,6 +1,10 @@
 #pragma once
 #include "engine.h"
 
+struct TimeLimit {
+	float minutes;
+	float seconds;
+};
 
 class LevelScene : public Scene {
 public:
@@ -22,5 +26,6 @@ public:
 protected:
 	shared_ptr<Entity> _player;
 	Vector2i _activeSector;
-	
+	TimeLimit _timeLimitValue;
+	shared_ptr<Entity> _timeLimit;
 };
