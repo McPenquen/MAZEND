@@ -95,16 +95,18 @@ void Component::Update(double dt) {
 
 // EntityManager
 void EntityManager::Render(Vector2i sectorID) {
+	//LS::Render(Engine::GetWindow(), 1, sectorID);
 	for (const auto& e : floor1_list) {
 		e->Render();
 	}
+	LS::Render(Engine::GetWindow(), 2, sectorID);
 	for (const auto& e : floor2_list) {
 		e->Render();
 	}
+	//LS::Render(Engine::GetWindow(), 3, sectorID);
 	for (const auto& e : floor3_list) {
 		e->Render();
 	}
-	LS::Render(Engine::GetWindow(), 3, sectorID);
 	for (const auto& e : floor4_list) {
 		e->Render();
 	}

@@ -28,7 +28,9 @@ void LevelScene::Load(string const s) {
 	sector->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
 
 	// Load the tiles
-	LS::loadLevelFile(s, 40.0f);
+	LS::loadLevelFile(s, 40.0f); // level 1 file loading
+	// LS::loadLevelFile(s, 40.0f); - level 2 file loading
+	// LS::loadLevelFile(s, 40.0f); - level 3 file loading
 
 	// Create the player
 	auto pl = makeEntity(4);

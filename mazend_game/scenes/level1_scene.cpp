@@ -4,7 +4,7 @@
 #include "LevelSystem.h"
 
 void Level1Scene::Load() {
-	LevelScene::Load("res/maps/lvl1/topMap.txt");
+	LevelScene::Load("res/maps/lvl1/midMap.txt");
 
 	// Set the time limit
 	_timeLimitValue.minutes = 2.0f;
