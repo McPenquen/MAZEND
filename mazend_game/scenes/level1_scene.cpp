@@ -3,6 +3,13 @@
 #include "../game.h"
 
 void Level1Scene::Load() {
+
+	//LevelScene::Load("res/maps/lvl1/topMap.txt");
+	LevelScene::Load("res/maps/lvl1/topMap.txt");
+	// Set the time limit
+	_timeLimitValue.minutes = 2.0f;
+	_timeLimitValue.seconds = 0.0f;
+
 	auto txt = makeEntity(4);
 	auto t = txt->addComponent<TextComponent>(
 		"LEVEL 1\n\nPause - ESC"
