@@ -185,9 +185,6 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
             switch (c)
             {
             case '1':
-
-                addTilePosition(TILE::EMPTY, ulPos);
-
                 addTilePosition(TILE::EMPTY, ulPos, 2, sectorId);
 
                 temp_tiles.push_back(EMPTY);
@@ -296,13 +293,9 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
             switch (c)
             {
             case '2':
-                addTilePosition(TILE::EMPTY, ulPos);
+                addTilePosition(TILE::EMPTY, ulPos, 2, sectorId);
                 temp_tiles.push_back(EMPTY);
                 break;
-
-            case '3':
-                addTilePosition(TILE::EMPTY, ulPos);
-
             case '-':
                 addTilePosition(TILE::MIDHORIZONTAL, ulPos, level - 2, sectorId);
                 temp_tiles.push_back(MIDHORIZONTAL);
