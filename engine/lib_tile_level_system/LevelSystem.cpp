@@ -27,7 +27,21 @@ map<LevelSystem::TILE, Vector2f> LevelSystem::_textures{
     {TOPCORNERUP,Vector2f(64, 192)},{TOPCORNERDOWN,Vector2f(0, 192)},
     {TTUP,Vector2f(192, 128)},{TTDOWN,Vector2f(128, 64)},
     {TTLEFT,Vector2f(128, 64)},{TTRIGHT,Vector2f(128, 128)},
-    {TXJUNCTION,Vector2f(256, 64)} 
+    {TXJUNCTION,Vector2f(256, 64)} , {MIDHORIZONTAL, Vector2f(192, 192)}, {MIDVERTICAL,Vector2f(128, 192)},
+    {MIDSTAIRUP,Vector2f(0, 64)},{MIDSTAIRDOWN,Vector2f(64, 0)},
+    {MIDSTAIRLEFT,Vector2f(128, 0)},{MIDSTAIRRIGHT,Vector2f(192, 0)},
+    {MIDCORNERLEFT,Vector2f(0, 128)},{MIDCORNERRIGHT,Vector2f(64, 128)},
+    {MIDCORNERUP,Vector2f(64, 192)},{MIDCORNERDOWN,Vector2f(0, 192)},
+    {MTUP,Vector2f(192, 128)},{MTDOWN,Vector2f(128, 64)},
+    {MTLEFT,Vector2f(128, 64)},{MTRIGHT,Vector2f(128, 128)},
+    {MXJUNCTION,Vector2f(256, 64)}, {BOTHORIZONTAL, Vector2f(192, 192)}, {BOTVERTICAL,Vector2f(128, 192)},
+    {BOTSTAIRUP,Vector2f(0, 64)},{BOTSTAIRDOWN,Vector2f(64, 0)},
+    {BOTSTAIRLEFT,Vector2f(128, 0)},{BOTSTAIRRIGHT,Vector2f(192, 0)},
+    {BOTCORNERLEFT,Vector2f(0, 128)},{BOTCORNERRIGHT,Vector2f(64, 128)},
+    {BOTCORNERUP,Vector2f(64, 192)},{BOTCORNERDOWN,Vector2f(0, 192)},
+    {BTUP,Vector2f(192, 128)},{BTDOWN,Vector2f(128, 64)},
+    {BTLEFT,Vector2f(128, 64)},{BTRIGHT,Vector2f(128, 128)},
+    {BXJUNCTION,Vector2f(256, 64)}
 };
 
 
