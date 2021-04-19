@@ -27,7 +27,7 @@ public:
     static void SetOffset(const Vector2f& _offset);
 
     static Vector2f getTexture(TILE t);
-   // static void setTexture(TILE t, Texture x);
+
 
     static TILE getTile(Vector2ul); // get tile at grid coordinate
     static Vector2f getTilePosition(Vector2ul); // get screenspace coordinate of tile 

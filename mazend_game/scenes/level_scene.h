@@ -11,7 +11,7 @@ public:
 	LevelScene() = default;
 	~LevelScene() = default;
 
-	void Load(string const s);
+	void Load(string const s, string const s1, string const s2);
 	void Update(const double dt) override;
 	void UnLoad() override;
 	void Render() override;

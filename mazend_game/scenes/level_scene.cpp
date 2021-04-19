@@ -8,7 +8,7 @@
 
 static float secSwitchTimer = 0.0f;
 
-void LevelScene::Load(string const s) {
+void LevelScene::Load(string const s, string const s1, string const s2) {
 	LS::SetOffset(Vector2f(leftXBorder, topYBorder));
 
 	//Load the initial sector
@@ -28,7 +28,9 @@ void LevelScene::Load(string const s) {
 	sector->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
 
 	// Load the tiles
-	LS::loadLevelFile(s, 40.0f);
+	LS::loadLevelFile(s, 40.0f); // level 1 file loading
+    LS::loadLevelFile(s1, 40.0f); // level 2 file loading
+    LS::loadLevelFile(s2, 40.0f); // level 3 file loading
 
 	// Create the player
 	auto pl = makeEntity(4);

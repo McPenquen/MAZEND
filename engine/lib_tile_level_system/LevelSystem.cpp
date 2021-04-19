@@ -27,7 +27,21 @@ map<LevelSystem::TILE, Vector2f> LevelSystem::_textures{
     {TOPCORNERUP,Vector2f(64, 192)},{TOPCORNERDOWN,Vector2f(0, 192)},
     {TTUP,Vector2f(192, 128)},{TTDOWN,Vector2f(128, 64)},
     {TTLEFT,Vector2f(128, 64)},{TTRIGHT,Vector2f(128, 128)},
-    {TXJUNCTION,Vector2f(256, 64)} 
+    {TXJUNCTION,Vector2f(256, 64)} , {MIDHORIZONTAL, Vector2f(192, 192)}, {MIDVERTICAL,Vector2f(128, 192)},
+    {MIDSTAIRUP,Vector2f(0, 64)},{MIDSTAIRDOWN,Vector2f(64, 0)},
+    {MIDSTAIRLEFT,Vector2f(128, 0)},{MIDSTAIRRIGHT,Vector2f(192, 0)},
+    {MIDCORNERLEFT,Vector2f(0, 128)},{MIDCORNERRIGHT,Vector2f(64, 128)},
+    {MIDCORNERUP,Vector2f(64, 192)},{MIDCORNERDOWN,Vector2f(0, 192)},
+    {MTUP,Vector2f(192, 128)},{MTDOWN,Vector2f(128, 64)},
+    {MTLEFT,Vector2f(128, 64)},{MTRIGHT,Vector2f(128, 128)},
+    {MXJUNCTION,Vector2f(256, 64)}, {BOTHORIZONTAL, Vector2f(192, 192)}, {BOTVERTICAL,Vector2f(128, 192)},
+    {BOTSTAIRUP,Vector2f(0, 64)},{BOTSTAIRDOWN,Vector2f(64, 0)},
+    {BOTSTAIRLEFT,Vector2f(128, 0)},{BOTSTAIRRIGHT,Vector2f(192, 0)},
+    {BOTCORNERLEFT,Vector2f(0, 128)},{BOTCORNERRIGHT,Vector2f(64, 128)},
+    {BOTCORNERUP,Vector2f(64, 192)},{BOTCORNERDOWN,Vector2f(0, 192)},
+    {BTUP,Vector2f(192, 128)},{BTDOWN,Vector2f(128, 64)},
+    {BTLEFT,Vector2f(128, 64)},{BTRIGHT,Vector2f(128, 128)},
+    {BXJUNCTION,Vector2f(256, 64)}
 };
 
 
@@ -164,120 +178,344 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
         unknownTile = false;
         const char c = buffer[i];
         Vector2ul ulPos = w == 0 ? Vector2ul(realI, 0) : Vector2ul(realI - ((w+1)*h), h);
-        switch (c) 
+        if (i == 0)
+
         {
+            switch (c)
+            {
+            case'1':
+                level = 1;
+                break;
+            case'2':
+                level = 2;
+                break;
+            case'3':
+                level = 3;
+                break;
+            }
+        }
+        if (level == 1)
+        {
+            switch (c)
+            {
             case '1':
                 addTilePosition(TILE::EMPTY, ulPos, 0, sectorId);
                 temp_tiles.push_back(EMPTY);
-                level = 1;
                 break;
+            case '-':
+                addTilePosition(TILE::BOTHORIZONTAL, ulPos, level - 1, sectorId);
+                temp_tiles.push_back(BOTHORIZONTAL);
+                break;
+            case '|':
+                addTilePosition(TILE::BOTVERTICAL, ulPos, level - 1, sectorId);
+                temp_tiles.push_back(BOTVERTICAL);
+                break;
+            case '/':
+                addTilePosition(TILE::BOTCORNERLEFT, ulPos, level - 1, sectorId); //left to right turn 
+                temp_tiles.push_back(BOTCORNERLEFT);
+                break;
+            case '~':
+                addTilePosition(TILE::BOTCORNERRIGHT, ulPos, level - 1, sectorId);//left to right turn
+                temp_tiles.push_back(BOTCORNERRIGHT);
+                break;
+            case ']':
+                addTilePosition(TILE::BOTCORNERUP, ulPos, level - 1, sectorId);//left to right turn
+                temp_tiles.push_back(BOTCORNERUP);
+                break;
+            case 'L':
+                addTilePosition(TILE::BOTCORNERDOWN, ulPos, level - 1, sectorId);//left to right turn
+                temp_tiles.push_back(BOTCORNERDOWN);
+                break;
+            case '^':
+                addTilePosition(TILE::BTUP, ulPos, level - 1, sectorId);//left to right turn
+                temp_tiles.push_back(TTUP);
+                break;
+            case '<':
+                addTilePosition(TILE::BTLEFT, ulPos, level - 1, sectorId);//left to right turn
+                temp_tiles.push_back(TTLEFT);
+                break;
+            case 'V':
+                addTilePosition(TILE::BTDOWN, ulPos, level - 1, sectorId);//left to right turn
+                temp_tiles.push_back(TTDOWN);
+                break;
+            case '>':
+                addTilePosition(TILE::BTRIGHT, ulPos, level - 1, sectorId);//left to right turn
+                temp_tiles.push_back(TTRIGHT);
+                break;
+            case '+':
+                addTilePosition(TILE::BXJUNCTION, ulPos, level - 1, sectorId); //cross section
+                temp_tiles.push_back(TXJUNCTION);
+                break;
+            case 'D':
+                addTilePosition(TILE::BOTSTAIRDOWN, ulPos, level - 1, sectorId);
+                temp_tiles.push_back(BOTSTAIRDOWN);
+                break;
+            case 'U':
+                addTilePosition(TILE::BOTSTAIRUP, ulPos, level - 1, sectorId);
+                temp_tiles.push_back(BOTSTAIRUP);
+                break;
+            case 'R':
+                addTilePosition(TILE::BOTSTAIRRIGHT, ulPos, level - 1, sectorId);
+                temp_tiles.push_back(BOTSTAIRRIGHT);
+                break;
+            case 'C':
+                addTilePosition(TILE::BOTSTAIRLEFT, ulPos, level - 1, sectorId);
+                temp_tiles.push_back(BOTSTAIRLEFT);
+                break;
+            case ' ':
+                addTilePosition(TILE::EMPTY, ulPos, level - 1, sectorId);
+                temp_tiles.push_back(EMPTY);
+                break;
+            case '\n':
+                if (w == 0)
+                {
+                    w = i;
+                }
+                h++;
+                // Update the sector Id generating Y value
+                if (sectorYswitch == sectorTilesNumber)
+                {
+                    sectorYswitch = 0;
+                    sectorId.y++;
+                }
+                // Reset X value
+                sectorXswitch = 0;
+                sectorId.x = 1;
+                sectorYswitch++;
+                break;
+            default:
+                unknownTile = true;
+                realI--;
+                std::cout << i << " - Unknown tile: " << c << endl;
+
+            }
+            if (!unknownTile)
+            {
+                // Update sector Id generating X value
+                if (sectorXswitch == sectorTilesNumber)
+                {
+                    sectorXswitch = 0;
+                    sectorId.x++;
+                }
+                sectorXswitch++;
+                realI++;
+            }
+        }
+        if (level == 2)
+        {
+            switch (c)
+            {
             case '2':
                 addTilePosition(TILE::EMPTY, ulPos, 1, sectorId);
                 temp_tiles.push_back(EMPTY);
-                level = 2;
                 break;
+            case '-':
+                addTilePosition(TILE::MIDHORIZONTAL, ulPos, level - 1, sectorId);
+                temp_tiles.push_back(MIDHORIZONTAL);
+                break;
+            case '|':
+                addTilePosition(TILE::MIDVERTICAL, ulPos, level - 1, sectorId);
+                temp_tiles.push_back(MIDVERTICAL);
+                break;
+            case '/':
+                addTilePosition(TILE::MIDCORNERLEFT, ulPos, level - 1, sectorId); //left to right turn 
+                temp_tiles.push_back(MIDCORNERLEFT);
+                break;
+            case '~':
+                addTilePosition(TILE::MIDCORNERRIGHT, ulPos, level - 1, sectorId);//left to right turn
+                temp_tiles.push_back(MIDCORNERRIGHT);
+                break;
+            case ']':
+                addTilePosition(TILE::MIDCORNERUP, ulPos, level - 1, sectorId);//left to right turn
+                temp_tiles.push_back(MIDCORNERUP);
+                break;
+            case 'L':
+                addTilePosition(TILE::MIDCORNERDOWN, ulPos, level - 1, sectorId);//left to right turn
+                temp_tiles.push_back(MIDCORNERDOWN);
+                break;
+            case '^':
+                addTilePosition(TILE::MTUP, ulPos, level - 1, sectorId);//left to right turn
+                temp_tiles.push_back(MTUP);
+                break;
+            case '<':
+                addTilePosition(TILE::MTLEFT, ulPos, level - 1, sectorId);//left to right turn
+                temp_tiles.push_back(MTLEFT);
+                break;
+            case 'V':
+                addTilePosition(TILE::MTDOWN, ulPos, level - 1, sectorId);//left to right turn
+                temp_tiles.push_back(MTDOWN);
+                break;
+            case '>':
+                addTilePosition(TILE::MTRIGHT, ulPos, level - 1, sectorId);//left to right turn
+                temp_tiles.push_back(MTRIGHT);
+                break;
+            case '+':
+                addTilePosition(TILE::MXJUNCTION, ulPos, level - 1, sectorId); //cross section
+                temp_tiles.push_back(MXJUNCTION);
+                break;
+            case 'D':
+                addTilePosition(TILE::MIDSTAIRDOWN, ulPos, level - 1, sectorId);
+                temp_tiles.push_back(MIDSTAIRDOWN);
+                break;
+            case 'U':
+                addTilePosition(TILE::MIDSTAIRUP, ulPos, level - 1, sectorId);
+                temp_tiles.push_back(MIDSTAIRUP);
+                break;
+            case 'R':
+                addTilePosition(TILE::MIDSTAIRRIGHT, ulPos, level - 1, sectorId);
+                temp_tiles.push_back(MIDSTAIRRIGHT);
+                break;
+            case 'C':
+                addTilePosition(TILE::MIDSTAIRLEFT, ulPos, level - 1, sectorId);
+                temp_tiles.push_back(MIDSTAIRLEFT);
+                break;
+            case ' ':
+                addTilePosition(TILE::EMPTY, ulPos, level - 1, sectorId);
+
+                temp_tiles.push_back(EMPTY);
+                break;
+            case '\n':
+                if (w == 0)
+                {
+                    w = i;
+                }
+                h++;
+                // Update the sector Id generating Y value
+                if (sectorYswitch == sectorTilesNumber)
+                {
+                    sectorYswitch = 0;
+                    sectorId.y++;
+                }
+                // Reset X value
+                sectorXswitch = 0;
+                sectorId.x = 1;
+                sectorYswitch++;
+                break;
+            default:
+                unknownTile = true;
+                realI--;
+                std::cout << i << " - Unknown tile: " << c << endl;
+
+            }
+            if (!unknownTile)
+            {
+                // Update sector Id generating X value
+                if (sectorXswitch == sectorTilesNumber)
+                {
+                    sectorXswitch = 0;
+                    sectorId.x++;
+                }
+                sectorXswitch++;
+                realI++;
+            }
+        }
+
+        if (level == 3)
+        {
+            switch (c)
+            {
             case '3':
                 addTilePosition(TILE::EMPTY, ulPos, 2, sectorId);
                 temp_tiles.push_back(EMPTY);
-                level = 3;
                 break;
-
-                if (level == 3)
+            case '-':
+                addTilePosition(TILE::MIDHORIZONTAL, ulPos, level - 1, sectorId);
+                temp_tiles.push_back(TOPHORIZONTAL);
+                break;
+            case '|':
+                addTilePosition(TILE::TOPVERTICAL, ulPos, level - 1, sectorId);
+                temp_tiles.push_back(TOPVERTICAL);
+                break;
+            case '/':
+                addTilePosition(TILE::TOPCORNERLEFT, ulPos, level - 1, sectorId); //left to right turn 
+                temp_tiles.push_back(TOPCORNERLEFT);
+                break;
+            case '~':
+                addTilePosition(TILE::TOPCORNERRIGHT, ulPos, level - 1, sectorId);//left to right turn
+                temp_tiles.push_back(TOPCORNERRIGHT);
+                break;
+            case ']':
+                addTilePosition(TILE::TOPCORNERUP, ulPos, level - 1, sectorId);//left to right turn
+                temp_tiles.push_back(TOPCORNERUP);
+                break;
+            case 'L':
+                addTilePosition(TILE::TOPCORNERDOWN, ulPos, level - 1, sectorId);//left to right turn
+                temp_tiles.push_back(TOPCORNERDOWN);
+                break;
+            case '^':
+                addTilePosition(TILE::TTUP, ulPos, level - 1, sectorId);//left to right turn
+                temp_tiles.push_back(TTUP);
+                break;
+            case '<':
+                addTilePosition(TILE::TTLEFT, ulPos, level - 1, sectorId);//left to right turn
+                temp_tiles.push_back(TTLEFT);
+                break;
+            case 'V':
+                addTilePosition(TILE::TTDOWN, ulPos, level - 1, sectorId);//left to right turn
+                temp_tiles.push_back(TTDOWN);
+                break;
+            case '>':
+                addTilePosition(TILE::TTRIGHT, ulPos, level - 1, sectorId);//left to right turn
+                temp_tiles.push_back(TTRIGHT);
+                break;
+            case '+':
+                addTilePosition(TILE::TXJUNCTION, ulPos, level - 1, sectorId); //cross section
+                temp_tiles.push_back(TXJUNCTION);
+                break;
+            case 'D':
+                addTilePosition(TILE::TOPSTAIRDOWN, ulPos, level - 1, sectorId);
+                temp_tiles.push_back(TOPSTAIRDOWN);
+                break;
+            case 'U':
+                addTilePosition(TILE::TOPSTAIRUP, ulPos, level - 1, sectorId);
+                temp_tiles.push_back(TOPSTAIRUP);
+                break;
+            case 'R':
+                addTilePosition(TILE::TOPSTAIRRIGHT, ulPos, level - 1, sectorId);
+                temp_tiles.push_back(TOPSTAIRRIGHT);
+                break;
+            case 'C':
+                addTilePosition(TILE::TOPSTAIRLEFT, ulPos, level - 1, sectorId);
+                temp_tiles.push_back(TOPSTAIRLEFT);
+                break;
+            case ' ':
+                addTilePosition(TILE::EMPTY, ulPos, level - 1, sectorId);
+                temp_tiles.push_back(EMPTY);
+                break;
+            case '\n':
+                if (w == 0)
                 {
- 
-                case '-':
-                    addTilePosition(TILE::TOPHORIZONTAL, ulPos, level - 1, sectorId);
-                    temp_tiles.push_back(TOPHORIZONTAL);
-                    break;
-                case '|':
-                    addTilePosition(TILE::TOPVERTICAL, ulPos, level - 1, sectorId);
-                    temp_tiles.push_back(TOPVERTICAL);
-                    break;
-                case '/':
-                    addTilePosition(TILE::TOPCORNERLEFT, ulPos, level - 1, sectorId); //left to right turn 
-                    temp_tiles.push_back(TOPCORNERLEFT);
-                    break;
-                case '~':
-                    addTilePosition(TILE::TOPCORNERRIGHT, ulPos, level - 1, sectorId);//left to right turn
-                    temp_tiles.push_back(TOPCORNERRIGHT);
-                    break;
-                case ']':
-                    addTilePosition(TILE::TOPCORNERUP, ulPos, level - 1, sectorId);//left to right turn
-                    temp_tiles.push_back(TOPCORNERUP);
-                    break;
-                case 'L':
-                    addTilePosition(TILE::TOPCORNERDOWN, ulPos, level - 1, sectorId);//left to right turn
-                    temp_tiles.push_back(TOPCORNERDOWN);
-                    break;
-                case '^':
-                    addTilePosition(TILE::TTUP, ulPos, level - 1, sectorId);//left to right turn
-                    temp_tiles.push_back(TTUP);
-                    break;
-                case '<':
-                    addTilePosition(TILE::TTLEFT, ulPos, level - 1, sectorId);//left to right turn
-                    temp_tiles.push_back(TTLEFT);
-                    break;
-                case 'V':
-                    addTilePosition(TILE::TTDOWN, ulPos, level - 1, sectorId);//left to right turn
-                    temp_tiles.push_back(TTDOWN);
-                    break;
-                case '>':
-                    addTilePosition(TILE::TTRIGHT, ulPos, level - 1, sectorId);//left to right turn
-                    temp_tiles.push_back(TTRIGHT);
-                    break;
-                case '+':
-                    addTilePosition(TILE::TXJUNCTION, ulPos, level - 1, sectorId); //cross section
-                    temp_tiles.push_back(TXJUNCTION);
-                    break;
-                case 'D':
-                    addTilePosition(TILE::TOPSTAIRDOWN, ulPos, level - 1, sectorId);
-                    temp_tiles.push_back(TOPSTAIRDOWN);
-                    break;
-                case 'U':
-                    addTilePosition(TILE::TOPSTAIRUP, ulPos, level - 1, sectorId);
-                    temp_tiles.push_back(TOPSTAIRUP);
-                    break;
-                case 'R':
-                    addTilePosition(TILE::TOPSTAIRRIGHT, ulPos, level - 1, sectorId);
-                    temp_tiles.push_back(TOPSTAIRRIGHT);
-                    break;
-                case 'C':
-                    addTilePosition(TILE::TOPSTAIRLEFT, ulPos, level - 1, sectorId);
-                    temp_tiles.push_back(TOPSTAIRLEFT);
-                    break;
-                case ' ':
-                    addTilePosition(TILE::EMPTY, ulPos, level - 1, sectorId);
-                    temp_tiles.push_back(EMPTY);
-                    break;
-                case '\n':
-                    if (w == 0) {
-                        w = i;
-                    }
-                    h++;
-                    // Update the sector Id generating Y value
-                    if (sectorYswitch == sectorTilesNumber) {
-                        sectorYswitch = 0;
-                        sectorId.y++;
-                    }
-                    // Reset X value
-                    sectorXswitch = 0;
-                    sectorId.x = 1;
-                    sectorYswitch++;
-                    break;
-                default:
-                    unknownTile = true;
-                    realI--;
-                    std::cout << i << " - Unknown tile: " << c << endl;
+                    w = i;
                 }
-        }
-        if (!unknownTile) {
-            // Update sector Id generating X value
-            if (sectorXswitch == sectorTilesNumber) {
+                h++;
+                // Update the sector Id generating Y value
+                if (sectorYswitch == sectorTilesNumber)
+                {
+                    sectorYswitch = 0;
+                    sectorId.y++;
+                }
+                // Reset X value
                 sectorXswitch = 0;
-                sectorId.x++;
+                sectorId.x = 1;
+                sectorYswitch++;
+                break;
+            default:
+                unknownTile = true;
+                realI--;
+                std::cout << i << " - Unknown tile: " << c << endl;
+
             }
-            sectorXswitch++;
-            realI++;
+            if (!unknownTile)
+            {
+                // Update sector Id generating X value
+                if (sectorXswitch == sectorTilesNumber)
+                {
+                    sectorXswitch = 0;
+                    sectorId.x++;
+                }
+                sectorXswitch++;
+                realI++;
+            }
         }
     }
     if (temp_tiles.size() != (w*h)) 
@@ -294,9 +532,17 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
 
 void LevelSystem::buildSprites(int levelNum) 
 {
-    if (!spriteSheet.loadFromFile("res/sprites/spriteSheet.png"))
+    if (level == 1)
     {
-        cout << "ERROR" << endl;
+        spriteSheet.loadFromFile("res/sprites/spriteSheet.png");
+    }
+    if (level == 2)
+    {
+        spriteSheet.loadFromFile("res/sprites/midspriteSheet.png");
+    }
+    if (level == 3)
+    {
+        spriteSheet.loadFromFile("res/sprites/spriteSheet.png");
     }
 
     _sprites[levelNum].clear();
