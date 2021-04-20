@@ -28,15 +28,23 @@ void Level1Scene::Load() {
 	setLoaded(true);
 }
 
+static float tempCounter = 5.0f;
+
 void Level1Scene::Update(const double dt) {
-	if (Keyboard::isKeyPressed(Keyboard::Escape)) {
-		Engine::PauseScene(&pauseMenu);
-	}
+	tempCounter -= dt;
+
 	LevelScene::Update(dt);
+	if (tempCounter <= 0.0) {
+		tempCounter = 5.0f;
+		auto answr = LS::getTileAt(_player1->getPosition(), _activeSector, _activePlayerFloor);
+		string str = "not_found";
+		if (answr == LS::EMPTY) { str = "empty"; }
+		
+		cout << str << endl;
+	}
 }
 
 void Level1Scene::DisplaySector() {
-	//TODO: render the appropriate sector from the id
 	auto txt = makeEntity(1);
 	txt->setPosition(Vector2f((gameWidth / 2) - 80,0));
 	string str = "Sector " + to_string(_activeSector.x) + ", " + to_string(_activeSector.y);

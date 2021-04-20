@@ -24,15 +24,15 @@ public:
     static Color getColor(TILE t);
     static void setColor(TILE t, Color c);
 
-    static void SetOffset(const Vector2f& _offset);
+    static void SetOffset(const Vector2f& _offset); 
 
     static Vector2f getTexture(TILE t);
 
 
-    static TILE getTile(Vector2ul); // get tile at grid coordinate
+    static TILE getTile(Vector2ul, int); // get tile at grid coordinate of the floor
     static Vector2f getTilePosition(Vector2ul); // get screenspace coordinate of tile 
     static Vector2f getTileOrigin(Vector2ul);
-    static TILE getTileAt(Vector2f); // get tile at screenspace pos
+    static TILE getTileAt(Vector2f, Vector2i sectorId ,int floor); // get tile at screenspace pos
 
     static size_t getHeight();
     static size_t getWidth();
@@ -44,7 +44,8 @@ public:
     static void buildSprites(int levelNum);
 
 protected:
-    static unique_ptr<TILE[]> _tiles; // internal array of tiles
+    static vector<unique_ptr<TILE[]>> _tiles; // internal array of tiles
+
     static size_t _width; // how many tiles the level is wide
     static size_t _height; // how many tiles the level is high
     static Vector2f _offset; // screenspace offset of level, when rendered

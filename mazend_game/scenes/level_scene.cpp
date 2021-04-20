@@ -109,6 +109,11 @@ void LevelScene::Render() {
 }
 
 void LevelScene::Update(double const dt) {
+
+	if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+		Engine::PauseScene(&pauseMenu);
+	}
+
 	Scene::Update(dt);
 
 	// Check if the time limit has reached 0

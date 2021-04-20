@@ -39,6 +39,7 @@ void Scene::UnLoad() {
 	ents.floor2_list.clear();
 	ents.floor3_list.clear();
 	ents.floor4_list.clear();
+	ents.players.clear();
 	setLoaded(false);
 }
 
