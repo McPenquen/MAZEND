@@ -37,11 +37,11 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	pl->setNameTag("player1");
 	pl->setCollisionBounds(_playerCollisionVelue);
 	auto plS = pl->addComponent<ShapeComponent>();
-	plS->setShape<CircleShape>(plRad);
+	plS->setShape<CircleShape>(plRad/4);
 	plS->getShape().setFillColor(plColor);
 	plS->getShape().setOutlineColor(Color::Black);
 	plS->getShape().setOutlineThickness(2.f);
-	plS->getShape().setOrigin(Vector2f(plRad, plRad));
+	plS->getShape().setOrigin(Vector2f(plRad/4, plRad/4));
 	pl->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
 	auto plM = pl->addComponent<PlayerMovementComponent>(_activeSector);
 	plM->setSpeed(500.f);
@@ -67,11 +67,11 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	pl3->setNameTag("player3");
 	pl3->setCollisionBounds(_playerCollisionVelue);
 	auto plS3 = pl3->addComponent<ShapeComponent>();
-	plS3->setShape<CircleShape>(plRad/4);
+	plS3->setShape<CircleShape>(plRad);
 	plS3->getShape().setFillColor(plColor);
 	plS3->getShape().setOutlineColor(Color::Black);
 	plS3->getShape().setOutlineThickness(2.f);
-	plS3->getShape().setOrigin(Vector2f(plRad/4, plRad/4));
+	plS3->getShape().setOrigin(Vector2f(plRad, plRad));
 	pl3->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
 	auto plM3 = pl3->addComponent<PlayerMovementComponent>(_activeSector);
 	plM3->setSpeed(500.f);
