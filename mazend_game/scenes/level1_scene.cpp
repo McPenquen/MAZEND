@@ -6,8 +6,8 @@
 
 void Level1Scene::Load() {
 	// Load the initial sector and player position
-	_activeSector = Vector2i(1, 2);
-	_activePlayerFloor = 3;
+	_activeSector = Vector2i(2, 2);
+	_activePlayerFloor = 2;
 	_playerCollisionVelue = tileBounds;
 	DisplaySector();
 
@@ -18,7 +18,7 @@ void Level1Scene::Load() {
 	_timeLimitValue.seconds = 0.0f;
 
 	// Move the player to the starting position in the chosen sector corresponding to the correct floor
-	movePlayerTo(Vector2f(leftXBorder + tileBounds * 3.0f, topYBorder + tileBounds * 3.0f));
+	movePlayerTo(Vector2f(leftXBorder + tileBounds * 9.0f, topYBorder + tileBounds * 7.0f));
 	// Set the active player
 	setActivePlayer();
 

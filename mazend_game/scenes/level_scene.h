@@ -26,6 +26,7 @@ public:
 	// Player management
 	void movePlayerTo(Vector2f);
 	void setActivePlayer();
+	void changeFloor(int);
 
 protected:
 	shared_ptr<Entity> _player1;

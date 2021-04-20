@@ -16,6 +16,9 @@ Vector2f LevelSystem::_offset(0.0f, 0.0f);
 
 float LevelSystem::_tileSize(100.f);
 vector<map<int,vector<shared_ptr<RectangleShape>>>> LevelSystem::_sprites;
+vector<LevelSystem::TILE> LevelSystem::_stairs = { TOPSTAIRUP, TOPSTAIRDOWN, TOPSTAIRRIGHT, TOPSTAIRLEFT,
+        MIDSTAIRUP, MIDSTAIRDOWN, MIDSTAIRRIGHT, MIDSTAIRLEFT,
+        BOTSTAIRUP, BOTSTAIRDOWN, BOTSTAIRRIGHT, BOTSTAIRLEFT };
 
 map<LevelSystem::TILE, Color> LevelSystem::_colours{ {TOPHORIZONTAL, Color::Blue },{TOPVERTICAL, Color::Blue} };
 Texture spriteSheet;
@@ -593,10 +596,6 @@ Vector2f LevelSystem::getTileOrigin(Vector2ul p)
 
 LevelSystem::TILE LevelSystem::getTile(Vector2ul p, int floor) 
 {
-    if (p.x > _width || p.y > _height) 
-    {
-         throw string("Tile out of range ") + to_string(p.x) + ", " + to_string(p.y) + ")";
-    }
     return _tiles[floor - 1][(p.y * _width) + p.x];
 }
 
@@ -650,4 +649,27 @@ void LevelSystem::UnLoad() {
 
 void LevelSystem::SetOffset(const Vector2f& new_offset) {
     _offset = new_offset;
+}
+
+bool LevelSystem::isStairs(LS::TILE t) {
+    for (int i = 0; i < _stairs.size(); ++i) {
+        if (t == _stairs[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// When the player stands on stairs tile it returns the other floor's number or 0 if invalid
+int LevelSystem::getStairsFloorChnage(Vector2f pos, Vector2i sectorId, int floor) {
+    if (floor == 1) {
+        return getTileAt(pos, sectorId, 2) == TILE::EMPTY ? 3 : 2;
+    }
+    if (floor == 2) {
+        return getTileAt(pos, sectorId, 1) == TILE::EMPTY ? 3 : 1;
+    }
+    if (floor == 3) {
+        return getTileAt(pos, sectorId, 1) == TILE::EMPTY ? 2 : 1;
+    }
+    return 0;
 }

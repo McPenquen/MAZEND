@@ -48,5 +48,7 @@ bool PlayerMovementComponent::validMove(const Vector2f& pos) {
 	if (!_parent->isVisible()) {
 		return true;
 	}
-	return LS::getTileAt(pos, _sectorId, _floorNum) != LS::EMPTY;
+	LS::TILE t = LS::getTileAt(pos, _sectorId, _floorNum);
+	//return true;
+	return t != LS::EMPTY;
 }

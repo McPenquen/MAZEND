@@ -17,6 +17,7 @@ public:
        , MIDHORIZONTAL, MIDVERTICAL, MIDSTAIRUP, MIDSTAIRDOWN, MIDSTAIRRIGHT, MIDSTAIRLEFT, MIDCORNERLEFT, MIDCORNERRIGHT, MIDCORNERUP, MIDCORNERDOWN, MTUP, MTDOWN, MTLEFT, MTRIGHT, MXJUNCTION,
         BOTHORIZONTAL, BOTVERTICAL, BOTSTAIRUP, BOTSTAIRDOWN, BOTSTAIRRIGHT, BOTSTAIRLEFT, BOTCORNERLEFT, BOTCORNERRIGHT, BOTCORNERUP, BOTCORNERDOWN, BTUP, BTDOWN, BTLEFT, BTRIGHT, BXJUNCTION};
 
+
     static void loadLevelFile(const string &, float tileSize=100.f);
     static void Render(RenderWindow& window, int floor, Vector2i sectorId);
     static void UnLoad();
@@ -43,6 +44,9 @@ public:
 
     static void buildSprites(int levelNum);
 
+    static bool isStairs(TILE);
+    static int getStairsFloorChnage(Vector2f, Vector2i, int);
+
 protected:
     static vector<unique_ptr<TILE[]>> _tiles; // internal array of tiles
 
@@ -59,6 +63,8 @@ protected:
     static vector<map<int, map<TILE, vector<Vector2ul>>>> _tile_positions; // positions of the tiles
     
     static void addTilePosition(TILE, Vector2ul, int, Vector2i);
+    // Tiles that are considered stairs
+    static vector<TILE> _stairs;
     
 private:
     LevelSystem() = delete;

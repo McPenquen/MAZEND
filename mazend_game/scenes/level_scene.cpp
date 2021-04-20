@@ -144,6 +144,15 @@ void LevelScene::Update(double const dt) {
 	if (secSwitchTimer > 0.0f) { 
 		secSwitchTimer -= dt; 
 	}
+
+	// Check if the player isn't on stairs to change floor
+	if (LS::isStairs(LS::getTileAt(_activePlayer->getPosition(), _activeSector, _activePlayerFloor))) {
+		if (Keyboard::isKeyPressed(Keyboard::Space)) {
+			int newFloor = LS::getStairsFloorChnage(_activePlayer->getPosition(), _activeSector, _activePlayerFloor);
+			changeFloor(newFloor);
+		}
+	}
+
 	// If the sector switch timer has reached a value bellow zero 
 	// and if the player is colliding with a wall leading to a next sector, a switch is allowed
 	Vector2i nv = secSwitchTimer <= 0.0f ? getNewSector() : Vector2i(0, 0);
@@ -151,6 +160,7 @@ void LevelScene::Update(double const dt) {
 		secSwitchTimer = SECTOR_SWITCH_COUNTER;
 		ChangeSector(nv);
 	}
+
 }
 
 void LevelScene::UnLoad() {
@@ -160,7 +170,6 @@ void LevelScene::UnLoad() {
 }
 
 void LevelScene::DisplaySector() {
-	//TODO: render the appropriate sector from the id
 	auto txt = makeEntity(1);
 	txt->setPosition(Vector2f((gameWidth / 2) + 50, 100));
 	string str = "Sector " + to_string(_activeSector.x) + ", " + to_string(_activeSector.y);
@@ -257,4 +266,16 @@ void LevelScene::setActivePlayer() {
 		_player1->setVisible(false);
 		_player2->setVisible(false);
 	}
+}
+
+void LevelScene::changeFloor(int newFloor) {
+	// Make all player entities to be at the same place
+	auto realPos = _activePlayer->getPosition();
+	_player1->setPosition(realPos);
+	_player2->setPosition(realPos);
+	_player3->setPosition(realPos);
+	// Update the floor
+	_activePlayerFloor = newFloor;
+	setActivePlayer();
+	_activePlayer->GetComponents<PlayerMovementComponent>()[0].get()->setFloor(newFloor);
 }
