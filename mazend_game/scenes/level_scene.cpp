@@ -11,13 +11,6 @@ static float secSwitchTimer = 0.0f;
 void LevelScene::Load(string const s, string const s1, string const s2) {
 	LS::SetOffset(Vector2f(leftXBorder, topYBorder));
 
-	//Load the initial sector
-	//TODO: get position of the player to start at
-	_activeSector = Vector2i(1, 1);
-	_activePlayer = 1;
-	_playerCollisionVelue = tileBounds;
-	DisplaySector();
-
 	// Create the mid sector
 	auto sector = makeEntity(4);
 	sector->setNameTag("sectorFrame");
@@ -179,7 +172,7 @@ void LevelScene::UnLoadSector() {
 }
 
 // If there is a change in sectors it eturns the id of the new sector, with no change returns {0,0}
-Vector2i LevelScene::getNewSector() {
+Vector2i LevelScene::getNewSector() const {
 	Vector2f plyPos = _player1->getPosition();
 	// Top border collision
 	if (plyPos.y - _playerCollisionVelue <= topYBorder && _activeSector.y > 1) {
@@ -219,6 +212,10 @@ void LevelScene::MovePlayerOnNewSector(Vector2i oldS, Vector2i newS) {
 	else if (oldS.x > newS.x) {
 		newPos.x += sectorBounds.x; 
 	}
+	movePlayerTo(newPos);
+}
+
+void LevelScene::movePlayerTo(Vector2f newPos) {
 	_player1->setPosition(newPos);
 	_player2->setPosition(newPos);
 	_player3->setPosition(newPos);

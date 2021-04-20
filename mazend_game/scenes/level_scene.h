@@ -16,20 +16,25 @@ public:
 	void UnLoad() override;
 	void Render() override;
 
+	// Sector movement
 	void UnLoadSector();
 	void ChangeSector(Vector2i);
 	virtual void DisplaySector();
-
-	Vector2i getNewSector();
+	Vector2i getNewSector() const;
 	void MovePlayerOnNewSector(Vector2i, Vector2i);
+
+	// Player management
+	void movePlayerTo(Vector2f);
 
 protected:
 	shared_ptr<Entity> _player1;
 	shared_ptr<Entity> _player2;
 	shared_ptr<Entity> _player3;
-	int _activePlayer;
 	float _playerCollisionVelue;
+
 	Vector2i _activeSector;
+	int _activePlayerFloor;
+
 	TimeLimit _timeLimitValue;
 	shared_ptr<Entity> _timeLimit;
 };

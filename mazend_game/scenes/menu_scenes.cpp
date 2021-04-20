@@ -9,6 +9,7 @@ void MainMenuScene::Load() {
 	auto t = txt->addComponent<TextComponent>(
 		"MAIN MENU\n\nPlay Levels - Press 1\nOptions - Press 2\nExit - Press 3"
 		);
+	txt->setPosition(Vector2f(2* tileBounds, 2* tileBounds));
 	setSceneName("mainMenu");
 	setLoaded(true);
 }
@@ -29,6 +30,7 @@ void OptionsScene::Load() {
 	auto t = txt->addComponent<TextComponent>(
 		"OPTIONS\n\nBack - Press 1"
 		);
+	txt->setPosition(Vector2f(2* tileBounds, 2* tileBounds));
 	setSceneName("options");
 	setLoaded(true);
 }
@@ -46,6 +48,7 @@ void LevelsScene::Load() {
 	auto t = txt->addComponent<TextComponent>(
 		"LEVELS\n\nLevel 1 - Press 1\nBack - Press 2"
 		);
+	txt->setPosition(Vector2f(2* tileBounds, 2* tileBounds));
 	setSceneName("levels");
 	setLoaded(true);
 }
@@ -72,6 +75,7 @@ void PauseMenuScene::Load() {
 	auto t = txt->addComponent<TextComponent>(
 		"PAUSE\n\nResume - Press 1\nLeave the level - Press 2"
 		);
+	txt->setPosition(Vector2f(2* tileBounds, 2* tileBounds));
 	setSceneName("pauseMenu");
 	setLoaded(true);
 }
