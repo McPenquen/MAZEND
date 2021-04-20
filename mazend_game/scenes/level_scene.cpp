@@ -124,11 +124,6 @@ void LevelScene::Update(double const dt) {
 
 	Scene::Update(dt);
 
-	// Check if the time limit has reached 0
-	if (_timeLimitValue.minutes <= 0.0f && (_timeLimitValue.seconds - dt) <= 0.0f) {
-		Engine::ChangeScene(&gameOverScn);
-	}
-
 	// Update the time limit
 	float tDif = _timeLimitValue.seconds - dt;
 	if (tDif >= 0) {
@@ -167,6 +162,11 @@ void LevelScene::Update(double const dt) {
 			int newFloor = LS::getStairsFloorChnage(_activePlayer->getPosition(), _activeSector, _activePlayerFloor);
 			changeFloor(newFloor);
 		}
+	}
+
+	// Check if the time limit has reached 0
+	if (_timeLimitValue.minutes <= 0.0f && (_timeLimitValue.seconds - dt) <= 0.0f) {
+		Engine::ChangeScene(&gameOverScn);
 	}
 }
 
