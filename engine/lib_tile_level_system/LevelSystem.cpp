@@ -602,10 +602,6 @@ LevelSystem::TILE LevelSystem::getTile(Vector2ul p, int floor)
 
 LevelSystem::TILE LevelSystem::getTileAt(Vector2f v, Vector2i sectorId, int floor) {
     auto a = v - _offset;
-    if (a.x < 0 || a.y < 0) 
-    {
-        throw string("tile out of range");
-    }
     if (sectorId.x == 2) {
         a.x += float(sectorTilesNumber) * _tileSize;
     }

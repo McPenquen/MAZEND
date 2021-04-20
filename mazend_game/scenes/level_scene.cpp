@@ -33,6 +33,7 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	// Create the player for bottom floor
 	auto pl = makeEntity(5);
 	pl->setNameTag("player1");
+	pl->setCollisionBounds(_playerCollisionVelue);
 	auto plS = pl->addComponent<ShapeComponent>();
 	plS->setShape<CircleShape>(plRad);
 	plS->getShape().setFillColor(plColor);
@@ -40,12 +41,14 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	plS->getShape().setOutlineThickness(2.f);
 	plS->getShape().setOrigin(Vector2f(plRad, plRad));
 	pl->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
-	auto plM = pl->addComponent<PlayerMovementComponent>();
+	auto plM = pl->addComponent<PlayerMovementComponent>(_activeSector);
 	plM->setSpeed(500.f);
+	plM->setFloor(1);
 	_player1 = pl;
 	// Create the player for middle floor
 	auto pl2 = makeEntity(5);
 	pl2->setNameTag("player2");
+	pl2->setCollisionBounds(_playerCollisionVelue);
 	auto plS2 = pl2->addComponent<ShapeComponent>();
 	plS2->setShape<CircleShape>(plRad/2);
 	plS2->getShape().setFillColor(plColor);
@@ -53,12 +56,14 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	plS2->getShape().setOutlineThickness(2.f);
 	plS2->getShape().setOrigin(Vector2f(plRad/2, plRad/2));
 	pl2->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
-	auto plM2 = pl2->addComponent<PlayerMovementComponent>();
+	auto plM2 = pl2->addComponent<PlayerMovementComponent>(_activeSector);
 	plM2->setSpeed(500.f);
+	plM2->setFloor(2);
 	_player2 = pl2;
 	// Create the player for top floor
 	auto pl3 = makeEntity(5);
 	pl3->setNameTag("player3");
+	pl3->setCollisionBounds(_playerCollisionVelue);
 	auto plS3 = pl3->addComponent<ShapeComponent>();
 	plS3->setShape<CircleShape>(plRad/4);
 	plS3->getShape().setFillColor(plColor);
@@ -66,8 +71,9 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	plS3->getShape().setOutlineThickness(2.f);
 	plS3->getShape().setOrigin(Vector2f(plRad/4, plRad/4));
 	pl3->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
-	auto plM3 = pl3->addComponent<PlayerMovementComponent>();
+	auto plM3 = pl3->addComponent<PlayerMovementComponent>(_activeSector);
 	plM3->setSpeed(500.f);
+	plM3->setFloor(3);
 	_player3 = pl3;
 
 	// Create black frame
@@ -167,6 +173,12 @@ void LevelScene::ChangeSector(Vector2i sectorId) {
 	// Move player to the other side of the square
 	MovePlayerOnNewSector(_activeSector, sectorId);
 	_activeSector = sectorId;
+
+	// Update the sector value in the player
+	_player1->GetComponents<PlayerMovementComponent>()[0].get()->setSector(_activeSector);
+	_player2->GetComponents<PlayerMovementComponent>()[0].get()->setSector(_activeSector);
+	_player3->GetComponents<PlayerMovementComponent>()[0].get()->setSector(_activeSector);
+
 	DisplaySector();
 }
 
@@ -178,7 +190,7 @@ void LevelScene::UnLoadSector() {
 
 // If there is a change in sectors it eturns the id of the new sector, with no change returns {0,0}
 Vector2i LevelScene::getNewSector() const {
-	Vector2f plyPos = _player1->getPosition();
+	Vector2f plyPos = _activePlayer->getPosition();
 	// Top border collision
 	if (plyPos.y - _playerCollisionVelue <= topYBorder && _activeSector.y > 1) {
 		return Vector2i(_activeSector.x, _activeSector.y - 1);
@@ -200,22 +212,22 @@ Vector2i LevelScene::getNewSector() const {
 
 // Move player to the other side of the screen simulating continuous movement
 void LevelScene::MovePlayerOnNewSector(Vector2i oldS, Vector2i newS) {
-	Vector2f newPos = _player1->getPosition();
+	Vector2f newPos = _activePlayer->getPosition();
 	// Top > down
 	if (oldS.y < newS.y) {
-		newPos.y -= sectorBounds.y;
+		newPos.y -= sectorBounds.y + 10.0f;
 	}
 	// Bottom > up
 	else if (oldS.y > newS.y) {
-		newPos.y += sectorBounds.y;
+		newPos.y += sectorBounds.y - 10.0f;
 	}
 	// Left > right
 	else if (oldS.x < newS.x) {
-		newPos.x -= sectorBounds.x; 
+		newPos.x -= sectorBounds.x + 10.0f;
 	}
 	// Right > left
 	else if (oldS.x > newS.x) {
-		newPos.x += sectorBounds.x; 
+		newPos.x += sectorBounds.x - 10.0f; 
 	}
 	movePlayerTo(newPos);
 }
@@ -224,4 +236,25 @@ void LevelScene::movePlayerTo(Vector2f newPos) {
 	_player1->setPosition(newPos);
 	_player2->setPosition(newPos);
 	_player3->setPosition(newPos);
+}
+
+void LevelScene::setActivePlayer() {
+	if (_activePlayerFloor == 1) {
+		_activePlayer = _player1;
+		_player1->setVisible(true);
+		_player2->setVisible(false);
+		_player3->setVisible(false);
+	}
+	else if (_activePlayerFloor == 2) {
+		_activePlayer = _player2;
+		_player2->setVisible(true);
+		_player1->setVisible(false);
+		_player3->setVisible(false);
+	}
+	else if (_activePlayerFloor == 3) {
+		_activePlayer = _player3;
+		_player3->setVisible(true);
+		_player1->setVisible(false);
+		_player2->setVisible(false);
+	}
 }

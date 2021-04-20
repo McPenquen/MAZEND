@@ -2,7 +2,7 @@
 #include "../game.h"
 #include "LevelSystem.h"
 
-PlayerMovementComponent::PlayerMovementComponent(Entity* p) : MovementComponent(p) {}
+PlayerMovementComponent::PlayerMovementComponent(Entity* p, Vector2i sectorID) : MovementComponent(p) { _sectorId = sectorID; }
 
 void PlayerMovementComponent::Update(double dt) {
 	if (_parent->isAlive()) {
@@ -42,4 +42,16 @@ void PlayerMovementComponent::Update(double dt) {
 			move(direction);
 		}
 	}
+}
+
+bool PlayerMovementComponent::validMove(const Vector2f& pos) {
+	if (!_parent->isVisible()) {
+		return true;
+	}
+	bool an = LS::getTileAt(pos, _sectorId, _floorNum) != LS::EMPTY;
+	if (!an) {
+
+	}
+	return LS::getTileAt(pos, _sectorId, _floorNum) != LS::EMPTY;
+	return true;
 }
