@@ -188,9 +188,9 @@ void LevelScene::ChangeSector(Vector2i sectorId) {
 	_activeSector = sectorId;
 
 	// Update the sector value in the player
-	ents.players[0]->GetComponents<PlayerMovementComponent>()[0].get()->setSector(_activeSector);
-	ents.players[1]->GetComponents<PlayerMovementComponent>()[0].get()->setSector(_activeSector);
-	ents.players[2]->GetComponents<PlayerMovementComponent>()[0].get()->setSector(_activeSector);
+	for (auto& p : ents.players) {
+		p->GetComponents<PlayerMovementComponent>()[0].get()->setSector(_activeSector);
+	}
 
 	DisplaySector();
 }
@@ -246,9 +246,9 @@ void LevelScene::MovePlayerOnNewSector(Vector2i oldS, Vector2i newS) {
 }
 
 void LevelScene::movePlayerTo(Vector2f newPos) {
-	ents.players[0]->setPosition(newPos);
-	ents.players[1]->setPosition(newPos);
-	ents.players[2]->setPosition(newPos);
+	for (auto& p : ents.players) {
+		p->setPosition(newPos);
+	}
 }
 
 void LevelScene::setActivePlayer() {
