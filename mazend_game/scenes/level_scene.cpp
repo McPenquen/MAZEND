@@ -4,17 +4,14 @@
 #include "../components/cmp_player_movement.h"
 #include "../components/cmp_text.h"
 // The amount of dt allowed between sector switches
-#define SECTOR_SWITCH_COUNTER 0.5f
+#define TIME_DELAY_COUNTER 0.5f
 
+// Timing management
 static float secSwitchTimer = 0.0f;
+static float stairSwitchTimer = 0.0f;
 
 void LevelScene::Load(string const s, string const s1, string const s2) {
 	LS::SetOffset(Vector2f(leftXBorder, topYBorder));
-
-	//Load the initial sector
-	//TODO: get position of the player to start at
-	_activeSector = Vector2i(1, 1);
-	DisplaySector();
 
 	// Create the mid sector
 	auto sector = makeEntity(4);
@@ -28,25 +25,58 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	sector->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
 
 	// Load the tiles
-	LS::loadLevelFile(s, 40.0f); // level 1 file loading
-    LS::loadLevelFile(s1, 40.0f); // level 2 file loading
-    LS::loadLevelFile(s2, 40.0f); // level 3 file loading
+	LS::loadLevelFile(s, 2 * tileBounds); // level 1 file loading
+    LS::loadLevelFile(s1, 2 * tileBounds); // level 2 file loading
+    LS::loadLevelFile(s2, 2 * tileBounds); // level 3 file loading
 
-	// Create the player
-	auto pl = makeEntity(4);
-	pl->setNameTag("player");
-	auto plS = pl->addComponent<ShapeComponent>();
 	float plRad = tileBounds;
-	plS->setShape<CircleShape>(plRad);
 	const Color plColor = { 222, 120, 31 }; // #DE781F
+
+	// Create the player for bottom floor
+	auto pl = makeEntity(5);
+	pl->setNameTag("player1");
+	pl->setCollisionBounds(_playerCollisionVelue);
+	auto plS = pl->addComponent<ShapeComponent>();
+	plS->setShape<CircleShape>(plRad/4);
 	plS->getShape().setFillColor(plColor);
 	plS->getShape().setOutlineColor(Color::Black);
 	plS->getShape().setOutlineThickness(2.f);
-	plS->getShape().setOrigin(Vector2f(plRad, plRad));
+	plS->getShape().setOrigin(Vector2f(plRad/4, plRad/4));
 	pl->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
-	auto plM = pl->addComponent<PlayerMovementComponent>();
+	auto plM = pl->addComponent<PlayerMovementComponent>(_activeSector);
 	plM->setSpeed(500.f);
-	_player = pl;
+	plM->setFloor(1);
+	_player1 = pl;
+	// Create the player for middle floor
+	auto pl2 = makeEntity(5);
+	pl2->setNameTag("player2");
+	pl2->setCollisionBounds(_playerCollisionVelue);
+	auto plS2 = pl2->addComponent<ShapeComponent>();
+	plS2->setShape<CircleShape>(plRad/2);
+	plS2->getShape().setFillColor(plColor);
+	plS2->getShape().setOutlineColor(Color::Black);
+	plS2->getShape().setOutlineThickness(2.f);
+	plS2->getShape().setOrigin(Vector2f(plRad/2, plRad/2));
+	pl2->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
+	auto plM2 = pl2->addComponent<PlayerMovementComponent>(_activeSector);
+	plM2->setSpeed(500.f);
+	plM2->setFloor(2);
+	_player2 = pl2;
+	// Create the player for top floor
+	auto pl3 = makeEntity(5);
+	pl3->setNameTag("player3");
+	pl3->setCollisionBounds(_playerCollisionVelue);
+	auto plS3 = pl3->addComponent<ShapeComponent>();
+	plS3->setShape<CircleShape>(plRad);
+	plS3->getShape().setFillColor(plColor);
+	plS3->getShape().setOutlineColor(Color::Black);
+	plS3->getShape().setOutlineThickness(2.f);
+	plS3->getShape().setOrigin(Vector2f(plRad, plRad));
+	pl3->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
+	auto plM3 = pl3->addComponent<PlayerMovementComponent>(_activeSector);
+	plM3->setSpeed(500.f);
+	plM3->setFloor(3);
+	_player3 = pl3;
 
 	// Create black frame
 	auto frame1 = makeEntity(4);
@@ -87,12 +117,12 @@ void LevelScene::Render() {
 }
 
 void LevelScene::Update(double const dt) {
-	Scene::Update(dt);
 
-	// Check if the time limit has reached 0
-	if (_timeLimitValue.minutes <= 0.0f && (_timeLimitValue.seconds - dt) <= 0.0f) {
-		Engine::ChangeScene(&gameOverScn);
+	if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+		Engine::PauseScene(&pauseMenu);
 	}
+
+	Scene::Update(dt);
 
 	// Update the time limit
 	float tDif = _timeLimitValue.seconds - dt;
@@ -111,12 +141,32 @@ void LevelScene::Update(double const dt) {
 	if (secSwitchTimer > 0.0f) { 
 		secSwitchTimer -= dt; 
 	}
+
 	// If the sector switch timer has reached a value bellow zero 
 	// and if the player is colliding with a wall leading to a next sector, a switch is allowed
 	Vector2i nv = secSwitchTimer <= 0.0f ? getNewSector() : Vector2i(0, 0);
 	if (nv != Vector2i(0, 0)) {
-		secSwitchTimer = SECTOR_SWITCH_COUNTER;
+		secSwitchTimer = TIME_DELAY_COUNTER;
 		ChangeSector(nv);
+	}
+
+	// Update Stair switch timer
+	if (stairSwitchTimer > 0.0f) {
+		stairSwitchTimer -= dt;
+	}
+
+	// Check if the player isn't on stairs to change floor
+	if (LS::isStairs(LS::getTileAt(_activePlayer->getPosition(), _activeSector, _activePlayerFloor))) {
+		if (Keyboard::isKeyPressed(Keyboard::Space) && stairSwitchTimer <= 0.0f) {
+			stairSwitchTimer = TIME_DELAY_COUNTER;
+			int newFloor = LS::getStairsFloorChnage(_activePlayer->getPosition(), _activeSector, _activePlayerFloor);
+			changeFloor(newFloor);
+		}
+	}
+
+	// Check if the time limit has reached 0
+	if (_timeLimitValue.minutes <= 0.0f && (_timeLimitValue.seconds - dt) <= 0.0f) {
+		Engine::ChangeScene(&gameOverScn);
 	}
 }
 
@@ -127,7 +177,6 @@ void LevelScene::UnLoad() {
 }
 
 void LevelScene::DisplaySector() {
-	//TODO: render the appropriate sector from the id
 	auto txt = makeEntity(1);
 	txt->setPosition(Vector2f((gameWidth / 2) + 50, 100));
 	string str = "Sector " + to_string(_activeSector.x) + ", " + to_string(_activeSector.y);
@@ -140,6 +189,12 @@ void LevelScene::ChangeSector(Vector2i sectorId) {
 	// Move player to the other side of the square
 	MovePlayerOnNewSector(_activeSector, sectorId);
 	_activeSector = sectorId;
+
+	// Update the sector value in the player
+	_player1->GetComponents<PlayerMovementComponent>()[0].get()->setSector(_activeSector);
+	_player2->GetComponents<PlayerMovementComponent>()[0].get()->setSector(_activeSector);
+	_player3->GetComponents<PlayerMovementComponent>()[0].get()->setSector(_activeSector);
+
 	DisplaySector();
 }
 
@@ -150,22 +205,22 @@ void LevelScene::UnLoadSector() {
 }
 
 // If there is a change in sectors it eturns the id of the new sector, with no change returns {0,0}
-Vector2i LevelScene::getNewSector() {
-	Vector2f plyPos = _player->getPosition();
+Vector2i LevelScene::getNewSector() const {
+	Vector2f plyPos = _activePlayer->getPosition();
 	// Top border collision
-	if (plyPos.y - tileBounds <= topYBorder && _activeSector.y > 1) {
+	if (plyPos.y - _playerCollisionVelue <= topYBorder && _activeSector.y > 1) {
 		return Vector2i(_activeSector.x, _activeSector.y - 1);
 	}
 	// Bottom border collision
-	else if (plyPos.y + tileBounds >= bottomYBorder && _activeSector.y < 3) {
+	else if (plyPos.y + _playerCollisionVelue >= bottomYBorder && _activeSector.y < 3) {
 		return Vector2i(_activeSector.x, _activeSector.y + 1);
 	}
 	// Left border collision
-	else if (plyPos.x - tileBounds <= leftXBorder && _activeSector.x > 1) {
+	else if (plyPos.x - _playerCollisionVelue <= leftXBorder && _activeSector.x > 1) {
 		return Vector2i(_activeSector.x - 1, _activeSector.y);
 	}
 	// Right border collision
-	else if (plyPos.x + tileBounds >= rightXBorder && _activeSector.x < 3) {
+	else if (plyPos.x + _playerCollisionVelue >= rightXBorder && _activeSector.x < 3) {
 		return Vector2i(_activeSector.x + 1, _activeSector.y);
 	}
 	return Vector2i(0, 0);
@@ -173,22 +228,61 @@ Vector2i LevelScene::getNewSector() {
 
 // Move player to the other side of the screen simulating continuous movement
 void LevelScene::MovePlayerOnNewSector(Vector2i oldS, Vector2i newS) {
-	Vector2f newPos = _player->getPosition();
+	Vector2f newPos = _activePlayer->getPosition();
 	// Top > down
 	if (oldS.y < newS.y) {
-		newPos.y -= sectorBounds.y;
+		newPos.y -= sectorBounds.y + 10.0f;
 	}
 	// Bottom > up
 	else if (oldS.y > newS.y) {
-		newPos.y += sectorBounds.y;
+		newPos.y += sectorBounds.y - 10.0f;
 	}
 	// Left > right
 	else if (oldS.x < newS.x) {
-		newPos.x -= sectorBounds.x; 
+		newPos.x -= sectorBounds.x + 10.0f;
 	}
 	// Right > left
 	else if (oldS.x > newS.x) {
-		newPos.x += sectorBounds.x; 
+		newPos.x += sectorBounds.x - 10.0f; 
 	}
-	_player->setPosition(newPos);
+	movePlayerTo(newPos);
+}
+
+void LevelScene::movePlayerTo(Vector2f newPos) {
+	_player1->setPosition(newPos);
+	_player2->setPosition(newPos);
+	_player3->setPosition(newPos);
+}
+
+void LevelScene::setActivePlayer() {
+	if (_activePlayerFloor == 1) {
+		_activePlayer = _player1;
+		_player1->setVisible(true);
+		_player2->setVisible(false);
+		_player3->setVisible(false);
+	}
+	else if (_activePlayerFloor == 2) {
+		_activePlayer = _player2;
+		_player2->setVisible(true);
+		_player1->setVisible(false);
+		_player3->setVisible(false);
+	}
+	else if (_activePlayerFloor == 3) {
+		_activePlayer = _player3;
+		_player3->setVisible(true);
+		_player1->setVisible(false);
+		_player2->setVisible(false);
+	}
+}
+
+void LevelScene::changeFloor(int newFloor) {
+	// Make all player entities to be at the same place
+	auto realPos = _activePlayer->getPosition();
+	_player1->setPosition(realPos);
+	_player2->setPosition(realPos);
+	_player3->setPosition(realPos);
+	// Update the floor
+	_activePlayerFloor = newFloor;
+	setActivePlayer();
+	_activePlayer->GetComponents<PlayerMovementComponent>()[0].get()->setFloor(newFloor);
 }

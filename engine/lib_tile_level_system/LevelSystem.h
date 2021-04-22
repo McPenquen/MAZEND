@@ -17,6 +17,7 @@ public:
        , MIDHORIZONTAL, MIDVERTICAL, MIDSTAIRUP, MIDSTAIRDOWN, MIDSTAIRRIGHT, MIDSTAIRLEFT, MIDCORNERLEFT, MIDCORNERRIGHT, MIDCORNERUP, MIDCORNERDOWN, MTUP, MTDOWN, MTLEFT, MTRIGHT, MXJUNCTION,
         BOTHORIZONTAL, BOTVERTICAL, BOTSTAIRUP, BOTSTAIRDOWN, BOTSTAIRRIGHT, BOTSTAIRLEFT, BOTCORNERLEFT, BOTCORNERRIGHT, BOTCORNERUP, BOTCORNERDOWN, BTUP, BTDOWN, BTLEFT, BTRIGHT, BXJUNCTION};
 
+
     static void loadLevelFile(const string &, float tileSize=100.f);
     static void Render(RenderWindow& window, int floor, Vector2i sectorId);
     static void UnLoad();
@@ -24,15 +25,15 @@ public:
     static Color getColor(TILE t);
     static void setColor(TILE t, Color c);
 
-    static void SetOffset(const Vector2f& _offset);
+    static void SetOffset(const Vector2f& _offset); 
 
     static Vector2f getTexture(TILE t);
 
 
-    static TILE getTile(Vector2ul); // get tile at grid coordinate
+    static TILE getTile(Vector2ul, int); // get tile at grid coordinate of the floor
     static Vector2f getTilePosition(Vector2ul); // get screenspace coordinate of tile 
     static Vector2f getTileOrigin(Vector2ul);
-    static TILE getTileAt(Vector2f); // get tile at screenspace pos
+    static TILE getTileAt(Vector2f, Vector2i sectorId ,int floor); // get tile at screenspace pos
 
     static size_t getHeight();
     static size_t getWidth();
@@ -43,8 +44,12 @@ public:
 
     static void buildSprites(int levelNum);
 
+    static bool isStairs(TILE);
+    static int getStairsFloorChnage(Vector2f, Vector2i, int);
+
 protected:
-    static unique_ptr<TILE[]> _tiles; // internal array of tiles
+    static vector<unique_ptr<TILE[]>> _tiles; // internal array of tiles
+
     static size_t _width; // how many tiles the level is wide
     static size_t _height; // how many tiles the level is high
     static Vector2f _offset; // screenspace offset of level, when rendered
@@ -58,6 +63,8 @@ protected:
     static vector<map<int, map<TILE, vector<Vector2ul>>>> _tile_positions; // positions of the tiles
     
     static void addTilePosition(TILE, Vector2ul, int, Vector2i);
+    // Tiles that are considered stairs
+    static vector<TILE> _stairs;
     
 private:
     LevelSystem() = delete;

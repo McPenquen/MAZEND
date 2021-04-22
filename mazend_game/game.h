@@ -21,7 +21,7 @@ extern Level1Scene level1;
 
 // BOUNDS
 // tile size
-static float tileBounds = 20.f; // TODO replace with LS::getTileSize() / 2;
+static float tileBounds = 20.f;
 // sector size
 static Vector2f sectorBounds = Vector2f(tileBounds * 20, tileBounds * 20);
 // Save positions of the square border

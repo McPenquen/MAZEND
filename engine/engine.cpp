@@ -39,6 +39,7 @@ void Scene::UnLoad() {
 	ents.floor2_list.clear();
 	ents.floor3_list.clear();
 	ents.floor4_list.clear();
+	ents.players.clear();
 	setLoaded(false);
 }
 
@@ -52,7 +53,11 @@ Scene::~Scene() {
 
 shared_ptr<Entity> Scene::makeEntity(int orderNum) {
 	auto en = make_shared<Entity>(orderNum);
-	if (orderNum == 1) {
+	// number 5 means the player list
+	if (orderNum == 5) {
+		ents.players.push_back(en);
+	}
+	else if (orderNum == 1) {
 		ents.floor1_list.push_back(en);
 	}
 	else if (orderNum == 2) {

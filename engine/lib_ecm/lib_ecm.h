@@ -20,6 +20,7 @@ protected:
 	bool _fordeletion = false; 
 	string _nameTag;
 	int _orderNum;
+	float _collisionBounds;
 
 public:
 	Entity() = delete;
@@ -40,6 +41,10 @@ public:
 	void setForDelete();
 	void setNameTag(const string s);
 	string getNameTag();
+
+	//For collision
+	float getCollisionBounds() const { return _collisionBounds; }
+	void setCollisionBounds(float newF) { _collisionBounds = newF; }
 
 	// Add a new component
 	template <typename T, typename... Targs>
@@ -76,6 +81,7 @@ public:
 		}
 		return move(ret);
 	}
+	
 };
 
 class Component {
@@ -98,6 +104,7 @@ struct EntityManager {
 	vector<shared_ptr<Entity>> floor2_list;
 	vector<shared_ptr<Entity>> floor3_list;
 	vector<shared_ptr<Entity>> floor4_list;
+	vector<shared_ptr<Entity>> players;
 	void Update(double dt);
 	void Render(Vector2i sectorId);
 

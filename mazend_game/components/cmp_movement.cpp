@@ -3,7 +3,7 @@
 
 void MovementComponent::Update(double dt) {}
 
-MovementComponent::MovementComponent(Entity* p) : _speed(100.0f), Component(p) {}
+MovementComponent::MovementComponent(Entity* p) : _speed(100.0f), _floorNum(3), Component(p) {}
 
 float MovementComponent::getSpeed() const { return _speed; }
 

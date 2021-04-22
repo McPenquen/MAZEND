@@ -99,13 +99,22 @@ void EntityManager::Render(Vector2i sectorID) {
 	for (const auto& e : floor1_list) {
 		e->Render();
 	}
+	if (players.size() > 0) {
+		players[0]->Render();
+	}
 	LS::Render(Engine::GetWindow(), 2, sectorID);
 	for (const auto& e : floor2_list) {
 		e->Render();
 	}
+	if (players.size() > 1) {
+		players[1]->Render();
+	}
 	LS::Render(Engine::GetWindow(), 3, sectorID);
 	for (const auto& e : floor3_list) {
 		e->Render();
+	}
+	if (players.size() > 2) {
+		players[2]->Render();
 	}
 	for (const auto& e : floor4_list) {
 		e->Render();
@@ -123,6 +132,9 @@ void EntityManager::Update(double dt) {
 		e->Update(dt);
 	}
 	for (auto& e : floor4_list) {
+		e->Update(dt);
+	}
+	for (auto& e : players) {
 		e->Update(dt);
 	}
 }

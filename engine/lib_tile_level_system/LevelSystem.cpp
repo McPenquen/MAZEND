@@ -2,19 +2,23 @@
 #include <fstream>
 #include <iostream>
 #include <memory>
+#include "../system_renderer.h"
 //Size of one sector
 #define sectorTilesNumber 10
 
 using namespace std;
 using namespace sf;
 
-unique_ptr<LevelSystem::TILE[]> LevelSystem::_tiles;
+vector<unique_ptr<LevelSystem::TILE[]>> LevelSystem::_tiles;
 size_t LevelSystem::_width;
 size_t LevelSystem::_height;
 Vector2f LevelSystem::_offset(0.0f, 0.0f);
 
 float LevelSystem::_tileSize(100.f);
 vector<map<int,vector<shared_ptr<RectangleShape>>>> LevelSystem::_sprites;
+vector<LevelSystem::TILE> LevelSystem::_stairs = { TOPSTAIRUP, TOPSTAIRDOWN, TOPSTAIRRIGHT, TOPSTAIRLEFT,
+        MIDSTAIRUP, MIDSTAIRDOWN, MIDSTAIRRIGHT, MIDSTAIRLEFT,
+        BOTSTAIRUP, BOTSTAIRDOWN, BOTSTAIRRIGHT, BOTSTAIRLEFT };
 
 map<LevelSystem::TILE, Color> LevelSystem::_colours{ {TOPHORIZONTAL, Color::Blue },{TOPVERTICAL, Color::Blue} };
 Texture spriteSheet;
@@ -79,20 +83,7 @@ Vector2ul getNormalisedSectorPositions(Vector2ul pos, Vector2i sectorID, float p
 
 void LevelSystem::addTilePosition(TILE tile, Vector2ul pos, int levelNum, Vector2i sectorId) 
 {
-    Vector2ul screenPos = pos;
-    //Convert the Vector2ul into the screen space + centerlise it
-    if (sectorId.x == 2) {
-        screenPos.x -= float(sectorTilesNumber) * getTileSize();
-    }
-    if (sectorId.x == 3) {
-        screenPos.x -= 2 * float(sectorTilesNumber) * getTileSize();
-    }
-    if (sectorId.y == 2) {
-        screenPos.y -= float(sectorTilesNumber) * getTileSize();
-    }
-    if (sectorId.y == 3) {
-        screenPos.y -= 2 * float(sectorTilesNumber) * getTileSize();
-    }
+    Vector2ul screenPos = getNormalisedSectorPositions(pos, sectorId, getTileSize());
 
     if (_tile_positions[levelNum][getIntSectorId(sectorId)].find(tile) == _tile_positions[levelNum][getIntSectorId(sectorId)].end())
     {
@@ -522,10 +513,11 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
     {
         throw string("Can't parse level file");
     }
-    _tiles = std::make_unique<TILE[]>(w*h);
+    // Save tiles in the correct floors - bottom floor first, mid floor second, top floor 3rd
+    _tiles.push_back(std::make_unique<TILE[]>(w*h));
     _width = w;
     _height = h;
-    std::copy(temp_tiles.begin(), temp_tiles.end(), &_tiles[0]);
+    std::copy(temp_tiles.begin(), temp_tiles.end(), &_tiles[level - 1][0]);
     std::cout << "Level " << path << " loaded. " << w << "x" << h << endl;
     buildSprites(level - 1);
 }
@@ -567,8 +559,8 @@ void LevelSystem::buildSprites(int levelNum)
             s->setSize(Vector2f(_tileSize, _tileSize));
             s->setTexture(&spriteSheet);
             
-            float g = getTexture(getTile({ x, y })).x;
-            float p = getTexture(getTile({ x, y })).y;
+            float g = getTexture(getTile({ x, y }, level)).x;
+            float p = getTexture(getTile({ x, y }, level)).y;
             s->setTextureRect(IntRect(g, p ,64,64));
             //s->setFillColor(getColor(getTile({x, y})));
             _sprites[levelNum][getIntSectorId(sectorId)].push_back(move(s));
@@ -602,23 +594,27 @@ Vector2f LevelSystem::getTileOrigin(Vector2ul p)
     return (Vector2f(p.x, p.y)) * _tileSize + Vector2f(_tileSize, _tileSize) * 0.5f;
 }
 
-LevelSystem::TILE LevelSystem::getTile(Vector2ul p) 
+LevelSystem::TILE LevelSystem::getTile(Vector2ul p, int floor) 
 {
-    if (p.x > _width || p.y > _height) 
-    {
-         throw string("Tile out of range ") + to_string(p.x) + ", " + to_string(p.y) + ")";
-    }
-    return _tiles[(p.y * _width) + p.x];
+    return _tiles[floor - 1][(p.y * _width) + p.x];
 }
 
-LevelSystem::TILE LevelSystem::getTileAt(Vector2f v) 
-{
+LevelSystem::TILE LevelSystem::getTileAt(Vector2f v, Vector2i sectorId, int floor) {
     auto a = v - _offset;
-    if (a.x < 0 || a.y < 0) 
-    {
-        throw string("tile out of range");
+    if (sectorId.x == 2) {
+        a.x += float(sectorTilesNumber) * _tileSize;
     }
-    return getTile(Vector2ul((v - _offset) / (_tileSize)));
+    if (sectorId.x == 3) {
+        a.x += 2 * float(sectorTilesNumber) * _tileSize;
+    }
+    if (sectorId.y == 2) {
+        a.y += float(sectorTilesNumber) * _tileSize;
+    }
+    if (sectorId.y == 3) {
+        a.y += 2 * float(sectorTilesNumber) * _tileSize;
+    }
+
+    return getTile(Vector2ul(a / (_tileSize)), floor);
 }
 
 void LevelSystem::Render(RenderWindow& window, int floor, Vector2i sectorId) {
@@ -626,7 +622,8 @@ void LevelSystem::Render(RenderWindow& window, int floor, Vector2i sectorId) {
     if (_sprites.size() > 0) {
         if (_sprites[floorIndex].size() > 0) {
             for (size_t i = 0; i < sectorTilesNumber * sectorTilesNumber; ++i) {
-                window.draw(*_sprites[floorIndex][getIntSectorId(sectorId)][i]);
+                Drawable *d = _sprites[floorIndex][getIntSectorId(sectorId)][i].get();
+                Renderer::Queue(d);
             }
         }
         else {
@@ -644,7 +641,7 @@ vector<Vector2ul> LevelSystem::findTiles(TILE tile, int levelNum, Vector2i secto
 void LevelSystem::UnLoad() {
     cout << "LevelSystem unloading" << endl;
     _sprites.clear();
-    _tiles.reset();
+    _tiles.clear();
     _width = 0;
     _height = 0;
     _offset = { 0, 0 };
@@ -652,4 +649,27 @@ void LevelSystem::UnLoad() {
 
 void LevelSystem::SetOffset(const Vector2f& new_offset) {
     _offset = new_offset;
+}
+
+bool LevelSystem::isStairs(LS::TILE t) {
+    for (int i = 0; i < _stairs.size(); ++i) {
+        if (t == _stairs[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// When the player stands on stairs tile it returns the other floor's number or 0 if invalid
+int LevelSystem::getStairsFloorChnage(Vector2f pos, Vector2i sectorId, int floor) {
+    if (floor == 1) {
+        return getTileAt(pos, sectorId, 2) == TILE::EMPTY ? 3 : 2;
+    }
+    if (floor == 2) {
+        return getTileAt(pos, sectorId, 1) == TILE::EMPTY ? 3 : 1;
+    }
+    if (floor == 3) {
+        return getTileAt(pos, sectorId, 1) == TILE::EMPTY ? 2 : 1;
+    }
+    return 0;
 }
