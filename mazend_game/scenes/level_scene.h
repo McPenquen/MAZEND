@@ -29,9 +29,6 @@ public:
 	void changeFloor(int);
 
 protected:
-	shared_ptr<Entity> _player1;
-	shared_ptr<Entity> _player2;
-	shared_ptr<Entity> _player3;
 	shared_ptr<Entity> _activePlayer;
 
 	float _playerCollisionVelue;
