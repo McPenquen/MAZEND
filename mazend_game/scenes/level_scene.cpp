@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "level1_scene.h"
 #include "../components/cmp_shape.h"
 #include "../game.h"
@@ -46,7 +47,6 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	auto plM = pl->addComponent<PlayerMovementComponent>(_activeSector);
 	plM->setSpeed(500.f);
 	plM->setFloor(1);
-	_player1 = pl;
 	// Create the player for middle floor
 	auto pl2 = makeEntity(5);
 	pl2->setNameTag("player2");
@@ -61,7 +61,6 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	auto plM2 = pl2->addComponent<PlayerMovementComponent>(_activeSector);
 	plM2->setSpeed(500.f);
 	plM2->setFloor(2);
-	_player2 = pl2;
 	// Create the player for top floor
 	auto pl3 = makeEntity(5);
 	pl3->setNameTag("player3");
@@ -76,7 +75,6 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	auto plM3 = pl3->addComponent<PlayerMovementComponent>(_activeSector);
 	plM3->setSpeed(500.f);
 	plM3->setFloor(3);
-	_player3 = pl3;
 
 	// Create black frame
 	auto frame1 = makeEntity(4);
@@ -156,11 +154,56 @@ void LevelScene::Update(double const dt) {
 	}
 
 	// Check if the player isn't on stairs to change floor
-	if (LS::isStairs(LS::getTileAt(_activePlayer->getPosition(), _activeSector, _activePlayerFloor))) {
-		if (Keyboard::isKeyPressed(Keyboard::Space) && stairSwitchTimer <= 0.0f) {
+	if (Keyboard::isKeyPressed(Keyboard::Space) && stairSwitchTimer <= 0.0f) {
+		if (LS::isStairs(LS::getTileAt(_activePlayer->getPosition(), _activeSector, _activePlayerFloor))) {
 			stairSwitchTimer = TIME_DELAY_COUNTER;
 			int newFloor = LS::getStairsFloorChnage(_activePlayer->getPosition(), _activeSector, _activePlayerFloor);
 			changeFloor(newFloor);
+		}
+	}
+
+	// Check if the player wants to jump down a floor in up direction- not possible if on the bottom floor
+	if (Keyboard::isKeyPressed(Keyboard::Space) && Keyboard::isKeyPressed(Keyboard::Up) && _activePlayerFloor > 1) {
+		Vector2f nextPos = _activePlayer->getPosition() + Vector2f(0, -(tileBounds * 2));
+		if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor) == LS::EMPTY) {
+			// if the floor bellow has a floor there player can jump
+			if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor - 1) != LS::EMPTY) {
+				movePlayerTo(nextPos);
+				changeFloor(_activePlayerFloor - 1);
+			} 
+		}
+	}
+	// Check if the player wants to jump down a floor in down direction- not possible if on the bottom floor
+	if (Keyboard::isKeyPressed(Keyboard::Space) && Keyboard::isKeyPressed(Keyboard::Down) && _activePlayerFloor > 1) {
+		Vector2f nextPos = _activePlayer->getPosition() + Vector2f(0, (tileBounds * 2));
+		if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor) == LS::EMPTY) {
+			// if the floor bellow has a floor there player can jump
+			if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor - 1) != LS::EMPTY) {
+				movePlayerTo(nextPos);
+				changeFloor(_activePlayerFloor - 1);
+			}
+		}
+	}
+	// Check if the player wants to jump down a floor in left direction- not possible if on the bottom floor
+	if (Keyboard::isKeyPressed(Keyboard::Space) && Keyboard::isKeyPressed(Keyboard::Left) && _activePlayerFloor > 1) {
+		Vector2f nextPos = _activePlayer->getPosition() + Vector2f(-(tileBounds * 2), 0);
+		if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor) == LS::EMPTY) {
+			// if the floor bellow has a floor there player can jump
+			if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor - 1) != LS::EMPTY) {
+				movePlayerTo(nextPos);
+				changeFloor(_activePlayerFloor - 1);
+			}
+		}
+	}
+	// Check if the player wants to jump down a floor in right direction- not possible if on the bottom floor
+	if (Keyboard::isKeyPressed(Keyboard::Space) && Keyboard::isKeyPressed(Keyboard::Right) && _activePlayerFloor > 1) {
+		Vector2f nextPos = _activePlayer->getPosition() + Vector2f((tileBounds * 2), 0);
+		if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor) == LS::EMPTY) {
+			// if the floor bellow has a floor there player can jump
+			if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor - 1) != LS::EMPTY) {
+				movePlayerTo(nextPos);
+				changeFloor(_activePlayerFloor - 1);
+			}
 		}
 	}
 
@@ -191,9 +234,9 @@ void LevelScene::ChangeSector(Vector2i sectorId) {
 	_activeSector = sectorId;
 
 	// Update the sector value in the player
-	_player1->GetComponents<PlayerMovementComponent>()[0].get()->setSector(_activeSector);
-	_player2->GetComponents<PlayerMovementComponent>()[0].get()->setSector(_activeSector);
-	_player3->GetComponents<PlayerMovementComponent>()[0].get()->setSector(_activeSector);
+	for (auto& p : ents.players) {
+		p->GetComponents<PlayerMovementComponent>()[0].get()->setSector(_activeSector);
+	}
 
 	DisplaySector();
 }
@@ -249,38 +292,36 @@ void LevelScene::MovePlayerOnNewSector(Vector2i oldS, Vector2i newS) {
 }
 
 void LevelScene::movePlayerTo(Vector2f newPos) {
-	_player1->setPosition(newPos);
-	_player2->setPosition(newPos);
-	_player3->setPosition(newPos);
+	for (auto& p : ents.players) {
+		p->setPosition(newPos);
+	}
 }
 
 void LevelScene::setActivePlayer() {
 	if (_activePlayerFloor == 1) {
-		_activePlayer = _player1;
-		_player1->setVisible(true);
-		_player2->setVisible(false);
-		_player3->setVisible(false);
+		_activePlayer = ents.players[0];
+		ents.players[0]->setVisible(true);
+		ents.players[1]->setVisible(false);
+		ents.players[2]->setVisible(false);
 	}
 	else if (_activePlayerFloor == 2) {
-		_activePlayer = _player2;
-		_player2->setVisible(true);
-		_player1->setVisible(false);
-		_player3->setVisible(false);
+		_activePlayer = ents.players[1];
+		ents.players[1]->setVisible(true);
+		ents.players[0]->setVisible(false);
+		ents.players[2]->setVisible(false);
 	}
 	else if (_activePlayerFloor == 3) {
-		_activePlayer = _player3;
-		_player3->setVisible(true);
-		_player1->setVisible(false);
-		_player2->setVisible(false);
+		_activePlayer = ents.players[2];
+		ents.players[2]->setVisible(true);
+		ents.players[0]->setVisible(false);
+		ents.players[1]->setVisible(false);
 	}
 }
 
 void LevelScene::changeFloor(int newFloor) {
 	// Make all player entities to be at the same place
 	auto realPos = _activePlayer->getPosition();
-	_player1->setPosition(realPos);
-	_player2->setPosition(realPos);
-	_player3->setPosition(realPos);
+	movePlayerTo(realPos);
 	// Update the floor
 	_activePlayerFloor = newFloor;
 	setActivePlayer();
