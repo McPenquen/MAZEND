@@ -30,7 +30,6 @@ public:
 
 protected:
 	shared_ptr<Entity> _activePlayer;
-
 	float _playerCollisionVelue;
 
 	Vector2i _activeSector;

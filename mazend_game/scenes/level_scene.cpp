@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "level1_scene.h"
 #include "../components/cmp_shape.h"
 #include "../game.h"
@@ -153,11 +154,56 @@ void LevelScene::Update(double const dt) {
 	}
 
 	// Check if the player isn't on stairs to change floor
-	if (LS::isStairs(LS::getTileAt(_activePlayer->getPosition(), _activeSector, _activePlayerFloor))) {
-		if (Keyboard::isKeyPressed(Keyboard::Space) && stairSwitchTimer <= 0.0f) {
+	if (Keyboard::isKeyPressed(Keyboard::Space) && stairSwitchTimer <= 0.0f) {
+		if (LS::isStairs(LS::getTileAt(_activePlayer->getPosition(), _activeSector, _activePlayerFloor))) {
 			stairSwitchTimer = TIME_DELAY_COUNTER;
 			int newFloor = LS::getStairsFloorChnage(_activePlayer->getPosition(), _activeSector, _activePlayerFloor);
 			changeFloor(newFloor);
+		}
+	}
+
+	// Check if the player wants to jump down a floor in up direction- not possible if on the bottom floor
+	if (Keyboard::isKeyPressed(Keyboard::Space) && Keyboard::isKeyPressed(Keyboard::Up) && _activePlayerFloor > 1) {
+		Vector2f nextPos = _activePlayer->getPosition() + Vector2f(0, -(tileBounds * 2));
+		if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor) == LS::EMPTY) {
+			// if the floor bellow has a floor there player can jump
+			if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor - 1) != LS::EMPTY) {
+				movePlayerTo(nextPos);
+				changeFloor(_activePlayerFloor - 1);
+			} 
+		}
+	}
+	// Check if the player wants to jump down a floor in down direction- not possible if on the bottom floor
+	if (Keyboard::isKeyPressed(Keyboard::Space) && Keyboard::isKeyPressed(Keyboard::Down) && _activePlayerFloor > 1) {
+		Vector2f nextPos = _activePlayer->getPosition() + Vector2f(0, (tileBounds * 2));
+		if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor) == LS::EMPTY) {
+			// if the floor bellow has a floor there player can jump
+			if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor - 1) != LS::EMPTY) {
+				movePlayerTo(nextPos);
+				changeFloor(_activePlayerFloor - 1);
+			}
+		}
+	}
+	// Check if the player wants to jump down a floor in left direction- not possible if on the bottom floor
+	if (Keyboard::isKeyPressed(Keyboard::Space) && Keyboard::isKeyPressed(Keyboard::Left) && _activePlayerFloor > 1) {
+		Vector2f nextPos = _activePlayer->getPosition() + Vector2f(-(tileBounds * 2), 0);
+		if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor) == LS::EMPTY) {
+			// if the floor bellow has a floor there player can jump
+			if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor - 1) != LS::EMPTY) {
+				movePlayerTo(nextPos);
+				changeFloor(_activePlayerFloor - 1);
+			}
+		}
+	}
+	// Check if the player wants to jump down a floor in right direction- not possible if on the bottom floor
+	if (Keyboard::isKeyPressed(Keyboard::Space) && Keyboard::isKeyPressed(Keyboard::Right) && _activePlayerFloor > 1) {
+		Vector2f nextPos = _activePlayer->getPosition() + Vector2f((tileBounds * 2), 0);
+		if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor) == LS::EMPTY) {
+			// if the floor bellow has a floor there player can jump
+			if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor - 1) != LS::EMPTY) {
+				movePlayerTo(nextPos);
+				changeFloor(_activePlayerFloor - 1);
+			}
 		}
 	}
 
