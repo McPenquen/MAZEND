@@ -10,7 +10,7 @@ EnemyMovementComponent::EnemyMovementComponent(Entity* p, Vector2i sectorID, vec
 }
 
 void EnemyMovementComponent::Update(double dt) {
-	if (_parent->isAlive()) {
+	if (_parent->isAlive() && _isHunting) {
 		Vector2f dir = _players[_activePlayerIndex]->getPosition() - _parent->getPosition();
 		move(dir / float(length(dir)) * _speed * float(dt));
 	}
