@@ -3,6 +3,8 @@
 #include "../game.h"
 #include "LevelSystem.h"
 #include "../components/cmp_player_movement.h"
+#include "../components/cmp_shape.h"
+#include "../components/cmp_enemy_movement.h"
 
 void Level1Scene::Load() {
 	// Load the initial sector and player position
@@ -21,6 +23,21 @@ void Level1Scene::Load() {
 	movePlayerTo(Vector2f(leftXBorder + tileBounds * 7.0f, topYBorder + tileBounds * 15.0f));
 	// Set the active player
 	setActivePlayer();
+
+	// Create an enemy
+	auto en = makeEntity(6);
+	en->setNameTag("enemy1");
+	en->setCollisionBounds(tileBounds);
+	auto enS = en->addComponent<ShapeComponent>();
+	enS->setShape<RectangleShape>(Vector2f(tileBounds, tileBounds));
+	enS->getShape().setFillColor(Color::Red);
+	enS->getShape().setOutlineColor(Color::White);
+	enS->getShape().setOutlineThickness(2.f);
+	enS->getShape().setOrigin(Vector2f(tileBounds/2, tileBounds/2));
+	en->setPosition(Vector2f(gameWidth / 2 + 100.0f, gameHeight / 2 + 60.f));
+	auto enM = en->addComponent<EnemyMovementComponent>(Vector2i(2, 1));
+	enM->setFloor(3);
+	enM->setSpeed(100.0f);
 
 	auto txt = makeEntity(4);
 	auto t = txt->addComponent<TextComponent>(

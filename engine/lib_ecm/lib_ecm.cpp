@@ -116,6 +116,9 @@ void EntityManager::Render(Vector2i sectorID) {
 	if (players.size() > 2) {
 		players[2]->Render();
 	}
+	for (const auto& e : enemies) {
+		e->Render();
+	}
 	for (const auto& e : floor4_list) {
 		e->Render();
 	}
@@ -135,6 +138,9 @@ void EntityManager::Update(double dt) {
 		e->Update(dt);
 	}
 	for (auto& e : players) {
+		e->Update(dt);
+	}
+	for (auto& e : enemies) {
 		e->Update(dt);
 	}
 }

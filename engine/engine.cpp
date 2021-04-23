@@ -57,6 +57,10 @@ shared_ptr<Entity> Scene::makeEntity(int orderNum) {
 	if (orderNum == 5) {
 		ents.players.push_back(en);
 	}
+	// number 6 means an enemy list
+	else if (orderNum == 6) {
+		ents.enemies.push_back(en);
+	}
 	else if (orderNum == 1) {
 		ents.floor1_list.push_back(en);
 	}
