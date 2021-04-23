@@ -7,16 +7,17 @@ PlayerMovementComponent::PlayerMovementComponent(Entity* p, Vector2i sectorID) :
 void PlayerMovementComponent::Update(double dt) {
 	if (_parent->isAlive()) {
 		Vector2f direction = { 0.f, 0.f };
-		if (Keyboard::isKeyPressed(Keyboard::Left)) {
+		Vector2f plPos = _parent->getPosition();
+		if (Keyboard::isKeyPressed(Keyboard::Left) && LS::getTileAt(plPos + Vector2f(- tileBounds, 0), _sectorId, _floorNum) != LS::EMPTY) {
 			direction.x = -_speed * dt;
 		}
-		if (Keyboard::isKeyPressed(Keyboard::Right)) {
+		if (Keyboard::isKeyPressed(Keyboard::Right) && LS::getTileAt(plPos + Vector2f(tileBounds, 0), _sectorId, _floorNum) != LS::EMPTY) {
 			direction.x = _speed * dt;
 		}
-		if (Keyboard::isKeyPressed(Keyboard::Down)) {
+		if (Keyboard::isKeyPressed(Keyboard::Down) && LS::getTileAt(plPos + Vector2f(0, tileBounds), _sectorId, _floorNum) != LS::EMPTY) {
 			direction.y = _speed * dt;
 		}
-		if (Keyboard::isKeyPressed(Keyboard::Up)) {
+		if (Keyboard::isKeyPressed(Keyboard::Up) && LS::getTileAt(plPos + Vector2f(0, -tileBounds), _sectorId, _floorNum) != LS::EMPTY) {
 			direction.y = -_speed * dt;
 		}
 
