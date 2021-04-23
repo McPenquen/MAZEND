@@ -49,6 +49,5 @@ bool PlayerMovementComponent::validMove(const Vector2f& pos) {
 		return true;
 	}
 	LS::TILE t = LS::getTileAt(pos, _sectorId, _floorNum);
-	//return true;
 	return t != LS::EMPTY;
 }
