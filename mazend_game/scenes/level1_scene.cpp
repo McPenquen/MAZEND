@@ -30,6 +30,7 @@ void Level1Scene::Load() {
 	auto en = makeEntity(6);
 	en->setNameTag("enemy1");
 	en->setCollisionBounds(tileBounds);
+	en->setVisible(false);
 	auto enS = en->addComponent<ShapeComponent>();
 	enS->setShape<RectangleShape>(Vector2f(tileBounds, tileBounds));
 	enS->getShape().setFillColor(Color::Red);
