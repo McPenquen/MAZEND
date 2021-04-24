@@ -11,16 +11,20 @@ EnemyMovementComponent::EnemyMovementComponent(Entity* p, Vector2i sectorID, vec
 }
 
 void EnemyMovementComponent::Update(double dt) {
-	if (_sectorId ==
-		_players[_activePlayerIndex]->GetComponents<PlayerMovementComponent>()[0]->getSector()) {
+	Vector2i playerSector = _players[_activePlayerIndex]->GetComponents<PlayerMovementComponent>()[0]->getSector();
+	if (_sectorId == playerSector) {
 		_parent->setVisible(true);
 	}
 	else {
 		_parent->setVisible(false);
 	}
-	if (_parent->isAlive() && _isHunting && _parent->isVisible()) {
-		Vector2f dir = _players[_activePlayerIndex]->getPosition() - _parent->getPosition();
-		move(dir / float(length(dir)) * _speed * float(dt));
+	if (_parent->isAlive() && _isHunting) {
+		Vector2f currentGlobalPos = LS::getGlobalPos(_parent->getPosition(), _sectorId);
+		Vector2f globalDir = LS::getGlobalPos(_players[_activePlayerIndex]->getPosition(), playerSector) - currentGlobalPos;
+		Vector2f newGlobalPos = currentGlobalPos + (globalDir / float(length(globalDir)) * _speed * float(dt));
+		auto newLocalPos = LS::getLocalPos(newGlobalPos);
+		_parent->setPosition(newLocalPos.position);
+		_sectorId = newLocalPos.sectorId;
 	}
 }
 

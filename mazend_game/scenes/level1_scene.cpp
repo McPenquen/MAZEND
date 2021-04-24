@@ -37,10 +37,10 @@ void Level1Scene::Load() {
 	enS->getShape().setOutlineColor(Color::White);
 	enS->getShape().setOutlineThickness(2.f);
 	enS->getShape().setOrigin(Vector2f(tileBounds/2, tileBounds/2));
-	en->setPosition(Vector2f(gameWidth / 2 + 100.0f, gameHeight / 2 + 60.f));
-	auto enM = en->addComponent<EnemyMovementComponent>(Vector2i(1, 1), ents.players, _activePlayerFloor - 1);
+	en->setPosition(Vector2f(gameWidth / 2 + 100.f, gameHeight / 2 + 100.f));
+	auto enM = en->addComponent<EnemyMovementComponent>(Vector2i(3, 3), ents.players, _activePlayerFloor - 1);
 	enM->setFloor(3);
-	enM->setSpeed(100.0f);
+	enM->setSpeed(50.0f);
 	auto enSm = en->addComponent<StateMachineComponent>();
 	enSm->addState("casual", make_shared<CasualState>(_activePlayer));
 	enSm->addState("hunting", make_shared<HuntingState>(_activePlayer));

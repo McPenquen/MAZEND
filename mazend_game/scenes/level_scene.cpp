@@ -208,6 +208,18 @@ void LevelScene::Update(double const dt) {
 		}
 	}
 
+	// Check if the enemy has caught the player
+	if (ents.enemies.size() > 0) {
+		for (const auto &e : ents.enemies) {
+			if (_activeSector == e->GetComponents<EnemyMovementComponent>()[0]->getSector()) {
+				if (length(_activePlayer->getPosition() - e->getPosition()) <= tileBounds * 1.5f) {
+					Engine::ChangeScene(&gameOverScn);
+					break;
+				}
+			}
+		}
+	}
+
 	// Check if the time limit has reached 0
 	if (_timeLimitValue.minutes <= 0.0f && (_timeLimitValue.seconds - dt) <= 0.0f) {
 		Engine::ChangeScene(&gameOverScn);

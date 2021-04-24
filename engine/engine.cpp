@@ -40,6 +40,7 @@ void Scene::UnLoad() {
 	ents.floor3_list.clear();
 	ents.floor4_list.clear();
 	ents.players.clear();
+	ents.enemies.clear();
 	setLoaded(false);
 }
 
