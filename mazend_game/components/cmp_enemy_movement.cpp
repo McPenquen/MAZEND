@@ -18,7 +18,7 @@ void EnemyMovementComponent::Update(double dt) {
 	else {
 		_parent->setVisible(false);
 	}
-	if (_parent->isAlive() && _isHunting) {
+	if (_parent->isAlive() && _isHunting && _parent->isVisible()) {
 		Vector2f dir = _players[_activePlayerIndex]->getPosition() - _parent->getPosition();
 		move(dir / float(length(dir)) * _speed * float(dt));
 	}
