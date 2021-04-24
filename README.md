@@ -8,9 +8,6 @@
 - `git submodule add https://github.com/SFML/SFML.git lib/sfml`
 - `git submodule init`
 - `git submodule update`
-- `git submodule add https://github.com/dooglz/Box2D.git lib/b2d`
-- `git submodule init`
-- `git submodule update`
 
 ### Compiling with CMake
 - Create a build folde outside of this folder
