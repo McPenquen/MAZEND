@@ -5,6 +5,9 @@
 #include <iostream>
 #include <vector>
 
+#include <sstream>
+#include <iomanip>
+
 #define PI 3.14159265
 
 using namespace std;
@@ -70,4 +73,12 @@ namespace sf {
         r.y *= right.y;
         return r;
     }
+}
+#include <sstream>
+#include <iomanip>
+template <typename T>
+std::string toStrDecPt(const uint16_t& dp, const T& i) {
+    std::stringstream stream;
+    stream << std::fixed << std::setprecision(dp) << i;
+    return stream.str();
 }

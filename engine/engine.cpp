@@ -131,12 +131,28 @@ void LoadingRender() {
 	Renderer::Queue(&octagon);
 }
 
+float frametimes[256] = {};
+uint8_t ftc = 0;
+
 // - Engine
 void Engine::Update() {
 	static Clock clock;
 	float dt = clock.restart().asSeconds();
 
 	scnSwitchTimer += dt;
+
+	{
+    frametimes[++ftc] = dt;
+    static string avg = _gameName + " FPS:";
+    if (ftc % 60 == 0) {
+      double davg = 0;
+      for (const auto t : frametimes) {
+        davg += t;
+      }
+      davg = 1.0 / (davg / 255.0);
+      _window->setTitle(avg + toStrDecPt(2, davg));
+    }
+  }
 
 	if (loading) {
 		LoadingUpdate(dt, _activeScene);
