@@ -28,7 +28,7 @@ link_directories("${CMAKE_BINARY_DIR}/lib/sfml/lib")
 # ENGINE
 file(GLOB_RECURSE SOURCE_FILES engine/*.cpp engine/*.h)
 add_library(lib_engine STATIC ${SOURCE_FILES})
-target_include_directories(lib_engine INTERFACE "${CMAKE_SOURCE_DIR}/engine/" PUBLIC SYSTEM ${B2D_INCS} )
+target_include_directories(lib_engine INTERFACE "${CMAKE_SOURCE_DIR}/engine/" PUBLIC SYSTEM)
 target_link_libraries(lib_engine lib_tile_level_system lib_maths lib_ecm sfml-graphics sfml-audio)
 
 # Maths lib
