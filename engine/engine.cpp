@@ -123,7 +123,7 @@ void LoadingRender() {
 	octagon.setFillColor(Color(255, 255, 255, min(255.f, 40.f * loadingTime)));
 	static Text t;
 	t.setString("Loading Level");
-	loadingFont.loadFromFile("res/fonts/Roboto-Bold.ttf");
+	loadingFont.loadFromFile("res/fonts/ZenDots-Regular.ttf");
 	t.setFont(loadingFont);
 	t.setFillColor(Color(255, 255, 255, min(255.f, 40.f * loadingTime)));
 	Vector2f winPos = sf::Vcast<float>(Engine::GetWindowSize());

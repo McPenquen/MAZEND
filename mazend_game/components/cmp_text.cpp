@@ -13,7 +13,7 @@ void TextComponent::Render() {
 TextComponent::TextComponent(Entity* const p, const string& str)
     : Component(p), _string(str) {
   _text.setString(_string);
-  _font = Resources::get<Font>("Roboto-Bold.ttf");
+  _font = Resources::get<Font>("ZenDots-Regular.ttf");
   _text.setFont(*_font);
 }
 
