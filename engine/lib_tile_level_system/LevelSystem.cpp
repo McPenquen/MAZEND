@@ -65,7 +65,7 @@ int getIntSectorId(Vector2i vecID) {
 
 // Helper function to get the uniform location of the sprites (starting at {0,0})
 Vector2ul getNormalisedSectorPositions(Vector2ul pos, Vector2i sectorID, float posPadding) {
-    Vector2ul answer = {pos.x, pos.y};
+    Vector2ul answer = pos;
     if (sectorID.x == 2) {
         answer.x -= float(sectorTilesNumber) * posPadding;
     }
@@ -672,4 +672,51 @@ int LevelSystem::getStairsFloorChnage(Vector2f pos, Vector2i sectorId, int floor
         return getTileAt(pos, sectorId, 1) == TILE::EMPTY ? 2 : 1;
     }
     return 0;
+}
+
+// Return the world's position
+Vector2f LevelSystem::getGlobalPos(Vector2f screenPos, Vector2i sector) {
+    Vector2f globalPos = screenPos - _offset;
+
+    if (sector.x == 2) {
+        globalPos.x += float(sectorTilesNumber) * _tileSize;
+    }
+    if (sector.x == 3) {
+        globalPos.x += 2 * float(sectorTilesNumber) * _tileSize;
+    }
+    if (sector.y == 2) {
+        globalPos.y += float(sectorTilesNumber) * _tileSize;
+    }
+    if (sector.y == 3) {
+        globalPos.y += 2 * float(sectorTilesNumber) * _tileSize;
+    }
+
+    return globalPos;
+}
+
+LocalPosition LevelSystem::getLocalPos(Vector2f globalPos) {
+    LocalPosition answr;
+    answr.position = globalPos;
+    answr.sectorId = Vector2i(1, 1);
+    float oneSectorSize = float(sectorTilesNumber) * _tileSize;
+
+    if (globalPos.x >= oneSectorSize) {
+        answr.position.x -= oneSectorSize;
+        answr.sectorId.x = 2;
+        if (globalPos.x >= 2 * oneSectorSize) {
+            answr.position.x -= oneSectorSize;
+            answr.sectorId.x = 3;
+        }
+    }
+    if (globalPos.y >= oneSectorSize) {
+        answr.position.y -= oneSectorSize;
+        answr.sectorId.y = 2;
+        if (globalPos.y >= 2 * oneSectorSize) {
+            answr.position.y -= oneSectorSize;
+            answr.sectorId.y = 3;
+        }
+    }
+
+    answr.position += _offset;
+    return answr;
 }
