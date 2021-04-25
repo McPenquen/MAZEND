@@ -222,8 +222,7 @@ void Engine::Start(unsigned int width, unsigned int height, const string& gameNa
             while (flag) {
                 while (_window->pollEvent(event)) {
                     if (event.type == Event::KeyPressed && event.key.code != Keyboard::Escape) {
-                        auto keyPressed = event.key.code;
-                        _controls[_observingControlName] = keyPressed;
+                        _controls[_observingControlName] = event.key.code;
                         _isObservingControlChange = false;
                         _observingControlName = "";
                         flag = false;
