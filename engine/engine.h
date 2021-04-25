@@ -27,6 +27,7 @@ public:
 	string getSceneName() const;
 	void setSceneName(const string);
 
+	virtual void Initialise() {}
 
 protected:
 	void setLoaded(bool);
@@ -67,6 +68,10 @@ public:
 	static Vector2f GetCentreSectorSize();
 	static void SetCentreSectorSize(Vector2f);
 
+	//Controls
+	static map<string, Keyboard::Key> GetControls();
+	static void SetControl(string controlName, Keyboard::Key);
+
 private:
 	static Scene* _activeScene;
 	static Scene* _previousScene;
@@ -78,7 +83,10 @@ private:
 	static string _changingMode;
 
 	// Centre sector of the window
-	static Vector2f _centreSector; 
+	static Vector2f _centreSector;
+
+	// Controls
+	static map<string, Keyboard::Key> _controls;
 };
 
 // Timing

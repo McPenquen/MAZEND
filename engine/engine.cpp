@@ -95,6 +95,7 @@ Scene* Engine::_previousScene = nullptr;
 string Engine::_gameName;
 Vector2f Engine::_centreSector;
 string Engine::_changingMode = "";
+map<string, Keyboard::Key> Engine::_controls;
 
 // - Loading
 static bool loading = false;
@@ -178,6 +179,11 @@ void Engine::Render(RenderWindow& window) {
 void Engine::Start(unsigned int width, unsigned int height, const string& gameName, Scene* scene, bool isFullscreen) {
 	// Reset the _changingMode value
 	_changingMode = "";
+
+	// If it's the first time running the Start()
+	if (_window == nullptr) {
+		scene->Initialise();
+	}
 
 	RenderWindow window(VideoMode(width, height), gameName, isFullscreen ? Style::Fullscreen : Style::Default);
 	_window = &window;
@@ -276,8 +282,6 @@ RenderWindow& Engine::GetWindow() {
 }
 
 void Engine::ChangeWindowMode(string modeStr) {
-	//_window->setPosition({ -10, 0 });
-	//_window->setSize({vm.width, vm.height});
 	_changingMode = modeStr;
 }
 
@@ -296,6 +300,14 @@ Vector2f Engine::GetCentreSectorSize() {
 
 void Engine::SetCentreSectorSize(Vector2f newSec) {
 	_centreSector = newSec;
+}
+
+map<string, Keyboard::Key> Engine::GetControls() {
+	return _controls;
+}
+
+void Engine::SetControl(string controlName, Keyboard::Key key) {
+	_controls.insert({controlName, key});
 }
 
 // Timing

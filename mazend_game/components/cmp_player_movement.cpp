@@ -5,22 +5,23 @@
 PlayerMovementComponent::PlayerMovementComponent(Entity* p, Vector2i sectorID) : MovementComponent(p) { 
 	_sectorId = sectorID; 
 	_currentSectorBorders = Engine::GetCentreSectorBorders();
+	_currentControls = Engine::GetControls();
 }
 
 void PlayerMovementComponent::Update(double dt) {
 	if (_parent->isAlive()) {
 		Vector2f direction = { 0.f, 0.f };
 		Vector2f plPos = _parent->getPosition();
-		if (Keyboard::isKeyPressed(Keyboard::Left) && LS::getTileAt(plPos + Vector2f(- tileBounds, 0), _sectorId, _floorNum) != LS::EMPTY) {
+		if (Keyboard::isKeyPressed(_currentControls["left"]) && LS::getTileAt(plPos + Vector2f(- tileBounds, 0), _sectorId, _floorNum) != LS::EMPTY) {
 			direction.x = -_speed * dt;
 		}
-		if (Keyboard::isKeyPressed(Keyboard::Right) && LS::getTileAt(plPos + Vector2f(tileBounds, 0), _sectorId, _floorNum) != LS::EMPTY) {
+		if (Keyboard::isKeyPressed(_currentControls["right"]) && LS::getTileAt(plPos + Vector2f(tileBounds, 0), _sectorId, _floorNum) != LS::EMPTY) {
 			direction.x = _speed * dt;
 		}
-		if (Keyboard::isKeyPressed(Keyboard::Down) && LS::getTileAt(plPos + Vector2f(0, tileBounds), _sectorId, _floorNum) != LS::EMPTY) {
+		if (Keyboard::isKeyPressed(_currentControls["down"]) && LS::getTileAt(plPos + Vector2f(0, tileBounds), _sectorId, _floorNum) != LS::EMPTY) {
 			direction.y = _speed * dt;
 		}
-		if (Keyboard::isKeyPressed(Keyboard::Up) && LS::getTileAt(plPos + Vector2f(0, -tileBounds), _sectorId, _floorNum) != LS::EMPTY) {
+		if (Keyboard::isKeyPressed(_currentControls["up"]) && LS::getTileAt(plPos + Vector2f(0, -tileBounds), _sectorId, _floorNum) != LS::EMPTY) {
 			direction.y = -_speed * dt;
 		}
 

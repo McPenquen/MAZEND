@@ -13,6 +13,9 @@ static float secSwitchTimer = 0.0f;
 static float stairSwitchTimer = 0.0f;
 
 void LevelScene::Load(string const s, string const s1, string const s2) {
+	// Get the controls
+	_currentControls = Engine::GetControls();
+
 	// Set the centre sector dimensions
 	Engine::SetCentreSectorSize(Vector2f(tileBounds * 20, tileBounds * 20));
 
@@ -162,7 +165,7 @@ void LevelScene::Update(double const dt) {
 	}
 
 	// Check if the player isn't on stairs to change floor
-	if (Keyboard::isKeyPressed(Keyboard::Space) && stairSwitchTimer <= 0.0f) {
+	if (Keyboard::isKeyPressed(_currentControls["jump"]) && stairSwitchTimer <= 0.0f) {
 		if (LS::isStairs(LS::getTileAt(_activePlayer->getPosition(), _activeSector, _activePlayerFloor))) {
 			stairSwitchTimer = TIME_DELAY_COUNTER;
 			int newFloor = LS::getStairsFloorChnage(_activePlayer->getPosition(), _activeSector, _activePlayerFloor);
@@ -171,7 +174,7 @@ void LevelScene::Update(double const dt) {
 	}
 
 	// Check if the player wants to jump down a floor in up direction- not possible if on the bottom floor
-	if (Keyboard::isKeyPressed(Keyboard::Space) && Keyboard::isKeyPressed(Keyboard::Up) && _activePlayerFloor > 1) {
+	if (Keyboard::isKeyPressed(_currentControls["jump"]) && Keyboard::isKeyPressed(_currentControls["up"]) && _activePlayerFloor > 1) {
 		Vector2f nextPos = _activePlayer->getPosition() + Vector2f(0, -(tileBounds * 2));
 		if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor) == LS::EMPTY) {
 			// if the floor bellow has a floor there player can jump
@@ -182,7 +185,7 @@ void LevelScene::Update(double const dt) {
 		}
 	}
 	// Check if the player wants to jump down a floor in down direction- not possible if on the bottom floor
-	if (Keyboard::isKeyPressed(Keyboard::Space) && Keyboard::isKeyPressed(Keyboard::Down) && _activePlayerFloor > 1) {
+	if (Keyboard::isKeyPressed(_currentControls["jump"]) && Keyboard::isKeyPressed(_currentControls["down"]) && _activePlayerFloor > 1) {
 		Vector2f nextPos = _activePlayer->getPosition() + Vector2f(0, (tileBounds * 2));
 		if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor) == LS::EMPTY) {
 			// if the floor bellow has a floor there player can jump
@@ -193,7 +196,7 @@ void LevelScene::Update(double const dt) {
 		}
 	}
 	// Check if the player wants to jump down a floor in left direction- not possible if on the bottom floor
-	if (Keyboard::isKeyPressed(Keyboard::Space) && Keyboard::isKeyPressed(Keyboard::Left) && _activePlayerFloor > 1) {
+	if (Keyboard::isKeyPressed(_currentControls["jump"]) && Keyboard::isKeyPressed(_currentControls["left"]) && _activePlayerFloor > 1) {
 		Vector2f nextPos = _activePlayer->getPosition() + Vector2f(-(tileBounds * 2), 0);
 		if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor) == LS::EMPTY) {
 			// if the floor bellow has a floor there player can jump
@@ -204,7 +207,7 @@ void LevelScene::Update(double const dt) {
 		}
 	}
 	// Check if the player wants to jump down a floor in right direction- not possible if on the bottom floor
-	if (Keyboard::isKeyPressed(Keyboard::Space) && Keyboard::isKeyPressed(Keyboard::Right) && _activePlayerFloor > 1) {
+	if (Keyboard::isKeyPressed(_currentControls["jump"]) && Keyboard::isKeyPressed(_currentControls["right"]) && _activePlayerFloor > 1) {
 		Vector2f nextPos = _activePlayer->getPosition() + Vector2f((tileBounds * 2), 0);
 		if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor) == LS::EMPTY) {
 			// if the floor bellow has a floor there player can jump

@@ -24,11 +24,20 @@ void MainMenuScene::Update(const double dt) {
 	Scene::Update(dt);
 }
 
+void MainMenuScene::Initialise() {
+	// Setup the default controls
+	Engine::SetControl("up", Keyboard::Up);
+	Engine::SetControl("down", Keyboard::Down);
+	Engine::SetControl("left", Keyboard::Left);
+	Engine::SetControl("right", Keyboard::Right);
+	Engine::SetControl("jump", Keyboard::Space);
+}
+
  // Options
 void OptionsScene::Load() {
 	auto txt = makeEntity(1);
 	auto t = txt->addComponent<TextComponent>(
-		"OPTIONS\n\nWindow Mode:\n   Window Mode (Press W+1) VS Full Screen (Press W+2)\n\nBack - Press 9"
+		"OPTIONS\n\nWindow Mode:\n   Window Mode (Press W+1) VS Full Screen (Press W+2)\nChange Controls:\n   \n\nBack - Press 9"
 		);
 	txt->setPosition(Vector2f(2* tileBounds, 2* tileBounds));
 	setSceneName("options");
