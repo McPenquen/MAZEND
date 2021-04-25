@@ -9,7 +9,7 @@ public:
 	void Load() override;
 	void Update(const double dt) override;
 
-	void Initialise() override;
+	void DefaultSetup() override;
 };
 
 class OptionsScene : public Scene {

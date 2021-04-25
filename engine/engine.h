@@ -27,7 +27,7 @@ public:
 	string getSceneName() const;
 	void setSceneName(const string);
 
-	virtual void Initialise() {}
+	virtual void DefaultSetup() {}
 
 protected:
 	void setLoaded(bool);
@@ -53,24 +53,25 @@ public:
 	Engine() = delete;
 
 	static void Start(unsigned int winWidth, unsigned int winHeight,
-		const string& gameName, Scene* scene, bool isFullscreen);
+		const string& gameName, Scene* scene, const bool isFullscreen);
 	static void ChangeScene(Scene*);
 	static void PauseScene(Scene*);
 	static void UnloadPreviousScene();
 
 	static RenderWindow& GetWindow();
 	static Vector2u GetWindowSize();
-	static void ChangeWindowMode(string);
-	static void SetVsync(bool);
+	static void ChangeWindowMode(const string);
+	static void SetVsync(const bool);
 
 	// Get and set sector values
 	static Borders GetCentreSectorBorders();
 	static Vector2f GetCentreSectorSize();
-	static void SetCentreSectorSize(Vector2f);
+	static void SetCentreSectorSize(const Vector2f);
 
 	//Controls
 	static map<string, Keyboard::Key> GetControls();
-	static void SetControl(string controlName, Keyboard::Key);
+	static void SetControl(const string controlName, const Keyboard::Key);
+	static string Key2String(const Keyboard::Key);
 
 private:
 	static Scene* _activeScene;

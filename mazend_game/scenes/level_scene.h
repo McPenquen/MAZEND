@@ -42,5 +42,5 @@ protected:
 	Borders _sectorBorders;
 
 	//Controls
-	map<string, Keyboard::Key>_currentControls;
+	static map<string, Keyboard::Key>_currentControls;
 };

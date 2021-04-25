@@ -24,7 +24,7 @@ void MainMenuScene::Update(const double dt) {
 	Scene::Update(dt);
 }
 
-void MainMenuScene::Initialise() {
+void MainMenuScene::DefaultSetup() {
 	// Setup the default controls
 	Engine::SetControl("up", Keyboard::Up);
 	Engine::SetControl("down", Keyboard::Down);
@@ -36,9 +36,14 @@ void MainMenuScene::Initialise() {
  // Options
 void OptionsScene::Load() {
 	auto txt = makeEntity(1);
-	auto t = txt->addComponent<TextComponent>(
-		"OPTIONS\n\nWindow Mode:\n   Window Mode (Press W+1) VS Full Screen (Press W+2)\nChange Controls:\n   \n\nBack - Press 9"
-		);
+	auto activeControls = Engine::GetControls();
+
+	string menuStr1 = "OPTIONS\n\nWindow Mode:\n   Window Mode (Press W+1) VS Full Screen (Press W+2)\n\Controls:\n   MOVE UP: ";
+	string menuStr2 = Engine::Key2String(activeControls["up"]) + "\n   MOVE DOWN: " + Engine::Key2String(activeControls["down"]) + "\n   MOVE LEFT: " 
+		+ Engine::Key2String(activeControls["left"]) + "\n   MOVE RIGHT: " + Engine::Key2String(activeControls["right"])
+		+ "\n   JUMP: " + Engine::Key2String(activeControls["jump"]) + "\n\nBack - Press 9";
+
+	auto t = txt->addComponent<TextComponent>(menuStr1 + menuStr2);
 	txt->setPosition(Vector2f(2* tileBounds, 2* tileBounds));
 	setSceneName("options");
 	setLoaded(true);

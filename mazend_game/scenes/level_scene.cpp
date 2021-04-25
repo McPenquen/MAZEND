@@ -11,6 +11,7 @@
 // Timing management
 static float secSwitchTimer = 0.0f;
 static float stairSwitchTimer = 0.0f;
+map<string, Keyboard::Key> LevelScene::_currentControls;
 
 void LevelScene::Load(string const s, string const s1, string const s2) {
 	// Get the controls

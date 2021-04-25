@@ -122,14 +122,14 @@ void LoadingRender() {
 	static CircleShape octagon(80, 8);
 	octagon.setOrigin(80, 80);
 	octagon.setRotation(loadingProgress);
-	octagon.setPosition(sf::Vcast<float>(Engine::GetWindowSize()) * .5f);
+	octagon.setPosition(Vcast<float>(Engine::GetWindowSize()) * .5f);
 	octagon.setFillColor(Color(255, 255, 255, min(255.f, 40.f * loadingTime)));
 	static Text t;
 	t.setString("Loading Level");
 	loadingFont.loadFromFile("res/fonts/ZenDots-Regular.ttf");
 	t.setFont(loadingFont);
 	t.setFillColor(Color(255, 255, 255, min(255.f, 40.f * loadingTime)));
-	Vector2f winPos = sf::Vcast<float>(Engine::GetWindowSize());
+	Vector2f winPos = Vcast<float>(Engine::GetWindowSize());
 	t.setPosition(winPos * Vector2f(0.4f, 0.3f));
 	Renderer::Queue(&t);
 	Renderer::Queue(&octagon);
@@ -182,7 +182,7 @@ void Engine::Start(unsigned int width, unsigned int height, const string& gameNa
 
 	// If it's the first time running the Start()
 	if (_window == nullptr) {
-		scene->Initialise();
+		scene->DefaultSetup();
 	}
 
 	RenderWindow window(VideoMode(width, height), gameName, isFullscreen ? Style::Fullscreen : Style::Default);
@@ -308,6 +308,428 @@ map<string, Keyboard::Key> Engine::GetControls() {
 
 void Engine::SetControl(string controlName, Keyboard::Key key) {
 	_controls.insert({controlName, key});
+}
+
+// from: https://en.sfml-dev.org/forums/index.php?topic=15226.0
+string Engine::Key2String(const Keyboard::Key k) {
+    string ret;
+    switch (k) {
+
+    case Keyboard::A:
+
+        ret = "A";
+        break;
+    case Keyboard::B:
+
+        ret = "B";
+        break;
+    case Keyboard::C:
+
+        ret = "C";
+        break;
+    case Keyboard::D:
+
+        ret = "D";
+        break;
+    case Keyboard::E:
+
+        ret = "E";
+        break;
+    case Keyboard::F:
+
+        ret = "F";
+        break;
+    case Keyboard::G:
+
+        ret = "G";
+        break;
+    case Keyboard::H:
+
+        ret = "H";
+        break;
+    case Keyboard::I:
+
+        ret = "I";
+        break;
+    case Keyboard::J:
+
+        ret = "J";
+        break;
+    case Keyboard::K:
+
+        ret = "K";
+        break;
+    case Keyboard::L:
+
+        ret = "L";
+        break;
+    case Keyboard::M:
+
+        ret = "M";
+        break;
+    case Keyboard::N:
+
+        ret = "N";
+        break;
+    case Keyboard::O:
+
+        ret = "O";
+        break;
+    case Keyboard::P:
+
+        ret = "P";
+        break;
+    case Keyboard::Q:
+
+        ret = "Q";
+        break;
+    case Keyboard::R:
+
+        ret = "R";
+        break;
+    case Keyboard::S:
+
+        ret = "S";
+        break;
+    case Keyboard::T:
+
+        ret = "T";
+        break;
+    case Keyboard::U:
+
+        ret = "U";
+        break;
+    case Keyboard::V:
+
+        ret = "V";
+        break;
+    case Keyboard::W:
+
+        ret = "W";
+        break;
+    case Keyboard::X:
+
+        ret = "X";
+        break;
+    case Keyboard::Y:
+
+        ret = "Y";
+        break;
+    case Keyboard::Z:
+
+        ret = "Z";
+        break;
+    case Keyboard::Num0:
+
+        ret = "Num0";
+        break;
+    case Keyboard::Num1:
+
+        ret = "Num1";
+        break;
+    case Keyboard::Num2:
+
+        ret = "Num2";
+        break;
+    case Keyboard::Num3:
+
+        ret = "Num3";
+        break;
+    case Keyboard::Num4:
+
+        ret = "Num4";
+        break;
+    case Keyboard::Num5:
+
+        ret = "Num5";
+        break;
+    case Keyboard::Num6:
+
+        ret = "Num6";
+        break;
+    case Keyboard::Num7:
+
+        ret = "Num7";
+        break;
+    case Keyboard::Num8:
+
+        ret = "Num8";
+        break;
+    case Keyboard::Num9:
+
+        ret = "Num9";
+        break;
+    case Keyboard::Escape:
+
+        ret = "Escape";
+        break;
+    case Keyboard::LControl:
+
+        ret = "LControl";
+        break;
+    case Keyboard::LShift:
+
+        ret = "LShift";
+        break;
+    case Keyboard::LAlt:
+
+        ret = "LAlt";
+        break;
+    case Keyboard::LSystem:
+
+        ret = "LSystem";
+        break;
+    case Keyboard::RControl:
+
+        ret = "RControl";
+        break;
+    case Keyboard::RShift:
+
+        ret = "RShift";
+        break;
+    case Keyboard::RAlt:
+
+        ret = "RAlt";
+        break;
+    case Keyboard::RSystem:
+
+        ret = "RSystem";
+        break;
+    case Keyboard::Menu:
+
+        ret = "Menu";
+        break;
+    case Keyboard::LBracket:
+
+        ret = "LBracket";
+        break;
+    case Keyboard::RBracket:
+
+        ret = "RBracket";
+        break;
+    case Keyboard::SemiColon:
+
+        ret = "SemiColon";
+        break;
+    case Keyboard::Comma:
+
+        ret = "Comma";
+        break;
+    case Keyboard::Period:
+
+        ret = "Period";
+        break;
+    case Keyboard::Quote:
+
+        ret = "Quote";
+        break;
+    case Keyboard::Slash:
+
+        ret = "Slash";
+        break;
+    case Keyboard::BackSlash:
+
+        ret = "BackSlash";
+        break;
+    case Keyboard::Tilde:
+
+        ret = "Tilde";
+        break;
+    case Keyboard::Equal:
+
+        ret = "Equal";
+        break;
+    case Keyboard::Dash:
+
+        ret = "Dash";
+        break;
+    case Keyboard::Space:
+
+        ret = "Space";
+        break;
+    case Keyboard::Return:
+
+        ret = "Return";
+        break;
+    case Keyboard::BackSpace:
+
+        ret = "BackSpace";
+        break;
+    case Keyboard::Tab:
+
+        ret = "Tab";
+        break;
+    case Keyboard::PageUp:
+
+        ret = "PageUp";
+        break;
+    case Keyboard::PageDown:
+
+        ret = "PageDown";
+        break;
+    case Keyboard::End:
+
+        ret = "End";
+        break;
+    case Keyboard::Home:
+
+        ret = "Home";
+        break;
+    case Keyboard::Insert:
+
+        ret = "Insert";
+        break;
+    case Keyboard::Delete:
+
+        ret = "Delete";
+        break;
+    case Keyboard::Add:
+
+        ret = "Add";
+        break;
+    case Keyboard::Subtract:
+
+        ret = "Subtract";
+        break;
+    case Keyboard::Multiply:
+
+        ret = "Multiply";
+        break;
+    case Keyboard::Divide:
+
+        ret = "Divide";
+        break;
+    case Keyboard::Left:
+
+        ret = "Left";
+        break;
+    case Keyboard::Right:
+
+        ret = "Right";
+        break;
+    case Keyboard::Up:
+
+        ret = "Up";
+        break;
+    case Keyboard::Down:
+
+        ret = "Down";
+        break;
+    case Keyboard::Numpad0:
+
+        ret = "Numpad0";
+        break;
+    case Keyboard::Numpad1:
+
+        ret = "Numpad1";
+        break;
+    case Keyboard::Numpad2:
+
+        ret = "Numpad2";
+        break;
+    case Keyboard::Numpad3:
+
+        ret = "Numpad3";
+        break;
+    case Keyboard::Numpad4:
+
+        ret = "Numpad4";
+        break;
+    case Keyboard::Numpad5:
+
+        ret = "Numpad5";
+        break;
+    case Keyboard::Numpad6:
+
+        ret = "Numpad6";
+        break;
+    case Keyboard::Numpad7:
+
+        ret = "Numpad7";
+        break;
+    case Keyboard::Numpad8:
+
+        ret = "Numpad8";
+        break;
+    case Keyboard::Numpad9:
+
+        ret = "Numpad9";
+        break;
+    case Keyboard::F1:
+
+        ret = "F1";
+        break;
+    case Keyboard::F2:
+
+        ret = "F2";
+        break;
+    case Keyboard::F3:
+
+        ret = "F3";
+        break;
+    case Keyboard::F4:
+
+        ret = "F4";
+        break;
+    case Keyboard::F5:
+
+        ret = "F5";
+        break;
+    case Keyboard::F6:
+
+        ret = "F6";
+        break;
+    case Keyboard::F7:
+
+        ret = "F7";
+        break;
+    case Keyboard::F8:
+
+        ret = "F8";
+        break;
+    case Keyboard::F9:
+
+        ret = "F9";
+        break;
+    case Keyboard::F10:
+
+        ret = "F10";
+        break;
+    case Keyboard::F11:
+
+        ret = "F11";
+        break;
+    case Keyboard::F12:
+
+        ret = "F12";
+        break;
+    case Keyboard::F13:
+
+        ret = "F13";
+        break;
+    case Keyboard::F14:
+
+        ret = "F14";
+        break;
+    case Keyboard::F15:
+
+        ret = "F15";
+        break;
+    case Keyboard::Pause:
+
+        ret = "Pause";
+        break;
+    case Keyboard::KeyCount:
+
+        ret = "KeyCount";
+        break;
+
+
+    default:
+        ret = "Unknow";
+        break;
+    }
+    return ret;
 }
 
 // Timing
