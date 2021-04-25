@@ -96,6 +96,8 @@ string Engine::_gameName;
 Vector2f Engine::_centreSector;
 string Engine::_changingMode = "";
 map<string, Keyboard::Key> Engine::_controls;
+string Engine::_observingControlName = "";
+bool Engine::_isObservingControlChange = false;
 
 // - Loading
 static bool loading = false;
@@ -198,9 +200,11 @@ void Engine::Start(unsigned int width, unsigned int height, const string& gameNa
 				window.close();
 			}
 		}
+        // Close the game
 		if (_activeScene->getSceneName() == "mainMenu" && (Keyboard::isKeyPressed(Keyboard::Num3))) {
 			window.close();
 		}
+        // Change Window mode
 		if (_changingMode != "") {
 			if (_changingMode == "fullscreen") {
 				window.close();
@@ -211,6 +215,23 @@ void Engine::Start(unsigned int width, unsigned int height, const string& gameNa
 				Engine::Start(width, height, gameName, scene, 0);
 			}
 		}
+        // Save a new Control
+        if (_isObservingControlChange) {
+            Event event;
+            bool flag = true;
+            while (flag) {
+                while (_window->pollEvent(event)) {
+                    if (event.type == Event::KeyPressed && event.key.code != Keyboard::Escape) {
+                        auto keyPressed = event.key.code;
+                        _controls[_observingControlName] = keyPressed;
+                        _isObservingControlChange = false;
+                        _observingControlName = "";
+                        flag = false;
+                        break;
+                    }
+                }
+            }
+        }
 		window.clear();
 		Update();
 		Render(window);
@@ -306,11 +327,26 @@ map<string, Keyboard::Key> Engine::GetControls() {
 	return _controls;
 }
 
-void Engine::SetControl(string controlName, Keyboard::Key key) {
-	_controls.insert({controlName, key});
+void Engine::SetControl(const string controlName, const Keyboard::Key key) {
+    if (_controls.find(controlName) == _controls.end()) {
+        _controls.insert({controlName, key});
+    }
+    else {
+        _controls[controlName] = key;
+    }
+}
+
+void Engine::ObserveControlChange(const string keyName) {
+    _observingControlName = keyName;
+    _isObservingControlChange = true;
+}
+
+bool Engine::isObservingControlChange() {
+    return _isObservingControlChange;
 }
 
 // from: https://en.sfml-dev.org/forums/index.php?topic=15226.0
+// Escape is "?????" - as it shouldn't be an option for controls
 string Engine::Key2String(const Keyboard::Key k) {
     string ret;
     switch (k) {
@@ -461,7 +497,7 @@ string Engine::Key2String(const Keyboard::Key k) {
         break;
     case Keyboard::Escape:
 
-        ret = "Escape";
+        ret = "?????";
         break;
     case Keyboard::LControl:
 
@@ -726,7 +762,7 @@ string Engine::Key2String(const Keyboard::Key k) {
 
 
     default:
-        ret = "Unknow";
+        ret = "Unknown";
         break;
     }
     return ret;

@@ -72,6 +72,8 @@ public:
 	static map<string, Keyboard::Key> GetControls();
 	static void SetControl(const string controlName, const Keyboard::Key);
 	static string Key2String(const Keyboard::Key);
+	static void ObserveControlChange(const string keyName); // mark to start detecting key to change a control from the string to
+	static bool isObservingControlChange();
 
 private:
 	static Scene* _activeScene;
@@ -88,6 +90,8 @@ private:
 
 	// Controls
 	static map<string, Keyboard::Key> _controls;
+	static bool _isObservingControlChange;
+	static string _observingControlName; // empty string is no, a string with contents marks the control to change
 };
 
 // Timing

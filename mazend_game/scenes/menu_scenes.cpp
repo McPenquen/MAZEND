@@ -34,30 +34,83 @@ void MainMenuScene::DefaultSetup() {
 }
 
  // Options
+bool OptionsScene::_isChangingControl = false;
+string OptionsScene::_changingKeyName = "";
+
 void OptionsScene::Load() {
 	auto txt = makeEntity(1);
 	auto activeControls = Engine::GetControls();
 
 	string menuStr1 = "OPTIONS\n\nWindow Mode:\n   Window Mode (Press W+1) VS Full Screen (Press W+2)\n\Controls:\n   MOVE UP: ";
-	string menuStr2 = Engine::Key2String(activeControls["up"]) + "\n   MOVE DOWN: " + Engine::Key2String(activeControls["down"]) + "\n   MOVE LEFT: " 
-		+ Engine::Key2String(activeControls["left"]) + "\n   MOVE RIGHT: " + Engine::Key2String(activeControls["right"])
-		+ "\n   JUMP: " + Engine::Key2String(activeControls["jump"]) + "\n\nBack - Press 9";
+	string menuStr2 = Engine::Key2String(activeControls["up"]) + " - Press Q+1 for change\n   MOVE DOWN: " + Engine::Key2String(activeControls["down"]) + " - Press Q+2 for change\n   MOVE LEFT: " 
+		+ Engine::Key2String(activeControls["left"]) + " - Press Q+3 for change\n   MOVE RIGHT: " + Engine::Key2String(activeControls["right"])
+		+ " - Press Q+4 for change\n   JUMP: " + Engine::Key2String(activeControls["jump"]) + " - Press Q+5 for change\n\nBack - Press 9";
 
 	auto t = txt->addComponent<TextComponent>(menuStr1 + menuStr2);
 	txt->setPosition(Vector2f(2* tileBounds, 2* tileBounds));
+
+	if (_isChangingControl) {
+		auto changingMessage = makeEntity(1);
+		auto cmt = changingMessage->addComponent<TextComponent>("Press a key to be your " + _changingKeyName + " movement\n\t\t\t\tIt cannot be ESC");
+		auto winSize = Engine::GetWindowSize();
+		changingMessage->setPosition({float(winSize.x) / 5, float(winSize.y) - 100.0f});
+	}
+
 	setSceneName("options");
 	setLoaded(true);
 }
 
 void OptionsScene::Update(const double dt) {
-	if (Keyboard::isKeyPressed(Keyboard::W) && Keyboard::isKeyPressed(Keyboard::Num1)) {
-		Engine::ChangeWindowMode("default");
+	if (!_isChangingControl) {
+		if (Keyboard::isKeyPressed(Keyboard::W) && Keyboard::isKeyPressed(Keyboard::Num1)) {
+			Engine::ChangeWindowMode("default");
+		}
+		if (Keyboard::isKeyPressed(Keyboard::W) && Keyboard::isKeyPressed(Keyboard::Num2)) {
+			Engine::ChangeWindowMode("fullscreen");
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Q) && Keyboard::isKeyPressed(Keyboard::Num1)) {
+			Engine::SetControl("up", Keyboard::Escape);
+			_isChangingControl = true;
+			_changingKeyName = "up";
+			Engine::ChangeScene(&options);
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Q) && Keyboard::isKeyPressed(Keyboard::Num2)) {
+			Engine::SetControl("down", Keyboard::Escape);
+			_isChangingControl = true;
+			_changingKeyName = "down";
+			Engine::ChangeScene(&options);
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Q) && Keyboard::isKeyPressed(Keyboard::Num3)) {
+			Engine::SetControl("left", Keyboard::Escape);
+			_isChangingControl = true;
+			_changingKeyName = "left";
+			Engine::ChangeScene(&options);
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Q) && Keyboard::isKeyPressed(Keyboard::Num4)) {
+			Engine::SetControl("right", Keyboard::Escape);
+			_isChangingControl = true;
+			_changingKeyName = "right";
+			Engine::ChangeScene(&options);
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Q) && Keyboard::isKeyPressed(Keyboard::Num5)) {
+			Engine::SetControl("jump", Keyboard::Escape);
+			_isChangingControl = true;
+			_changingKeyName = "jump";
+			Engine::ChangeScene(&options);
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Num9)) {
+			Engine::ChangeScene(&mainMenu);
+		}
 	}
-	if (Keyboard::isKeyPressed(Keyboard::W) && Keyboard::isKeyPressed(Keyboard::Num2)) {
-		Engine::ChangeWindowMode("fullscreen");
-	}
-	if (Keyboard::isKeyPressed(Keyboard::Num9)) {
-		Engine::ChangeScene(&mainMenu);
+	else {
+		if (_changingKeyName != "") {
+			Engine::ObserveControlChange(_changingKeyName);
+			_changingKeyName = "";
+		}
+		if (!Engine::isObservingControlChange()) {
+			_isChangingControl = false;
+			Engine::ChangeScene(&options);
+		}
 	}
 	Scene::Update(dt);
 }
