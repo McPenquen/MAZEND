@@ -39,6 +39,14 @@ private:
 	string _sceneName;
 };
 
+// Borders of a rectangle
+struct Borders {
+	float top;
+	float bottom;
+	float left;
+	float right;
+};
+
 class Engine {
 public:
 	Engine() = delete;
@@ -53,12 +61,20 @@ public:
 	static Vector2u GetWindowSize();
 	static void setVsync(bool);
 
+	// Get and set sector values
+	static Borders getCentreSectorBorders();
+	static Vector2f getCentreSectorSize();
+	static void setCentreSectorSize(Vector2f);
+
 private:
 	static Scene* _activeScene;
 	static Scene* _previousScene;
 	static string _gameName;
 	static void Update();
 	static void Render(RenderWindow& window);
+
+	// Centre sector of the window
+	static Vector2f _centreSector; 
 };
 
 // Timing

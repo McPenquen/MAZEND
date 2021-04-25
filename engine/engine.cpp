@@ -93,6 +93,7 @@ void Scene::setSceneName(const string s) {
 Scene* Engine::_activeScene = nullptr;
 Scene* Engine::_previousScene = nullptr;
 string Engine::_gameName;
+Vector2f Engine::_centreSector;
 
 // - Loading
 static bool loading = false;
@@ -257,6 +258,23 @@ Vector2u Engine::GetWindowSize() {
 
 RenderWindow& Engine::GetWindow() {
 	return *_window;
+}
+
+Borders Engine::getCentreSectorBorders() {
+	Borders answer;
+	answer.top = _window->getSize().y / 2 - _centreSector.y / 2;
+	answer.bottom = _window->getSize().y / 2 + _centreSector.y / 2;
+	answer.left = _window->getSize().x / 2 - _centreSector.x / 2;
+	answer.right = _window->getSize().x / 2 + _centreSector.x / 2;
+	return answer;
+}
+
+Vector2f Engine::getCentreSectorSize() {
+	return _centreSector;
+}
+
+void Engine::setCentreSectorSize(Vector2f newSec) {
+	_centreSector = newSec;
 }
 
 // Timing
