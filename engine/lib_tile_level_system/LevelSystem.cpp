@@ -153,7 +153,7 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
     }
     else 
     {
-        throw string("Couldn't open lvel file:") + path;
+        throw string("Couldn't open level file:") + path;
     }
 
     vector<TILE> temp_tiles;
