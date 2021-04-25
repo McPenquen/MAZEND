@@ -61,6 +61,16 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	auto plM2 = pl2->addComponent<PlayerMovementComponent>(_activeSector);
 	plM2->setSpeed(500.f);
 	plM2->setFloor(2);
+
+	//create collectables
+	auto cl1 = makeEntity(6);
+	auto clS2 = cl1->addComponent<ShapeComponent>();
+	clS2->setShape<CircleShape>(plRad / 2);
+	clS2->getShape().setFillColor(Color::Yellow);
+	clS2->getShape().setOutlineThickness(2.f);
+	clS2->getShape().setOrigin(Vector2f(plRad / 2, plRad / 2));
+	cl1->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
+
 	// Create the player for top floor
 	auto pl3 = makeEntity(5);
 	pl3->setNameTag("player3");

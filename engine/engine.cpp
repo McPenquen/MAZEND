@@ -66,6 +66,9 @@ shared_ptr<Entity> Scene::makeEntity(int orderNum) {
 	else if (orderNum == 3) {
 		ents.floor3_list.push_back(en);
 	}
+	else if (orderNum == 6) {
+		ents.collectables.push_back(en);
+	}
 	else {
 		ents.floor4_list.push_back(en);
 	}

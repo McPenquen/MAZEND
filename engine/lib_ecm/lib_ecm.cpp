@@ -119,6 +119,9 @@ void EntityManager::Render(Vector2i sectorID) {
 	for (const auto& e : floor4_list) {
 		e->Render();
 	}
+	for (const auto& e : collectables) {
+		e->Render();
+	}
 }
 
 void EntityManager::Update(double dt) {
@@ -132,6 +135,9 @@ void EntityManager::Update(double dt) {
 		e->Update(dt);
 	}
 	for (auto& e : floor4_list) {
+		e->Update(dt);
+	}
+	for (auto& e : collectables) {
 		e->Update(dt);
 	}
 	for (auto& e : players) {
