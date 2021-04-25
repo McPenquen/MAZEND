@@ -9,4 +9,6 @@ public:
 	void Update(double dt) override;
 
 	bool validMove(const Vector2f& pos) override;
+private:
+	Borders _currentSectorBorders;
 };

@@ -13,23 +13,30 @@ static float secSwitchTimer = 0.0f;
 static float stairSwitchTimer = 0.0f;
 
 void LevelScene::Load(string const s, string const s1, string const s2) {
-	LS::SetOffset(Vector2f(leftXBorder, topYBorder));
+	// Set the centre sector dimensions
+	Engine::setCentreSectorSize(Vector2f(tileBounds * 20, tileBounds * 20));
+
+	// Save sector borders
+	_sectorBorders = Engine::getCentreSectorBorders();
+
+	// Set offset
+	LS::SetOffset(Vector2f(_sectorBorders.left, _sectorBorders.top));
+	// Load the tiles
+	LS::loadLevelFile(s, 2 * tileBounds); // level 1 file loading
+    LS::loadLevelFile(s1, 2 * tileBounds); // level 2 file loading
+    LS::loadLevelFile(s2, 2 * tileBounds); // level 3 file loading
 
 	// Create the mid sector
 	auto sector = makeEntity(4);
 	sector->setNameTag("sectorFrame");
 	auto ss = sector->addComponent<ShapeComponent>();
-	ss->setShape<RectangleShape>(sectorBounds);
+	ss->setShape<RectangleShape>(Engine::getCentreSectorSize());
 	ss->getShape().setFillColor(Color::Transparent);
-	ss->getShape().setOrigin(sectorBounds / 2.f);
+	ss->getShape().setOrigin(Engine::getCentreSectorSize() / 2.f);
 	ss->getShape().setOutlineColor(Color::White);
 	ss->getShape().setOutlineThickness(5.f);
 	sector->setPosition(Vector2f(Engine::GetWindowSize().x / 2, Engine::GetWindowSize().y / 2));
 
-	// Load the tiles
-	LS::loadLevelFile(s, 2 * tileBounds); // level 1 file loading
-    LS::loadLevelFile(s1, 2 * tileBounds); // level 2 file loading
-    LS::loadLevelFile(s2, 2 * tileBounds); // level 3 file loading
 
 	float plRad = tileBounds;
 	const Color plColor = { 222, 120, 31 }; // #DE781F
@@ -80,28 +87,28 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	// Create black frame
 	auto frame1 = makeEntity(4);
 	auto sf1 = frame1->addComponent<ShapeComponent>();
-	sf1->setShape<RectangleShape>(Vector2f(tileBounds * 2, sectorBounds.y));
+	sf1->setShape<RectangleShape>(Vector2f(tileBounds * 2, Engine::getCentreSectorSize().y));
 	sf1->getShape().setFillColor(Color::Black);
-	sf1->getShape().setOrigin(Vector2f(tileBounds, sectorBounds.y/2));
-	frame1->setPosition(Vector2f((Engine::GetWindowSize().x / 2 - sectorBounds.x / 2 - tileBounds - 5.f), Engine::GetWindowSize().y / 2));
+	sf1->getShape().setOrigin(Vector2f(tileBounds, Engine::getCentreSectorSize().y/2));
+	frame1->setPosition(Vector2f((Engine::GetWindowSize().x / 2 - Engine::getCentreSectorSize().x / 2 - tileBounds - 5.f), Engine::GetWindowSize().y / 2));
 	auto frame2 = makeEntity(4);
 	auto sf2 = frame2->addComponent<ShapeComponent>();
-	sf2->setShape<RectangleShape>(Vector2f(tileBounds * 2, sectorBounds.y));
+	sf2->setShape<RectangleShape>(Vector2f(tileBounds * 2, Engine::getCentreSectorSize().y));
 	sf2->getShape().setFillColor(Color::Black);
-	sf2->getShape().setOrigin(Vector2f(tileBounds, sectorBounds.y / 2));
-	frame2->setPosition(Vector2f((Engine::GetWindowSize().x / 2 + sectorBounds.x / 2 + tileBounds + 5.f), Engine::GetWindowSize().y / 2));
+	sf2->getShape().setOrigin(Vector2f(tileBounds, Engine::getCentreSectorSize().y / 2));
+	frame2->setPosition(Vector2f((Engine::GetWindowSize().x / 2 + Engine::getCentreSectorSize().x / 2 + tileBounds + 5.f), Engine::GetWindowSize().y / 2));
 	auto frame3 = makeEntity(4);
 	auto sf3 = frame3->addComponent<ShapeComponent>();
-	sf3->setShape<RectangleShape>(Vector2f(sectorBounds.x, tileBounds * 2));
+	sf3->setShape<RectangleShape>(Vector2f(Engine::getCentreSectorSize().x, tileBounds * 2));
 	sf3->getShape().setFillColor(Color::Black);
-	sf3->getShape().setOrigin(Vector2f(sectorBounds.x / 2, tileBounds));
-	frame3->setPosition(Vector2f((Engine::GetWindowSize().x / 2), Engine::GetWindowSize().y / 2 - sectorBounds.y / 2 - tileBounds - 5.f));
+	sf3->getShape().setOrigin(Vector2f(Engine::getCentreSectorSize().x / 2, tileBounds));
+	frame3->setPosition(Vector2f((Engine::GetWindowSize().x / 2), Engine::GetWindowSize().y / 2 - Engine::getCentreSectorSize().y / 2 - tileBounds - 5.f));
 	auto frame4 = makeEntity(4);
 	auto sf4 = frame4->addComponent<ShapeComponent>();
-	sf4->setShape<RectangleShape>(Vector2f(sectorBounds.x, tileBounds * 2));
+	sf4->setShape<RectangleShape>(Vector2f(Engine::getCentreSectorSize().x, tileBounds * 2));
 	sf4->getShape().setFillColor(Color::Black);
-	sf4->getShape().setOrigin(Vector2f(sectorBounds.x / 2, tileBounds));
-	frame4->setPosition(Vector2f((Engine::GetWindowSize().x / 2), Engine::GetWindowSize().y / 2 + sectorBounds.y / 2 + tileBounds + 5.f));
+	sf4->getShape().setOrigin(Vector2f(Engine::getCentreSectorSize().x / 2, tileBounds));
+	frame4->setPosition(Vector2f((Engine::GetWindowSize().x / 2), Engine::GetWindowSize().y / 2 + Engine::getCentreSectorSize().y / 2 + tileBounds + 5.f));
 
 	// Create a time limit var
 	auto timeLim = makeEntity(4);
@@ -264,19 +271,19 @@ void LevelScene::UnLoadSector() {
 Vector2i LevelScene::getNewSector() const {
 	Vector2f plyPos = _activePlayer->getPosition();
 	// Top border collision
-	if (plyPos.y - _playerCollisionVelue <= topYBorder && _activeSector.y > 1) {
+	if (plyPos.y - _playerCollisionVelue <= _sectorBorders.top && _activeSector.y > 1) {
 		return Vector2i(_activeSector.x, _activeSector.y - 1);
 	}
 	// Bottom border collision
-	else if (plyPos.y + _playerCollisionVelue >= bottomYBorder && _activeSector.y < 3) {
+	else if (plyPos.y + _playerCollisionVelue >= _sectorBorders.bottom && _activeSector.y < 3) {
 		return Vector2i(_activeSector.x, _activeSector.y + 1);
 	}
 	// Left border collision
-	else if (plyPos.x - _playerCollisionVelue <= leftXBorder && _activeSector.x > 1) {
+	else if (plyPos.x - _playerCollisionVelue <= _sectorBorders.left && _activeSector.x > 1) {
 		return Vector2i(_activeSector.x - 1, _activeSector.y);
 	}
 	// Right border collision
-	else if (plyPos.x + _playerCollisionVelue >= rightXBorder && _activeSector.x < 3) {
+	else if (plyPos.x + _playerCollisionVelue >= _sectorBorders.right && _activeSector.x < 3) {
 		return Vector2i(_activeSector.x + 1, _activeSector.y);
 	}
 	return Vector2i(0, 0);
@@ -287,19 +294,19 @@ void LevelScene::MovePlayerOnNewSector(Vector2i oldS, Vector2i newS) {
 	Vector2f newPos = _activePlayer->getPosition();
 	// Top > down
 	if (oldS.y < newS.y) {
-		newPos.y -= sectorBounds.y + 10.0f;
+		newPos.y -= Engine::getCentreSectorSize().y + 10.0f;
 	}
 	// Bottom > up
 	else if (oldS.y > newS.y) {
-		newPos.y += sectorBounds.y - 10.0f;
+		newPos.y += Engine::getCentreSectorSize().y - 10.0f;
 	}
 	// Left > right
 	else if (oldS.x < newS.x) {
-		newPos.x -= sectorBounds.x + 10.0f;
+		newPos.x -= Engine::getCentreSectorSize().x + 10.0f;
 	}
 	// Right > left
 	else if (oldS.x > newS.x) {
-		newPos.x += sectorBounds.x - 10.0f; 
+		newPos.x += Engine::getCentreSectorSize().x - 10.0f; 
 	}
 	movePlayerTo(newPos);
 }

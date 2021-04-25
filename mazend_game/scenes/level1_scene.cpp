@@ -22,7 +22,7 @@ void Level1Scene::Load() {
 	_timeLimitValue.seconds = 0.0f;
 
 	// Move the player to the starting position in the chosen sector corresponding to the correct floor
-	movePlayerTo(Vector2f(leftXBorder + tileBounds * 7.0f, topYBorder + tileBounds * 15.0f));
+	movePlayerTo(Vector2f(_sectorBorders.left + tileBounds * 7.0f, _sectorBorders.top + tileBounds * 15.0f));
 	// Set the active player
 	setActivePlayer();
 
