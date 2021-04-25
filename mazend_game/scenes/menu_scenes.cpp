@@ -67,10 +67,10 @@ void LevelsScene::Update(const double dt) {
 void PauseMenuScene::Load() {
 	auto curtain = makeEntity(4);
 	auto cs = curtain->addComponent<ShapeComponent>();
-	cs->setShape<RectangleShape>(Vector2f(gameWidth, gameHeight));
+	cs->setShape<RectangleShape>(Vector2f(Engine::GetWindowSize().x, Engine::GetWindowSize().y));
 	cs->getShape().setFillColor(Color::Black);
-	cs->getShape().setOrigin(Vector2f(gameWidth / 2, gameHeight / 2));
-	curtain->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
+	cs->getShape().setOrigin(Vector2f(Engine::GetWindowSize().x / 2, Engine::GetWindowSize().y / 2));
+	curtain->setPosition(Vector2f(Engine::GetWindowSize().x / 2, Engine::GetWindowSize().y / 2));
 	auto txt = makeEntity(4);
 	auto t = txt->addComponent<TextComponent>(
 		"PAUSE\n\nResume - Press 1\nLeave the level - Press 2"

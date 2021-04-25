@@ -37,7 +37,7 @@ void Level1Scene::Load() {
 	enS->getShape().setOutlineColor(Color::White);
 	enS->getShape().setOutlineThickness(2.f);
 	enS->getShape().setOrigin(Vector2f(tileBounds/2, tileBounds/2));
-	en->setPosition(Vector2f(gameWidth / 2 + 100.f, gameHeight / 2 + 100.f));
+	en->setPosition(Vector2f(Engine::GetWindowSize().x / 2 + 100.f, Engine::GetWindowSize().y / 2 + 100.f));
 	auto enM = en->addComponent<EnemyMovementComponent>(Vector2i(3, 3), ents.players, _activePlayerFloor - 1);
 	enM->setFloor(3);
 	enM->setSpeed(50.0f);
@@ -62,7 +62,7 @@ void Level1Scene::Update(const double dt) {
 
 void Level1Scene::DisplaySector() {
 	auto txt = makeEntity(1);
-	txt->setPosition(Vector2f((gameWidth / 2) - 80,0));
+	txt->setPosition(Vector2f((Engine::GetWindowSize().x / 2) - 80,0));
 	string str = "Sector " + to_string(_activeSector.x) + ", " + to_string(_activeSector.y);
 	auto t = txt->addComponent<TextComponent>(str);
 }

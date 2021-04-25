@@ -24,7 +24,7 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	ss->getShape().setOrigin(sectorBounds / 2.f);
 	ss->getShape().setOutlineColor(Color::White);
 	ss->getShape().setOutlineThickness(5.f);
-	sector->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
+	sector->setPosition(Vector2f(Engine::GetWindowSize().x / 2, Engine::GetWindowSize().y / 2));
 
 	// Load the tiles
 	LS::loadLevelFile(s, 2 * tileBounds); // level 1 file loading
@@ -44,7 +44,7 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	plS->getShape().setOutlineColor(Color::Black);
 	plS->getShape().setOutlineThickness(2.f);
 	plS->getShape().setOrigin(Vector2f(plRad/4, plRad/4));
-	pl->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
+	pl->setPosition(Vector2f(Engine::GetWindowSize().x / 2, Engine::GetWindowSize().y / 2));
 	auto plM = pl->addComponent<PlayerMovementComponent>(_activeSector);
 	plM->setSpeed(500.f);
 	plM->setFloor(1);
@@ -58,7 +58,7 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	plS2->getShape().setOutlineColor(Color::Black);
 	plS2->getShape().setOutlineThickness(2.f);
 	plS2->getShape().setOrigin(Vector2f(plRad/2, plRad/2));
-	pl2->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
+	pl2->setPosition(Vector2f(Engine::GetWindowSize().x / 2, Engine::GetWindowSize().y / 2));
 	auto plM2 = pl2->addComponent<PlayerMovementComponent>(_activeSector);
 	plM2->setSpeed(500.f);
 	plM2->setFloor(2);
@@ -72,7 +72,7 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	plS3->getShape().setOutlineColor(Color::Black);
 	plS3->getShape().setOutlineThickness(2.f);
 	plS3->getShape().setOrigin(Vector2f(plRad, plRad));
-	pl3->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
+	pl3->setPosition(Vector2f(Engine::GetWindowSize().x / 2, Engine::GetWindowSize().y / 2));
 	auto plM3 = pl3->addComponent<PlayerMovementComponent>(_activeSector);
 	plM3->setSpeed(500.f);
 	plM3->setFloor(3);
@@ -83,29 +83,29 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	sf1->setShape<RectangleShape>(Vector2f(tileBounds * 2, sectorBounds.y));
 	sf1->getShape().setFillColor(Color::Black);
 	sf1->getShape().setOrigin(Vector2f(tileBounds, sectorBounds.y/2));
-	frame1->setPosition(Vector2f((gameWidth / 2 - sectorBounds.x / 2 - tileBounds - 5.f), gameHeight / 2));
+	frame1->setPosition(Vector2f((Engine::GetWindowSize().x / 2 - sectorBounds.x / 2 - tileBounds - 5.f), Engine::GetWindowSize().y / 2));
 	auto frame2 = makeEntity(4);
 	auto sf2 = frame2->addComponent<ShapeComponent>();
 	sf2->setShape<RectangleShape>(Vector2f(tileBounds * 2, sectorBounds.y));
 	sf2->getShape().setFillColor(Color::Black);
 	sf2->getShape().setOrigin(Vector2f(tileBounds, sectorBounds.y / 2));
-	frame2->setPosition(Vector2f((gameWidth / 2 + sectorBounds.x / 2 + tileBounds + 5.f), gameHeight / 2));
+	frame2->setPosition(Vector2f((Engine::GetWindowSize().x / 2 + sectorBounds.x / 2 + tileBounds + 5.f), Engine::GetWindowSize().y / 2));
 	auto frame3 = makeEntity(4);
 	auto sf3 = frame3->addComponent<ShapeComponent>();
 	sf3->setShape<RectangleShape>(Vector2f(sectorBounds.x, tileBounds * 2));
 	sf3->getShape().setFillColor(Color::Black);
 	sf3->getShape().setOrigin(Vector2f(sectorBounds.x / 2, tileBounds));
-	frame3->setPosition(Vector2f((gameWidth / 2), gameHeight / 2 - sectorBounds.y / 2 - tileBounds - 5.f));
+	frame3->setPosition(Vector2f((Engine::GetWindowSize().x / 2), Engine::GetWindowSize().y / 2 - sectorBounds.y / 2 - tileBounds - 5.f));
 	auto frame4 = makeEntity(4);
 	auto sf4 = frame4->addComponent<ShapeComponent>();
 	sf4->setShape<RectangleShape>(Vector2f(sectorBounds.x, tileBounds * 2));
 	sf4->getShape().setFillColor(Color::Black);
 	sf4->getShape().setOrigin(Vector2f(sectorBounds.x / 2, tileBounds));
-	frame4->setPosition(Vector2f((gameWidth / 2), gameHeight / 2 + sectorBounds.y / 2 + tileBounds + 5.f));
+	frame4->setPosition(Vector2f((Engine::GetWindowSize().x / 2), Engine::GetWindowSize().y / 2 + sectorBounds.y / 2 + tileBounds + 5.f));
 
 	// Create a time limit var
 	auto timeLim = makeEntity(4);
-	timeLim->setPosition(Vector2f((gameWidth / 2) - 30, 100));
+	timeLim->setPosition(Vector2f((Engine::GetWindowSize().x / 2) - 30, 100));
 	timeLim->setNameTag("timeLimit");
 	auto tL = timeLim->addComponent<TextComponent>("");
 	_timeLimit = timeLim;
@@ -234,7 +234,7 @@ void LevelScene::UnLoad() {
 
 void LevelScene::DisplaySector() {
 	auto txt = makeEntity(1);
-	txt->setPosition(Vector2f((gameWidth / 2) + 50, 100));
+	txt->setPosition(Vector2f((Engine::GetWindowSize().x / 2) + 50, 100));
 	string str = "Sector " + to_string(_activeSector.x) + ", " + to_string(_activeSector.y);
 	auto t = txt->addComponent<TextComponent>(str);
 }
