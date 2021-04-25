@@ -52,19 +52,20 @@ public:
 	Engine() = delete;
 
 	static void Start(unsigned int winWidth, unsigned int winHeight,
-		const string& gameName, Scene* scene);
+		const string& gameName, Scene* scene, bool isFullscreen);
 	static void ChangeScene(Scene*);
 	static void PauseScene(Scene*);
 	static void UnloadPreviousScene();
 
 	static RenderWindow& GetWindow();
 	static Vector2u GetWindowSize();
-	static void setVsync(bool);
+	static void ChangeWindowMode(string);
+	static void SetVsync(bool);
 
 	// Get and set sector values
-	static Borders getCentreSectorBorders();
-	static Vector2f getCentreSectorSize();
-	static void setCentreSectorSize(Vector2f);
+	static Borders GetCentreSectorBorders();
+	static Vector2f GetCentreSectorSize();
+	static void SetCentreSectorSize(Vector2f);
 
 private:
 	static Scene* _activeScene;
@@ -72,6 +73,9 @@ private:
 	static string _gameName;
 	static void Update();
 	static void Render(RenderWindow& window);
+
+	// Flag to change the window mode - '' means no change, name indicates the type of change
+	static string _changingMode;
 
 	// Centre sector of the window
 	static Vector2f _centreSector; 

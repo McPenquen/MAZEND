@@ -28,7 +28,7 @@ void MainMenuScene::Update(const double dt) {
 void OptionsScene::Load() {
 	auto txt = makeEntity(1);
 	auto t = txt->addComponent<TextComponent>(
-		"OPTIONS\n\nBack - Press 1"
+		"OPTIONS\n\nWindow Mode:\n   Window Mode (Press W+1) VS Full Screen (Press W+2)\n\nBack - Press 9"
 		);
 	txt->setPosition(Vector2f(2* tileBounds, 2* tileBounds));
 	setSceneName("options");
@@ -36,7 +36,13 @@ void OptionsScene::Load() {
 }
 
 void OptionsScene::Update(const double dt) {
-	if (Keyboard::isKeyPressed(Keyboard::Num1)) {
+	if (Keyboard::isKeyPressed(Keyboard::W) && Keyboard::isKeyPressed(Keyboard::Num1)) {
+		Engine::ChangeWindowMode("default");
+	}
+	if (Keyboard::isKeyPressed(Keyboard::W) && Keyboard::isKeyPressed(Keyboard::Num2)) {
+		Engine::ChangeWindowMode("fullscreen");
+	}
+	if (Keyboard::isKeyPressed(Keyboard::Num9)) {
 		Engine::ChangeScene(&mainMenu);
 	}
 	Scene::Update(dt);

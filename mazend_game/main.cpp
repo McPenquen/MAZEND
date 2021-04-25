@@ -17,6 +17,6 @@ Level1Scene level1;
 GameOverScene gameOverScn;
 
 int main(){
-	Engine::Start(gameWidth, gameHeight, "MAZEND", &mainMenu);
+	Engine::Start(gameWidth, gameHeight, "MAZEND", &mainMenu, 0);
 	return 0;
 }

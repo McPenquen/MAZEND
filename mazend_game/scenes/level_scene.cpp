@@ -14,10 +14,10 @@ static float stairSwitchTimer = 0.0f;
 
 void LevelScene::Load(string const s, string const s1, string const s2) {
 	// Set the centre sector dimensions
-	Engine::setCentreSectorSize(Vector2f(tileBounds * 20, tileBounds * 20));
+	Engine::SetCentreSectorSize(Vector2f(tileBounds * 20, tileBounds * 20));
 
 	// Save sector borders
-	_sectorBorders = Engine::getCentreSectorBorders();
+	_sectorBorders = Engine::GetCentreSectorBorders();
 
 	// Set offset
 	LS::SetOffset(Vector2f(_sectorBorders.left, _sectorBorders.top));
@@ -30,9 +30,9 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	auto sector = makeEntity(4);
 	sector->setNameTag("sectorFrame");
 	auto ss = sector->addComponent<ShapeComponent>();
-	ss->setShape<RectangleShape>(Engine::getCentreSectorSize());
+	ss->setShape<RectangleShape>(Engine::GetCentreSectorSize());
 	ss->getShape().setFillColor(Color::Transparent);
-	ss->getShape().setOrigin(Engine::getCentreSectorSize() / 2.f);
+	ss->getShape().setOrigin(Engine::GetCentreSectorSize() / 2.f);
 	ss->getShape().setOutlineColor(Color::White);
 	ss->getShape().setOutlineThickness(5.f);
 	sector->setPosition(Vector2f(Engine::GetWindowSize().x / 2, Engine::GetWindowSize().y / 2));
@@ -87,28 +87,28 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	// Create black frame
 	auto frame1 = makeEntity(4);
 	auto sf1 = frame1->addComponent<ShapeComponent>();
-	sf1->setShape<RectangleShape>(Vector2f(tileBounds * 2, Engine::getCentreSectorSize().y));
+	sf1->setShape<RectangleShape>(Vector2f(tileBounds * 2, Engine::GetCentreSectorSize().y));
 	sf1->getShape().setFillColor(Color::Black);
-	sf1->getShape().setOrigin(Vector2f(tileBounds, Engine::getCentreSectorSize().y/2));
-	frame1->setPosition(Vector2f((Engine::GetWindowSize().x / 2 - Engine::getCentreSectorSize().x / 2 - tileBounds - 5.f), Engine::GetWindowSize().y / 2));
+	sf1->getShape().setOrigin(Vector2f(tileBounds, Engine::GetCentreSectorSize().y/2));
+	frame1->setPosition(Vector2f((Engine::GetWindowSize().x / 2 - Engine::GetCentreSectorSize().x / 2 - tileBounds - 5.f), Engine::GetWindowSize().y / 2));
 	auto frame2 = makeEntity(4);
 	auto sf2 = frame2->addComponent<ShapeComponent>();
-	sf2->setShape<RectangleShape>(Vector2f(tileBounds * 2, Engine::getCentreSectorSize().y));
+	sf2->setShape<RectangleShape>(Vector2f(tileBounds * 2, Engine::GetCentreSectorSize().y));
 	sf2->getShape().setFillColor(Color::Black);
-	sf2->getShape().setOrigin(Vector2f(tileBounds, Engine::getCentreSectorSize().y / 2));
-	frame2->setPosition(Vector2f((Engine::GetWindowSize().x / 2 + Engine::getCentreSectorSize().x / 2 + tileBounds + 5.f), Engine::GetWindowSize().y / 2));
+	sf2->getShape().setOrigin(Vector2f(tileBounds, Engine::GetCentreSectorSize().y / 2));
+	frame2->setPosition(Vector2f((Engine::GetWindowSize().x / 2 + Engine::GetCentreSectorSize().x / 2 + tileBounds + 5.f), Engine::GetWindowSize().y / 2));
 	auto frame3 = makeEntity(4);
 	auto sf3 = frame3->addComponent<ShapeComponent>();
-	sf3->setShape<RectangleShape>(Vector2f(Engine::getCentreSectorSize().x, tileBounds * 2));
+	sf3->setShape<RectangleShape>(Vector2f(Engine::GetCentreSectorSize().x, tileBounds * 2));
 	sf3->getShape().setFillColor(Color::Black);
-	sf3->getShape().setOrigin(Vector2f(Engine::getCentreSectorSize().x / 2, tileBounds));
-	frame3->setPosition(Vector2f((Engine::GetWindowSize().x / 2), Engine::GetWindowSize().y / 2 - Engine::getCentreSectorSize().y / 2 - tileBounds - 5.f));
+	sf3->getShape().setOrigin(Vector2f(Engine::GetCentreSectorSize().x / 2, tileBounds));
+	frame3->setPosition(Vector2f((Engine::GetWindowSize().x / 2), Engine::GetWindowSize().y / 2 - Engine::GetCentreSectorSize().y / 2 - tileBounds - 5.f));
 	auto frame4 = makeEntity(4);
 	auto sf4 = frame4->addComponent<ShapeComponent>();
-	sf4->setShape<RectangleShape>(Vector2f(Engine::getCentreSectorSize().x, tileBounds * 2));
+	sf4->setShape<RectangleShape>(Vector2f(Engine::GetCentreSectorSize().x, tileBounds * 2));
 	sf4->getShape().setFillColor(Color::Black);
-	sf4->getShape().setOrigin(Vector2f(Engine::getCentreSectorSize().x / 2, tileBounds));
-	frame4->setPosition(Vector2f((Engine::GetWindowSize().x / 2), Engine::GetWindowSize().y / 2 + Engine::getCentreSectorSize().y / 2 + tileBounds + 5.f));
+	sf4->getShape().setOrigin(Vector2f(Engine::GetCentreSectorSize().x / 2, tileBounds));
+	frame4->setPosition(Vector2f((Engine::GetWindowSize().x / 2), Engine::GetWindowSize().y / 2 + Engine::GetCentreSectorSize().y / 2 + tileBounds + 5.f));
 
 	// Create a time limit var
 	auto timeLim = makeEntity(4);
@@ -294,19 +294,19 @@ void LevelScene::MovePlayerOnNewSector(Vector2i oldS, Vector2i newS) {
 	Vector2f newPos = _activePlayer->getPosition();
 	// Top > down
 	if (oldS.y < newS.y) {
-		newPos.y -= Engine::getCentreSectorSize().y + 10.0f;
+		newPos.y -= Engine::GetCentreSectorSize().y + 10.0f;
 	}
 	// Bottom > up
 	else if (oldS.y > newS.y) {
-		newPos.y += Engine::getCentreSectorSize().y - 10.0f;
+		newPos.y += Engine::GetCentreSectorSize().y - 10.0f;
 	}
 	// Left > right
 	else if (oldS.x < newS.x) {
-		newPos.x -= Engine::getCentreSectorSize().x + 10.0f;
+		newPos.x -= Engine::GetCentreSectorSize().x + 10.0f;
 	}
 	// Right > left
 	else if (oldS.x > newS.x) {
-		newPos.x += Engine::getCentreSectorSize().x - 10.0f; 
+		newPos.x += Engine::GetCentreSectorSize().x - 10.0f; 
 	}
 	movePlayerTo(newPos);
 }

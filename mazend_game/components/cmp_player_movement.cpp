@@ -4,7 +4,7 @@
 
 PlayerMovementComponent::PlayerMovementComponent(Entity* p, Vector2i sectorID) : MovementComponent(p) { 
 	_sectorId = sectorID; 
-	_currentSectorBorders = Engine::getCentreSectorBorders();
+	_currentSectorBorders = Engine::GetCentreSectorBorders();
 }
 
 void PlayerMovementComponent::Update(double dt) {

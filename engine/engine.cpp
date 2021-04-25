@@ -94,6 +94,7 @@ Scene* Engine::_activeScene = nullptr;
 Scene* Engine::_previousScene = nullptr;
 string Engine::_gameName;
 Vector2f Engine::_centreSector;
+string Engine::_changingMode = "";
 
 // - Loading
 static bool loading = false;
@@ -174,11 +175,15 @@ void Engine::Render(RenderWindow& window) {
 	Renderer::Render();
 }
 
-void Engine::Start(unsigned int width, unsigned int height, const string& gameName, Scene* scene) {
-	RenderWindow window(VideoMode(width, height), gameName);
-	_gameName = gameName;
+void Engine::Start(unsigned int width, unsigned int height, const string& gameName, Scene* scene, bool isFullscreen) {
+	// Reset the _changingMode value
+	_changingMode = "";
+
+	RenderWindow window(VideoMode(width, height), gameName, isFullscreen ? Style::Fullscreen : Style::Default);
 	_window = &window;
-	Renderer::Initialise(window);
+	_gameName = gameName;
+	window.setMouseCursorVisible(false);
+	Renderer::Initialise(*_window);
 	ChangeScene(scene);
 	while (window.isOpen()) {
 		Event event;
@@ -189,6 +194,16 @@ void Engine::Start(unsigned int width, unsigned int height, const string& gameNa
 		}
 		if (_activeScene->getSceneName() == "mainMenu" && (Keyboard::isKeyPressed(Keyboard::Num3))) {
 			window.close();
+		}
+		if (_changingMode != "") {
+			if (_changingMode == "fullscreen") {
+				window.close();
+				Engine::Start(width, height, gameName, scene, 1);
+			}
+			else {
+				window.close();
+				Engine::Start(width, height, gameName, scene, 0);
+			}
 		}
 		window.clear();
 		Update();
@@ -206,7 +221,7 @@ void Engine::Start(unsigned int width, unsigned int height, const string& gameNa
 	window.close();
 }
 
-void Engine::setVsync(bool bo) {
+void Engine::SetVsync(bool bo) {
 	_window->setVerticalSyncEnabled(bo);
 }
 
@@ -260,7 +275,13 @@ RenderWindow& Engine::GetWindow() {
 	return *_window;
 }
 
-Borders Engine::getCentreSectorBorders() {
+void Engine::ChangeWindowMode(string modeStr) {
+	//_window->setPosition({ -10, 0 });
+	//_window->setSize({vm.width, vm.height});
+	_changingMode = modeStr;
+}
+
+Borders Engine::GetCentreSectorBorders() {
 	Borders answer;
 	answer.top = _window->getSize().y / 2 - _centreSector.y / 2;
 	answer.bottom = _window->getSize().y / 2 + _centreSector.y / 2;
@@ -269,11 +290,11 @@ Borders Engine::getCentreSectorBorders() {
 	return answer;
 }
 
-Vector2f Engine::getCentreSectorSize() {
+Vector2f Engine::GetCentreSectorSize() {
 	return _centreSector;
 }
 
-void Engine::setCentreSectorSize(Vector2f newSec) {
+void Engine::SetCentreSectorSize(Vector2f newSec) {
 	_centreSector = newSec;
 }
 
