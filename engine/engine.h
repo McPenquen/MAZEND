@@ -27,6 +27,7 @@ public:
 	string getSceneName() const;
 	void setSceneName(const string);
 
+	virtual void DefaultSetup() {}
 
 protected:
 	void setLoaded(bool);
@@ -39,19 +40,40 @@ private:
 	string _sceneName;
 };
 
+// Borders of a rectangle
+struct Borders {
+	float top;
+	float bottom;
+	float left;
+	float right;
+};
+
 class Engine {
 public:
 	Engine() = delete;
 
 	static void Start(unsigned int winWidth, unsigned int winHeight,
-		const string& gameName, Scene* scene);
+		const string& gameName, Scene* scene, const bool isFullscreen);
 	static void ChangeScene(Scene*);
 	static void PauseScene(Scene*);
 	static void UnloadPreviousScene();
 
 	static RenderWindow& GetWindow();
 	static Vector2u GetWindowSize();
-	static void setVsync(bool);
+	static void ChangeWindowMode(const string);
+	static void SetVsync(const bool);
+
+	// Get and set sector values
+	static Borders GetCentreSectorBorders();
+	static Vector2f GetCentreSectorSize();
+	static void SetCentreSectorSize(const Vector2f);
+
+	//Controls
+	static map<string, Keyboard::Key> GetControls();
+	static void SetControl(const string controlName, const Keyboard::Key);
+	static string Key2String(const Keyboard::Key);
+	static void ObserveControlChange(const string keyName); // mark to start detecting key to change a control from the string to
+	static bool isObservingControlChange();
 
 private:
 	static Scene* _activeScene;
@@ -59,6 +81,17 @@ private:
 	static string _gameName;
 	static void Update();
 	static void Render(RenderWindow& window);
+
+	// Flag to change the window mode - '' means no change, name indicates the type of change
+	static string _changingMode;
+
+	// Centre sector of the window
+	static Vector2f _centreSector;
+
+	// Controls
+	static map<string, Keyboard::Key> _controls;
+	static bool _isObservingControlChange;
+	static string _observingControlName; // empty string is no, a string with contents marks the control to change
 };
 
 // Timing

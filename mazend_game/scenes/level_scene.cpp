@@ -11,25 +11,36 @@
 // Timing management
 static float secSwitchTimer = 0.0f;
 static float stairSwitchTimer = 0.0f;
+map<string, Keyboard::Key> LevelScene::_currentControls;
 
 void LevelScene::Load(string const s, string const s1, string const s2) {
-	LS::SetOffset(Vector2f(leftXBorder, topYBorder));
+	// Get the controls
+	_currentControls = Engine::GetControls();
+
+	// Set the centre sector dimensions
+	Engine::SetCentreSectorSize(Vector2f(tileBounds * 20, tileBounds * 20));
+
+	// Save sector borders
+	_sectorBorders = Engine::GetCentreSectorBorders();
+
+	// Set offset
+	LS::SetOffset(Vector2f(_sectorBorders.left, _sectorBorders.top));
+	// Load the tiles
+	LS::loadLevelFile(s, 2 * tileBounds); // level 1 file loading
+    LS::loadLevelFile(s1, 2 * tileBounds); // level 2 file loading
+    LS::loadLevelFile(s2, 2 * tileBounds); // level 3 file loading
 
 	// Create the mid sector
 	auto sector = makeEntity(4);
 	sector->setNameTag("sectorFrame");
 	auto ss = sector->addComponent<ShapeComponent>();
-	ss->setShape<RectangleShape>(sectorBounds);
+	ss->setShape<RectangleShape>(Engine::GetCentreSectorSize());
 	ss->getShape().setFillColor(Color::Transparent);
-	ss->getShape().setOrigin(sectorBounds / 2.f);
+	ss->getShape().setOrigin(Engine::GetCentreSectorSize() / 2.f);
 	ss->getShape().setOutlineColor(Color::White);
 	ss->getShape().setOutlineThickness(5.f);
-	sector->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
+	sector->setPosition(Vector2f(Engine::GetWindowSize().x / 2, Engine::GetWindowSize().y / 2));
 
-	// Load the tiles
-	LS::loadLevelFile(s, 2 * tileBounds); // level 1 file loading
-    LS::loadLevelFile(s1, 2 * tileBounds); // level 2 file loading
-    LS::loadLevelFile(s2, 2 * tileBounds); // level 3 file loading
 
 	float plRad = tileBounds;
 	const Color plColor = { 222, 120, 31 }; // #DE781F
@@ -44,7 +55,7 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	plS->getShape().setOutlineColor(Color::Black);
 	plS->getShape().setOutlineThickness(2.f);
 	plS->getShape().setOrigin(Vector2f(plRad/4, plRad/4));
-	pl->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
+	pl->setPosition(Vector2f(Engine::GetWindowSize().x / 2, Engine::GetWindowSize().y / 2));
 	auto plM = pl->addComponent<PlayerMovementComponent>(_activeSector);
 	plM->setSpeed(500.f);
 	plM->setFloor(1);
@@ -58,7 +69,7 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	plS2->getShape().setOutlineColor(Color::Black);
 	plS2->getShape().setOutlineThickness(2.f);
 	plS2->getShape().setOrigin(Vector2f(plRad/2, plRad/2));
-	pl2->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
+	pl2->setPosition(Vector2f(Engine::GetWindowSize().x / 2, Engine::GetWindowSize().y / 2));
 	auto plM2 = pl2->addComponent<PlayerMovementComponent>(_activeSector);
 	plM2->setSpeed(500.f);
 	plM2->setFloor(2);
@@ -72,7 +83,7 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	plS3->getShape().setOutlineColor(Color::Black);
 	plS3->getShape().setOutlineThickness(2.f);
 	plS3->getShape().setOrigin(Vector2f(plRad, plRad));
-	pl3->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
+	pl3->setPosition(Vector2f(Engine::GetWindowSize().x / 2, Engine::GetWindowSize().y / 2));
 	auto plM3 = pl3->addComponent<PlayerMovementComponent>(_activeSector);
 	plM3->setSpeed(500.f);
 	plM3->setFloor(3);
@@ -80,32 +91,32 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	// Create black frame
 	auto frame1 = makeEntity(4);
 	auto sf1 = frame1->addComponent<ShapeComponent>();
-	sf1->setShape<RectangleShape>(Vector2f(tileBounds * 2, sectorBounds.y));
+	sf1->setShape<RectangleShape>(Vector2f(tileBounds * 2, Engine::GetCentreSectorSize().y));
 	sf1->getShape().setFillColor(Color::Black);
-	sf1->getShape().setOrigin(Vector2f(tileBounds, sectorBounds.y/2));
-	frame1->setPosition(Vector2f((gameWidth / 2 - sectorBounds.x / 2 - tileBounds - 5.f), gameHeight / 2));
+	sf1->getShape().setOrigin(Vector2f(tileBounds, Engine::GetCentreSectorSize().y/2));
+	frame1->setPosition(Vector2f((Engine::GetWindowSize().x / 2 - Engine::GetCentreSectorSize().x / 2 - tileBounds - 5.f), Engine::GetWindowSize().y / 2));
 	auto frame2 = makeEntity(4);
 	auto sf2 = frame2->addComponent<ShapeComponent>();
-	sf2->setShape<RectangleShape>(Vector2f(tileBounds * 2, sectorBounds.y));
+	sf2->setShape<RectangleShape>(Vector2f(tileBounds * 2, Engine::GetCentreSectorSize().y));
 	sf2->getShape().setFillColor(Color::Black);
-	sf2->getShape().setOrigin(Vector2f(tileBounds, sectorBounds.y / 2));
-	frame2->setPosition(Vector2f((gameWidth / 2 + sectorBounds.x / 2 + tileBounds + 5.f), gameHeight / 2));
+	sf2->getShape().setOrigin(Vector2f(tileBounds, Engine::GetCentreSectorSize().y / 2));
+	frame2->setPosition(Vector2f((Engine::GetWindowSize().x / 2 + Engine::GetCentreSectorSize().x / 2 + tileBounds + 5.f), Engine::GetWindowSize().y / 2));
 	auto frame3 = makeEntity(4);
 	auto sf3 = frame3->addComponent<ShapeComponent>();
-	sf3->setShape<RectangleShape>(Vector2f(sectorBounds.x, tileBounds * 2));
+	sf3->setShape<RectangleShape>(Vector2f(Engine::GetCentreSectorSize().x, tileBounds * 2));
 	sf3->getShape().setFillColor(Color::Black);
-	sf3->getShape().setOrigin(Vector2f(sectorBounds.x / 2, tileBounds));
-	frame3->setPosition(Vector2f((gameWidth / 2), gameHeight / 2 - sectorBounds.y / 2 - tileBounds - 5.f));
+	sf3->getShape().setOrigin(Vector2f(Engine::GetCentreSectorSize().x / 2, tileBounds));
+	frame3->setPosition(Vector2f((Engine::GetWindowSize().x / 2), Engine::GetWindowSize().y / 2 - Engine::GetCentreSectorSize().y / 2 - tileBounds - 5.f));
 	auto frame4 = makeEntity(4);
 	auto sf4 = frame4->addComponent<ShapeComponent>();
-	sf4->setShape<RectangleShape>(Vector2f(sectorBounds.x, tileBounds * 2));
+	sf4->setShape<RectangleShape>(Vector2f(Engine::GetCentreSectorSize().x, tileBounds * 2));
 	sf4->getShape().setFillColor(Color::Black);
-	sf4->getShape().setOrigin(Vector2f(sectorBounds.x / 2, tileBounds));
-	frame4->setPosition(Vector2f((gameWidth / 2), gameHeight / 2 + sectorBounds.y / 2 + tileBounds + 5.f));
+	sf4->getShape().setOrigin(Vector2f(Engine::GetCentreSectorSize().x / 2, tileBounds));
+	frame4->setPosition(Vector2f((Engine::GetWindowSize().x / 2), Engine::GetWindowSize().y / 2 + Engine::GetCentreSectorSize().y / 2 + tileBounds + 5.f));
 
 	// Create a time limit var
 	auto timeLim = makeEntity(4);
-	timeLim->setPosition(Vector2f((gameWidth / 2) - 30, 100));
+	timeLim->setPosition(Vector2f((Engine::GetWindowSize().x / 2) - 30, 100));
 	timeLim->setNameTag("timeLimit");
 	auto tL = timeLim->addComponent<TextComponent>("");
 	_timeLimit = timeLim;
@@ -155,7 +166,7 @@ void LevelScene::Update(double const dt) {
 	}
 
 	// Check if the player isn't on stairs to change floor
-	if (Keyboard::isKeyPressed(Keyboard::Space) && stairSwitchTimer <= 0.0f) {
+	if (Keyboard::isKeyPressed(_currentControls["jump"]) && stairSwitchTimer <= 0.0f) {
 		if (LS::isStairs(LS::getTileAt(_activePlayer->getPosition(), _activeSector, _activePlayerFloor))) {
 			stairSwitchTimer = TIME_DELAY_COUNTER;
 			int newFloor = LS::getStairsFloorChnage(_activePlayer->getPosition(), _activeSector, _activePlayerFloor);
@@ -164,7 +175,7 @@ void LevelScene::Update(double const dt) {
 	}
 
 	// Check if the player wants to jump down a floor in up direction- not possible if on the bottom floor
-	if (Keyboard::isKeyPressed(Keyboard::Space) && Keyboard::isKeyPressed(Keyboard::Up) && _activePlayerFloor > 1) {
+	if (Keyboard::isKeyPressed(_currentControls["jump"]) && Keyboard::isKeyPressed(_currentControls["up"]) && _activePlayerFloor > 1) {
 		Vector2f nextPos = _activePlayer->getPosition() + Vector2f(0, -(tileBounds * 2));
 		if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor) == LS::EMPTY) {
 			// if the floor bellow has a floor there player can jump
@@ -175,7 +186,7 @@ void LevelScene::Update(double const dt) {
 		}
 	}
 	// Check if the player wants to jump down a floor in down direction- not possible if on the bottom floor
-	if (Keyboard::isKeyPressed(Keyboard::Space) && Keyboard::isKeyPressed(Keyboard::Down) && _activePlayerFloor > 1) {
+	if (Keyboard::isKeyPressed(_currentControls["jump"]) && Keyboard::isKeyPressed(_currentControls["down"]) && _activePlayerFloor > 1) {
 		Vector2f nextPos = _activePlayer->getPosition() + Vector2f(0, (tileBounds * 2));
 		if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor) == LS::EMPTY) {
 			// if the floor bellow has a floor there player can jump
@@ -186,7 +197,7 @@ void LevelScene::Update(double const dt) {
 		}
 	}
 	// Check if the player wants to jump down a floor in left direction- not possible if on the bottom floor
-	if (Keyboard::isKeyPressed(Keyboard::Space) && Keyboard::isKeyPressed(Keyboard::Left) && _activePlayerFloor > 1) {
+	if (Keyboard::isKeyPressed(_currentControls["jump"]) && Keyboard::isKeyPressed(_currentControls["left"]) && _activePlayerFloor > 1) {
 		Vector2f nextPos = _activePlayer->getPosition() + Vector2f(-(tileBounds * 2), 0);
 		if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor) == LS::EMPTY) {
 			// if the floor bellow has a floor there player can jump
@@ -197,7 +208,7 @@ void LevelScene::Update(double const dt) {
 		}
 	}
 	// Check if the player wants to jump down a floor in right direction- not possible if on the bottom floor
-	if (Keyboard::isKeyPressed(Keyboard::Space) && Keyboard::isKeyPressed(Keyboard::Right) && _activePlayerFloor > 1) {
+	if (Keyboard::isKeyPressed(_currentControls["jump"]) && Keyboard::isKeyPressed(_currentControls["right"]) && _activePlayerFloor > 1) {
 		Vector2f nextPos = _activePlayer->getPosition() + Vector2f((tileBounds * 2), 0);
 		if (LS::getTileAt(nextPos, _activeSector, _activePlayerFloor) == LS::EMPTY) {
 			// if the floor bellow has a floor there player can jump
@@ -234,7 +245,7 @@ void LevelScene::UnLoad() {
 
 void LevelScene::DisplaySector() {
 	auto txt = makeEntity(1);
-	txt->setPosition(Vector2f((gameWidth / 2) + 50, 100));
+	txt->setPosition(Vector2f((Engine::GetWindowSize().x / 2) + 50, 100));
 	string str = "Sector " + to_string(_activeSector.x) + ", " + to_string(_activeSector.y);
 	auto t = txt->addComponent<TextComponent>(str);
 }
@@ -264,19 +275,19 @@ void LevelScene::UnLoadSector() {
 Vector2i LevelScene::getNewSector() const {
 	Vector2f plyPos = _activePlayer->getPosition();
 	// Top border collision
-	if (plyPos.y - _playerCollisionVelue <= topYBorder && _activeSector.y > 1) {
+	if (plyPos.y - _playerCollisionVelue <= _sectorBorders.top && _activeSector.y > 1) {
 		return Vector2i(_activeSector.x, _activeSector.y - 1);
 	}
 	// Bottom border collision
-	else if (plyPos.y + _playerCollisionVelue >= bottomYBorder && _activeSector.y < 3) {
+	else if (plyPos.y + _playerCollisionVelue >= _sectorBorders.bottom && _activeSector.y < 3) {
 		return Vector2i(_activeSector.x, _activeSector.y + 1);
 	}
 	// Left border collision
-	else if (plyPos.x - _playerCollisionVelue <= leftXBorder && _activeSector.x > 1) {
+	else if (plyPos.x - _playerCollisionVelue <= _sectorBorders.left && _activeSector.x > 1) {
 		return Vector2i(_activeSector.x - 1, _activeSector.y);
 	}
 	// Right border collision
-	else if (plyPos.x + _playerCollisionVelue >= rightXBorder && _activeSector.x < 3) {
+	else if (plyPos.x + _playerCollisionVelue >= _sectorBorders.right && _activeSector.x < 3) {
 		return Vector2i(_activeSector.x + 1, _activeSector.y);
 	}
 	return Vector2i(0, 0);
@@ -287,19 +298,19 @@ void LevelScene::MovePlayerOnNewSector(Vector2i oldS, Vector2i newS) {
 	Vector2f newPos = _activePlayer->getPosition();
 	// Top > down
 	if (oldS.y < newS.y) {
-		newPos.y -= sectorBounds.y + 10.0f;
+		newPos.y -= Engine::GetCentreSectorSize().y + 10.0f;
 	}
 	// Bottom > up
 	else if (oldS.y > newS.y) {
-		newPos.y += sectorBounds.y - 10.0f;
+		newPos.y += Engine::GetCentreSectorSize().y - 10.0f;
 	}
 	// Left > right
 	else if (oldS.x < newS.x) {
-		newPos.x -= sectorBounds.x + 10.0f;
+		newPos.x -= Engine::GetCentreSectorSize().x + 10.0f;
 	}
 	// Right > left
 	else if (oldS.x > newS.x) {
-		newPos.x += sectorBounds.x - 10.0f; 
+		newPos.x += Engine::GetCentreSectorSize().x - 10.0f; 
 	}
 	movePlayerTo(newPos);
 }

@@ -5,7 +5,7 @@
 // Game Over
 void GameOverScene::Load() {
 	auto txt = makeEntity(1);
-	txt->setPosition(Vector2f(gameWidth/2 - 100, gameHeight/2 - 100));
+	txt->setPosition(Vector2f(Engine::GetWindowSize().x/2 - 100, Engine::GetWindowSize().y/2 - 100));
 	auto t = txt->addComponent<TextComponent>(
 		"GAME OVER\n\nPress ESC"
 		);

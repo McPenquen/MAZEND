@@ -74,8 +74,7 @@ namespace sf {
         return r;
     }
 }
-#include <sstream>
-#include <iomanip>
+
 template <typename T>
 std::string toStrDecPt(const uint16_t& dp, const T& i) {
     std::stringstream stream;

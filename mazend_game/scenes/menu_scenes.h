@@ -8,6 +8,8 @@ public:
 
 	void Load() override;
 	void Update(const double dt) override;
+
+	void DefaultSetup() override;
 };
 
 class OptionsScene : public Scene {
@@ -17,6 +19,10 @@ public:
 
 	void Load() override;
 	void Update(const double dt) override;
+
+private:
+	static bool _isChangingControl;
+	static string _changingKeyName;
 };
 
 class LevelsScene : public Scene {
