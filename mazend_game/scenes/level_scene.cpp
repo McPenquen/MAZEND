@@ -4,6 +4,7 @@
 #include "../game.h"
 #include "../components/cmp_player_movement.h"
 #include "../components/cmp_text.h"
+#include "../components/cmp_enemy_movement.h"
 // The amount of dt allowed between sector switches
 #define TIME_DELAY_COUNTER 0.5f
 
@@ -207,6 +208,18 @@ void LevelScene::Update(double const dt) {
 		}
 	}
 
+	// Check if the enemy has caught the player
+	if (ents.enemies.size() > 0) {
+		for (const auto &e : ents.enemies) {
+			if (_activeSector == e->GetComponents<EnemyMovementComponent>()[0]->getSector()) {
+				if (length(_activePlayer->getPosition() - e->getPosition()) <= tileBounds * 1.5f) {
+					Engine::ChangeScene(&gameOverScn);
+					break;
+				}
+			}
+		}
+	}
+
 	// Check if the time limit has reached 0
 	if (_timeLimitValue.minutes <= 0.0f && (_timeLimitValue.seconds - dt) <= 0.0f) {
 		Engine::ChangeScene(&gameOverScn);
@@ -298,6 +311,12 @@ void LevelScene::movePlayerTo(Vector2f newPos) {
 }
 
 void LevelScene::setActivePlayer() {
+	// Change the active player for the enemies too
+	if (ents.enemies.size() > 0) {
+		for (auto& e : ents.enemies) {
+			e->GetComponents<EnemyMovementComponent>()[0]->changePlayerToHunt(_activePlayerFloor - 1);
+		}
+	}
 	if (_activePlayerFloor == 1) {
 		_activePlayer = ents.players[0];
 		ents.players[0]->setVisible(true);

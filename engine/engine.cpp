@@ -40,6 +40,7 @@ void Scene::UnLoad() {
 	ents.floor3_list.clear();
 	ents.floor4_list.clear();
 	ents.players.clear();
+	ents.enemies.clear();
 	setLoaded(false);
 }
 
@@ -56,6 +57,10 @@ shared_ptr<Entity> Scene::makeEntity(int orderNum) {
 	// number 5 means the player list
 	if (orderNum == 5) {
 		ents.players.push_back(en);
+	}
+	// number 6 means an enemy list
+	else if (orderNum == 6) {
+		ents.enemies.push_back(en);
 	}
 	else if (orderNum == 1) {
 		ents.floor1_list.push_back(en);
@@ -118,7 +123,7 @@ void LoadingRender() {
 	octagon.setFillColor(Color(255, 255, 255, min(255.f, 40.f * loadingTime)));
 	static Text t;
 	t.setString("Loading Level");
-	loadingFont.loadFromFile("res/fonts/Roboto-Bold.ttf");
+	loadingFont.loadFromFile("res/fonts/ZenDots-Regular.ttf");
 	t.setFont(loadingFont);
 	t.setFillColor(Color(255, 255, 255, min(255.f, 40.f * loadingTime)));
 	Vector2f winPos = sf::Vcast<float>(Engine::GetWindowSize());
@@ -127,12 +132,28 @@ void LoadingRender() {
 	Renderer::Queue(&octagon);
 }
 
+float frametimes[256] = {};
+uint8_t ftc = 0;
+
 // - Engine
 void Engine::Update() {
 	static Clock clock;
 	float dt = clock.restart().asSeconds();
 
 	scnSwitchTimer += dt;
+
+	{
+    frametimes[++ftc] = dt;
+    static string avg = _gameName + " FPS:";
+    if (ftc % 60 == 0) {
+      double davg = 0;
+      for (const auto t : frametimes) {
+        davg += t;
+      }
+      davg = 1.0 / (davg / 255.0);
+      _window->setTitle(avg + toStrDecPt(2, davg));
+    }
+  }
 
 	if (loading) {
 		LoadingUpdate(dt, _activeScene);

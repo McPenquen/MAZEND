@@ -11,6 +11,12 @@
 using namespace std;
 using namespace sf;
 
+// Local position consists of the screen position and the sector id
+struct LocalPosition {
+    Vector2f position;
+    Vector2i sectorId;
+};
+
 class LevelSystem {
 public:
     enum TILE {EMPTY, TOPHORIZONTAL, TOPVERTICAL, TOPSTAIRUP, TOPSTAIRDOWN, TOPSTAIRRIGHT, TOPSTAIRLEFT, TOPCORNERLEFT, TOPCORNERRIGHT, TOPCORNERUP, TOPCORNERDOWN, TTUP, TTDOWN, TTLEFT, TTRIGHT, TXJUNCTION
@@ -44,11 +50,17 @@ public:
 
     static void buildSprites(int levelNum);
 
-    static bool isStairs(TILE);
-    static int getStairsFloorChnage(Vector2f, Vector2i, int);
+    static bool isStairs(TILE); //return if the tile is stairs
+    static int getStairsFloorChnage(Vector2f, Vector2i, int); // return the layer number that the stairs lead to
+
+    // Return the global position based on the sector and position
+    static Vector2f getGlobalPos(Vector2f, Vector2i);
+    // Return the sector and position based on the global position
+    static LocalPosition getLocalPos(Vector2f);
 
 protected:
-    static vector<unique_ptr<TILE[]>> _tiles; // internal array of tiles
+    // Internal array of tiles, [0] - bot layer,[1] - mid layer, [2] - top layer
+    static vector<unique_ptr<TILE[]>> _tiles;
 
     static size_t _width; // how many tiles the level is wide
     static size_t _height; // how many tiles the level is high

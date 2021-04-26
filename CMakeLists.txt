@@ -24,17 +24,12 @@ add_subdirectory("lib/sfml")
 set(SFML_INCS "lib/sfml/include")
 link_directories("${CMAKE_BINARY_DIR}/lib/sfml/lib")
 
-# BOX2D
-add_subdirectory("lib/b2d/Box2D")
-set(B2D_INCS "lib/b2d/Box2D/")
-link_directories("${CMAKE_BINARY_DIR}/lib/sfml/lib")
-
 #### LIBRARIES ####
 # ENGINE
 file(GLOB_RECURSE SOURCE_FILES engine/*.cpp engine/*.h)
 add_library(lib_engine STATIC ${SOURCE_FILES})
-target_include_directories(lib_engine INTERFACE "${CMAKE_SOURCE_DIR}/engine/" PUBLIC SYSTEM ${B2D_INCS} )
-target_link_libraries(lib_engine lib_tile_level_system lib_maths lib_ecm Box2D sfml-graphics sfml-audio)
+target_include_directories(lib_engine INTERFACE "${CMAKE_SOURCE_DIR}/engine/" PUBLIC SYSTEM)
+target_link_libraries(lib_engine lib_tile_level_system lib_maths lib_ecm sfml-graphics sfml-audio)
 
 # Maths lib
 add_library(lib_maths INTERFACE)
@@ -57,9 +52,11 @@ target_link_libraries(lib_tile_level_system lib_maths sfml-graphics)
 file(GLOB_RECURSE SOURCES mazend_game/*.cpp mazend_game/*.h)
 file(GLOB_RECURSE CMPNTS mazend_game/components/*.cpp mazend_game/components/*.h)
 file(GLOB_RECURSE SCENES mazend_game/scenes/*.cpp mazend_game/scenes/*.h)
+file(GLOB_RECURSE ENEMY_AI mazend_game/enemy_ai/*.cpp mazend_game/enemy_ai/*.h)
 add_executable(MAZEND_GAME ${SOURCES} ${CMPNTS} ${SCENES})
 source_group("components" FILES ${CMPNTS})
 source_group("scenes" FILES ${SCENES})
+source_group("enemy_ai" FILES ${ENEMY_AI})
 target_link_libraries(MAZEND_GAME lib_engine)
 set(EXECUTABLES ${EXECUTABLES} MAZEND_GAME)
 set_target_properties(MAZEND_GAME 
