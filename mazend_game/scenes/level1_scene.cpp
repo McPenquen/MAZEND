@@ -17,6 +17,10 @@ void Level1Scene::Load() {
 	_timeLimitValue.minutes = 2.0f;
 	_timeLimitValue.seconds = 0.0f;
 
+	//set the collectable tracker
+	auto col = makeEntity(1);
+	col->setTexture("res/sprites/UI-UnLit.png");
+	col->setPosition(Vector2f(1.5 * tileBounds, 1.5 * tileBounds));
 	// Move the player to the starting position in the chosen sector corresponding to the correct floor
 	movePlayerTo(Vector2f(leftXBorder + tileBounds * 9.0f, topYBorder + tileBounds * 7.0f));
 	// Set the active player

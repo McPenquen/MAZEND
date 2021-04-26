@@ -40,6 +40,7 @@ public:
 	bool is_fordeletion() const;
 	void setForDelete();
 	void setNameTag(const string s);
+	Texture setTexture(const string s);
 	string getNameTag();
 
 	//For collision

@@ -3,6 +3,7 @@
 #include "../components/cmp_shape.h"
 #include "../game.h"
 #include "../components/cmp_player_movement.h"
+#include "../components/cmp_collectables.h"
 #include "../components/cmp_text.h"
 // The amount of dt allowed between sector switches
 #define TIME_DELAY_COUNTER 0.5f
@@ -62,15 +63,6 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	plM2->setSpeed(500.f);
 	plM2->setFloor(2);
 
-	//create collectables
-	auto cl1 = makeEntity(6);
-	auto clS2 = cl1->addComponent<ShapeComponent>();
-	clS2->setShape<CircleShape>(plRad / 2);
-	clS2->getShape().setFillColor(Color::Yellow);
-	clS2->getShape().setOutlineThickness(2.f);
-	clS2->getShape().setOrigin(Vector2f(plRad / 2, plRad / 2));
-	cl1->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
-
 	// Create the player for top floor
 	auto pl3 = makeEntity(5);
 	pl3->setNameTag("player3");
@@ -85,6 +77,22 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	auto plM3 = pl3->addComponent<PlayerMovementComponent>(_activeSector);
 	plM3->setSpeed(500.f);
 	plM3->setFloor(3);
+
+	//create collectables
+	vector<Entity*> Collectables;
+	for (int i = 0; i < 5; i++)
+	{
+		auto cl =  makeEntity(6);
+	}
+	auto cl1 = makeEntity(6);
+	auto clS2 = cl1->addComponent<ShapeComponent>();
+	clS2->setShape<CircleShape>(plRad / 2);
+	clS2->getShape().setFillColor(Color::Yellow);
+	clS2->getShape().setOutlineThickness(2.f);
+	clS2->getShape().setOrigin(Vector2f(plRad / 2, plRad / 2));
+	cl1->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
+	auto cfl = cl1->addComponent<CollectableComponent>();
+	_collectable = cfl;
 
 	// Create black frame
 	auto frame1 = makeEntity(4);
@@ -216,7 +224,14 @@ void LevelScene::Update(double const dt) {
 			}
 		}
 	}
+	//check if the player has collided with a collectable
 
+	if (length(_activePlayer->getPosition() - _collectable->getPosition()) <= 5.f && _collectable->isVisible())
+	{
+		cout << "You've collected" << endl;
+		_collectable->setVisible(false);
+	}
+	
 	// Check if the time limit has reached 0
 	if (_timeLimitValue.minutes <= 0.0f && (_timeLimitValue.seconds - dt) <= 0.0f) {
 		Engine::ChangeScene(&gameOverScn);

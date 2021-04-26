@@ -562,7 +562,6 @@ void LevelSystem::buildSprites(int levelNum)
             float g = getTexture(getTile({ x, y }, level)).x;
             float p = getTexture(getTile({ x, y }, level)).y;
             s->setTextureRect(IntRect(g, p ,64,64));
-            //s->setFillColor(getColor(getTile({x, y})));
             _sprites[levelNum][getIntSectorId(sectorId)].push_back(move(s));
             
             // Update sector Id X counter

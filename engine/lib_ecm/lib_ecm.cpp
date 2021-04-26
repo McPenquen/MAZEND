@@ -77,6 +77,12 @@ void Entity::setNameTag(const string s) {
 string Entity::getNameTag() {
 	return _nameTag;
 }
+Texture Entity::setTexture(const string s)
+{
+	Texture texture;
+	texture.loadFromFile(s);
+	return texture;
+}
 
 // Component
 Component::~Component() {}
