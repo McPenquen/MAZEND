@@ -5,6 +5,7 @@
 #include "../components/cmp_player_movement.h"
 #include "../components/cmp_text.h"
 #include "../components/cmp_enemy_movement.h"
+#include "../components/cmp_victory_collectable.h"
 // The amount of dt allowed between sector switches
 #define TIME_DELAY_COUNTER 0.5f
 
@@ -326,6 +327,12 @@ void LevelScene::setActivePlayer() {
 	if (ents.enemies.size() > 0) {
 		for (auto& e : ents.enemies) {
 			e->GetComponents<EnemyMovementComponent>()[0]->changePlayerToHunt(_activePlayerFloor - 1);
+		}
+	}
+	// Change the active player for the collectables
+	if (ents.collectables.size() > 0) {
+		for (auto& e : ents.collectables) {
+			e->GetComponents<CollectableComponent>()[0]->ChangeActivePlayerId(_activePlayerFloor - 1);
 		}
 	}
 	if (_activePlayerFloor == 1) {
