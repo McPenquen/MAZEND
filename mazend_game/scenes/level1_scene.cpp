@@ -66,7 +66,7 @@ void Level1Scene::Load() {
 			enS->getShape().setOrigin(Vector2f(tileBounds / 4, tileBounds / 4));
 		}
 		enS->getShape().setFillColor(Color::Yellow);
-		enS->getShape().setOutlineColor(Color::Red);
+		enS->getShape().setOutlineColor({ 222, 120, 31 });
 		enS->getShape().setOutlineThickness(2.f);
 		en->setPosition(collectablePositions[ci].position);
 		auto enC = en->addComponent<CollectableComponent>(collectablePositions[ci].sectorId, ents.players, _activePlayerFloor - 1);
