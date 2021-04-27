@@ -1,12 +1,12 @@
 version: 1.0.{build}
-image: Visual Studio 2017
+image: Visual Studio 2019
 configuration: Debug, Release
 platform: x64
 before_build:
 - cmd: >-
     git submodule update --init --recursive
 
-    mkdir build & cd build & cmake -G "Visual Studio 15 2017 Win64" ../
+    mkdir build & cd build & cmake -G "Visual Studio 16 2019" -A x64 ../
 build:
   project: build/MAZEND_GAME.vcxproj
   verbosity: minimal
@@ -15,15 +15,3 @@ after_build:
 artifacts:
 - path: '*.zip'
   name: zip
-environment:
-  matrix:
-  - TOOLSET: v141
-    ToolsVersion: 14.10
-matrix:
-  exclude:
-    - image: Visual Studio 2017
-      TOOLSET: v100
-      ToolsVersion: 4.0
-    - image: Visual Studio 2017
-      TOOLSET: v140
-      ToolsVersion: 14.0
