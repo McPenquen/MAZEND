@@ -48,7 +48,7 @@ map<LevelSystem::TILE, Vector2f> LevelSystem::_textures{
     {BXJUNCTION,Vector2f(256, 64)}
 };
 
-
+vector<LevelSystem::TILE> LevelSystem::_collectables = { CONE, CTWO, CTHREE, CFOUR, CFIVE, CSIX, CSEVEN};
 int level = 0;
 
 
@@ -181,6 +181,9 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
                 level = 2;
                 break;
             case'3':
+                level = 3;
+                break;
+            case'4':
                 level = 3;
                 break;
             }
@@ -472,6 +475,77 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
             case ' ':
                 addTilePosition(TILE::EMPTY, ulPos, level - 1, sectorId);
                 temp_tiles.push_back(EMPTY);
+                break;
+            case '\n':
+                if (w == 0)
+                {
+                    w = i;
+                }
+                h++;
+                // Update the sector Id generating Y value
+                if (sectorYswitch == sectorTilesNumber)
+                {
+                    sectorYswitch = 0;
+                    sectorId.y++;
+                }
+                // Reset X value
+                sectorXswitch = 0;
+                sectorId.x = 1;
+                sectorYswitch++;
+                break;
+            default:
+                unknownTile = true;
+                realI--;
+                std::cout << i << " - Unknown tile: " << c << endl;
+
+            }
+            if (!unknownTile)
+            {
+                // Update sector Id generating X value
+                if (sectorXswitch == sectorTilesNumber)
+                {
+                    sectorXswitch = 0;
+                    sectorId.x++;
+                }
+                sectorXswitch++;
+                realI++;
+            }
+        }
+        if (level == 4)
+        {
+            switch (c)
+            {
+            case '4':
+                addTilePosition(TILE::EMPTY, ulPos, 2, sectorId);
+                temp_tiles.push_back(EMPTY);
+                break;
+            case 'V':
+                addTilePosition(TILE::CONE, ulPos, 2, sectorId);
+                temp_tiles.push_back(CONE);
+                break;
+            case 'I':
+                addTilePosition(TILE::CTWO, ulPos, 2, sectorId);
+                temp_tiles.push_back(CTWO);
+                break;
+            case 'C':
+                addTilePosition(TILE::CTHREE, ulPos, 2, sectorId);
+                temp_tiles.push_back(CTHREE);
+                break;
+            case 'T':
+                addTilePosition(TILE::CFOUR, ulPos, 2, sectorId);
+                temp_tiles.push_back(CFOUR);
+                break;
+            case 'O':
+                addTilePosition(TILE::CFIVE, ulPos, 2, sectorId);
+                temp_tiles.push_back(CFIVE);
+                break;
+            case 'R':
+                addTilePosition(TILE::CSIX, ulPos, 2, sectorId);
+                temp_tiles.push_back(CSIX);
+                break;
+            case 'Y':
+                addTilePosition(TILE::CSEVEN, ulPos, 2, sectorId);
+                temp_tiles.push_back(CSEVEN);
                 break;
             case '\n':
                 if (w == 0)

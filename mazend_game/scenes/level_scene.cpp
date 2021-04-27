@@ -11,7 +11,7 @@
 // Timing management
 static float secSwitchTimer = 0.0f;
 static float stairSwitchTimer = 0.0f;
-
+int score = 0;
 void LevelScene::Load(string const s, string const s1, string const s2) {
 	LS::SetOffset(Vector2f(leftXBorder, topYBorder));
 
@@ -79,11 +79,6 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	plM3->setFloor(3);
 
 	//create collectables
-	vector<Entity*> Collectables;
-	for (int i = 0; i < 5; i++)
-	{
-		auto cl =  makeEntity(6);
-	}
 	auto cl1 = makeEntity(6);
 	auto clS2 = cl1->addComponent<ShapeComponent>();
 	clS2->setShape<CircleShape>(plRad / 2);
@@ -91,8 +86,7 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	clS2->getShape().setOutlineThickness(2.f);
 	clS2->getShape().setOrigin(Vector2f(plRad / 2, plRad / 2));
 	cl1->setPosition(Vector2f(gameWidth / 2, gameHeight / 2));
-	auto cfl = cl1->addComponent<CollectableComponent>();
-	_collectable = cfl;
+	_collectable = cl1;
 
 	// Create black frame
 	auto frame1 = makeEntity(4);
@@ -228,6 +222,7 @@ void LevelScene::Update(double const dt) {
 
 	if (length(_activePlayer->getPosition() - _collectable->getPosition()) <= 5.f && _collectable->isVisible())
 	{
+		score += 1;
 		cout << "You've collected" << endl;
 		_collectable->setVisible(false);
 	}
