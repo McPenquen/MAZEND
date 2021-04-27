@@ -1,4 +1,4 @@
-# MAZEND
+# MAZEND [![Build status](https://ci.appveyor.com/api/projects/status/nlttqmmw9456ok42/branch/main?svg=true)](https://ci.appveyor.com/project/McPenquen/mazend/branch/main)
 *Games Engineering Coursework*
 
 ### Getting started from git cloned repo
