@@ -19,11 +19,11 @@ environment:
   matrix:
   - TOOLSET: v141
     ToolsVersion: 14.10
-  matrix:
-    exclude:
-      - image: Visual Studio 2017
-        TOOLSET: v100
-        ToolsVersion: 4.0
-      - image: Visual Studio 2017
-        TOOLSET: v140
-        ToolsVersion: 14.0
+matrix:
+  exclude:
+    - image: Visual Studio 2017
+      TOOLSET: v100
+      ToolsVersion: 4.0
+    - image: Visual Studio 2017
+      TOOLSET: v140
+      ToolsVersion: 14.0
