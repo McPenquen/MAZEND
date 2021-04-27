@@ -6,7 +6,7 @@ before_build:
 - cmd: >-
     git submodule update --init --recursive
 
-    mkdir build & cd build & cmake -G "Visual Studio 16 2019" -A x64 ../
+    mkdir build & cd build & cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_CONFIGURATION_TYPES="Release" -DCMAKE_BUILD_TYPE="Release" ../
 build:
   project: build/MAZEND_GAME.vcxproj
   verbosity: minimal
