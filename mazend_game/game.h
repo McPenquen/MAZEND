@@ -15,9 +15,8 @@ extern OptionsScene options;
 extern LevelsScene levels;
 extern PauseMenuScene pauseMenu;
 extern GameOverScene gameOverScn;
+extern VictoryScene victoryScn;
 extern Level1Scene level1;
-//extern Scene level2;
-//extern Scene level3;
 
 // tile size
 static float tileBounds = 20.f;

@@ -38,6 +38,9 @@ protected:
 	TimeLimit _timeLimitValue;
 	shared_ptr<Entity> _timeLimit;
 
+	int _score;
+	shared_ptr<Entity> _scoreEnt;
+
 	// Sector size
 	Borders _sectorBorders;
 

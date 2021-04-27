@@ -18,5 +18,11 @@ public:
 	Vector2i getSector() const { return _sectorId; }
 	void setSector(Vector2i newSector) { _sectorId = newSector; }
 
+	static int getCollectedAmount() { return collectedAmount; }
+	static void resetCollectedAmount() { collectedAmount = 0; }
+
 	void ChangeActivePlayerId(int playerIndex);
+
+protected:
+	static int collectedAmount;
 };
