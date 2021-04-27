@@ -1,5 +1,7 @@
 #include "cmp_victory_collectable.h"
 #include "cmp_player_movement.h"
+#include <LevelSystem.h>
+
 
 CollectableComponent::CollectableComponent(Entity* p, Vector2i sectorID, vector<shared_ptr<Entity>> players, int activePlayerIndx) : Component(p) {
 	_sectorId = sectorID;
@@ -14,6 +16,11 @@ void CollectableComponent::Update(double dt) {
 	}
 	else {
 		_parent->setVisible(false);
+	}
+	if (_parent->isVisible()) {
+		if (length(_players[_activePlayerIndex]->getPosition() - _parent->getPosition()) <= _parent->getCollisionBounds()) {
+			_parent->setAlive(false);
+		}
 	}
 }
 

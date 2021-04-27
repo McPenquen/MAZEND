@@ -23,7 +23,7 @@ void Entity::Update(double dt) {
 }
 
 void Entity::Render() {
-	if (_visible) {
+	if (_visible && _alive) {
 		for (const auto& c : _components) {
 			c->Render();
 		}
