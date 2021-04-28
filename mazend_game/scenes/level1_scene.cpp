@@ -7,6 +7,15 @@
 #include "../components/cmp_enemy_movement.h"
 #include "../components/cmp_state_machine.h"
 #include "../enemy_ai/enemy_states.h"
+#include "../components/cmp_victory_collectable.h"
+
+#define COLLECTABLES_NUM 7
+
+struct MazePosition {
+	Vector2f position;
+	Vector2i sectorId;
+	int floor;
+};
 
 void Level1Scene::Load() {
 	// Load the initial sector and player position
@@ -25,6 +34,43 @@ void Level1Scene::Load() {
 	movePlayerTo(Vector2f(_sectorBorders.left + tileBounds * 7.0f, _sectorBorders.top + tileBounds * 15.0f));
 	// Set the active player
 	setActivePlayer();
+
+	// Collectable positions for this level
+	MazePosition collectablePositions[COLLECTABLES_NUM] = {
+		{Vector2f(_sectorBorders.right - tileBounds * 5.0f, _sectorBorders.bottom - tileBounds * 5.0f), Vector2i(1, 1), 3},
+		{Vector2f(_sectorBorders.right - tileBounds * 11.0f, _sectorBorders.bottom - tileBounds * 7.0f), Vector2i(1, 3), 3},
+		{Vector2f(_sectorBorders.left + tileBounds * 3.0f, _sectorBorders.bottom - tileBounds * 5.0f), Vector2i(2, 2), 1},
+		{Vector2f(_sectorBorders.right - tileBounds * 3.0f, _sectorBorders.top + tileBounds * 5.0f), Vector2i(3, 2), 2},
+		{Vector2f(_sectorBorders.left + tileBounds * 7.0f, _sectorBorders.bottom - tileBounds * 3.0f), Vector2i(3, 3), 3},
+		{Vector2f(_sectorBorders.right - tileBounds * 3.0f, _sectorBorders.bottom - tileBounds * 9.0f), Vector2i(3, 3), 1},
+		{Vector2f(_sectorBorders.right - tileBounds * 5.0f, _sectorBorders.bottom - tileBounds * 3.0f), Vector2i(2, 1), 3}
+	};
+
+	// Create collectables
+	for (int ci = 0; ci < COLLECTABLES_NUM; ++ci) {
+		auto en = makeEntity(7);
+		en->setNameTag("collectable");
+		en->setCollisionBounds(tileBounds);
+		en->setVisible(false);
+		auto enS = en->addComponent<ShapeComponent>();
+		if (collectablePositions[ci].floor == 3) {
+			enS->setShape<CircleShape>(tileBounds / 2);
+			enS->getShape().setOrigin(Vector2f(tileBounds / 2, tileBounds / 2));
+		}
+		else if (collectablePositions[ci].floor == 2) {
+			enS->setShape<CircleShape>(tileBounds / 3);
+			enS->getShape().setOrigin(Vector2f(tileBounds / 3, tileBounds / 3));
+		}
+		else {
+			enS->setShape<CircleShape>(tileBounds / 4);
+			enS->getShape().setOrigin(Vector2f(tileBounds / 4, tileBounds / 4));
+		}
+		enS->getShape().setFillColor(Color::Yellow);
+		enS->getShape().setOutlineColor({ 222, 120, 31 });
+		enS->getShape().setOutlineThickness(2.f);
+		en->setPosition(collectablePositions[ci].position);
+		auto enC = en->addComponent<CollectableComponent>(collectablePositions[ci].sectorId, ents.players, _activePlayerFloor - 1);
+	}
 
 	// Create an enemy
 	auto en = makeEntity(6);
@@ -45,7 +91,7 @@ void Level1Scene::Load() {
 	enSm->addState("casual", make_shared<CasualState>(_activePlayer));
 	enSm->addState("hunting", make_shared<HuntingState>(_activePlayer));
 	enSm->changeState("casual");
-
+	
 	auto txt = makeEntity(4);
 	auto t = txt->addComponent<TextComponent>(
 		"ESC for PAUSE"

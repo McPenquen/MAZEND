@@ -106,6 +106,7 @@ struct EntityManager {
 	vector<shared_ptr<Entity>> floor4_list;
 	vector<shared_ptr<Entity>> players;
 	vector<shared_ptr<Entity>> enemies;
+	vector<shared_ptr<Entity>> collectables;
 	void Update(double dt);
 	void Render(Vector2i sectorId);
 

@@ -41,6 +41,7 @@ void Scene::UnLoad() {
 	ents.floor4_list.clear();
 	ents.players.clear();
 	ents.enemies.clear();
+    ents.collectables.clear();
 	setLoaded(false);
 }
 
@@ -61,6 +62,10 @@ shared_ptr<Entity> Scene::makeEntity(int orderNum) {
 	// number 6 means an enemy list
 	else if (orderNum == 6) {
 		ents.enemies.push_back(en);
+	}
+    // number 7 means collectable
+    else if (orderNum == 7) {
+		ents.collectables.push_back(en);
 	}
 	else if (orderNum == 1) {
 		ents.floor1_list.push_back(en);

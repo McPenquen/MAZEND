@@ -5,6 +5,7 @@
 #include "../components/cmp_player_movement.h"
 #include "../components/cmp_text.h"
 #include "../components/cmp_enemy_movement.h"
+#include "../components/cmp_victory_collectable.h"
 // The amount of dt allowed between sector switches
 #define TIME_DELAY_COUNTER 0.5f
 
@@ -40,7 +41,6 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	ss->getShape().setOutlineColor(Color::White);
 	ss->getShape().setOutlineThickness(5.f);
 	sector->setPosition(Vector2f(Engine::GetWindowSize().x / 2, Engine::GetWindowSize().y / 2));
-
 
 	float plRad = tileBounds;
 	const Color plColor = { 222, 120, 31 }; // #DE781F
@@ -120,6 +120,13 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	timeLim->setNameTag("timeLimit");
 	auto tL = timeLim->addComponent<TextComponent>("");
 	_timeLimit = timeLim;
+
+	// Create score
+	auto scoreTxt = makeEntity(4);
+	scoreTxt->setPosition(Vector2f((Engine::GetWindowSize().x / 2) - 30, _sectorBorders.bottom + 10));
+	scoreTxt->setNameTag("score");
+	auto sT = scoreTxt->addComponent<TextComponent>("");
+	_scoreEnt = scoreTxt;
 }
 
 void LevelScene::Render() {
@@ -224,6 +231,7 @@ void LevelScene::Update(double const dt) {
 		for (const auto &e : ents.enemies) {
 			if (_activeSector == e->GetComponents<EnemyMovementComponent>()[0]->getSector()) {
 				if (length(_activePlayer->getPosition() - e->getPosition()) <= tileBounds * 1.5f) {
+					CollectableComponent::resetCollectedAmount();
 					Engine::ChangeScene(&gameOverScn);
 					break;
 				}
@@ -231,8 +239,22 @@ void LevelScene::Update(double const dt) {
 		}
 	}
 
+	// Update score
+	_score = CollectableComponent::getCollectedAmount();
+
+	// Set the score to contain a new val
+	auto scoreStr = _scoreEnt->GetComponents<TextComponent>();
+	scoreStr[0]->SetText(to_string(_score) + "/" + to_string(ents.collectables.size()));
+
+	// Check if the player has collected all collectables
+	if (_score == ents.collectables.size()) {
+		CollectableComponent::resetCollectedAmount();
+		Engine::ChangeScene(&victoryScn);
+	}
+
 	// Check if the time limit has reached 0
 	if (_timeLimitValue.minutes <= 0.0f && (_timeLimitValue.seconds - dt) <= 0.0f) {
+		CollectableComponent::resetCollectedAmount();
 		Engine::ChangeScene(&gameOverScn);
 	}
 }
@@ -326,6 +348,12 @@ void LevelScene::setActivePlayer() {
 	if (ents.enemies.size() > 0) {
 		for (auto& e : ents.enemies) {
 			e->GetComponents<EnemyMovementComponent>()[0]->changePlayerToHunt(_activePlayerFloor - 1);
+		}
+	}
+	// Change the active player for the collectables
+	if (ents.collectables.size() > 0) {
+		for (auto& e : ents.collectables) {
+			e->GetComponents<CollectableComponent>()[0]->ChangeActivePlayerId(_activePlayerFloor - 1);
 		}
 	}
 	if (_activePlayerFloor == 1) {

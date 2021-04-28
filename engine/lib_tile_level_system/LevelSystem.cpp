@@ -694,8 +694,8 @@ Vector2f LevelSystem::getGlobalPos(Vector2f screenPos, Vector2i sector) {
     return globalPos;
 }
 
-LocalPosition LevelSystem::getLocalPos(Vector2f globalPos) {
-    LocalPosition answr;
+WorldPosition LevelSystem::getLocalPos(Vector2f globalPos) {
+    WorldPosition answr;
     answr.position = globalPos;
     answr.sectorId = Vector2i(1, 1);
     float oneSectorSize = float(sectorTilesNumber) * _tileSize;

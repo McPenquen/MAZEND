@@ -12,7 +12,7 @@ using namespace std;
 using namespace sf;
 
 // Local position consists of the screen position and the sector id
-struct LocalPosition {
+struct WorldPosition {
     Vector2f position;
     Vector2i sectorId;
 };
@@ -56,7 +56,7 @@ public:
     // Return the global position based on the sector and position
     static Vector2f getGlobalPos(Vector2f, Vector2i);
     // Return the sector and position based on the global position
-    static LocalPosition getLocalPos(Vector2f);
+    static WorldPosition getLocalPos(Vector2f);
 
 protected:
     // Internal array of tiles, [0] - bot layer,[1] - mid layer, [2] - top layer

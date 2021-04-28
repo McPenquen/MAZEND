@@ -2,6 +2,7 @@
 #include "../components/cmp_text.h"
 #include "../game.h"
 #include "../components/cmp_shape.h"
+#include "../components/cmp_victory_collectable.h"
 
 // Main Menu
 void MainMenuScene::Load() {
@@ -159,6 +160,7 @@ void PauseMenuScene::Update(const double dt) {
 	}
 	else if (Keyboard::isKeyPressed(Keyboard::Num2)) {
 		Engine::UnloadPreviousScene();
+		CollectableComponent::resetCollectedAmount();
 		Engine::ChangeScene(&levels);
 	}
 	Scene::Update(dt);

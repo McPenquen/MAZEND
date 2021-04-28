@@ -23,7 +23,7 @@ void Entity::Update(double dt) {
 }
 
 void Entity::Render() {
-	if (_visible) {
+	if (_visible && _alive) {
 		for (const auto& c : _components) {
 			c->Render();
 		}
@@ -116,6 +116,9 @@ void EntityManager::Render(Vector2i sectorID) {
 	if (players.size() > 2) {
 		players[2]->Render();
 	}
+	for (const auto& e : collectables) {
+		e->Render();
+	}
 	for (const auto& e : enemies) {
 		e->Render();
 	}
@@ -135,6 +138,9 @@ void EntityManager::Update(double dt) {
 		e->Update(dt);
 	}
 	for (auto& e : floor4_list) {
+		e->Update(dt);
+	}
+	for (auto& e : collectables) {
 		e->Update(dt);
 	}
 	for (auto& e : players) {
