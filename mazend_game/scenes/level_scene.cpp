@@ -37,7 +37,7 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
     LS::loadLevelFile(s2, 2 * tileBounds); // level 3 file loading
 
 	// Create the mid sector
-	auto sector = makeEntity(4);
+	auto sector = makeEntity("");
 	sector->setNameTag("sectorFrame");
 	auto ss = sector->addComponent<ShapeComponent>();
 	ss->setShape<RectangleShape>(Engine::GetCentreSectorSize());
@@ -51,7 +51,7 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	const Color plColor = { 222, 120, 31 }; // #DE781F
 
 	// Create the player for bottom floor
-	auto pl = makeEntity(5);
+	auto pl = makeEntity("player");
 	pl->setNameTag("player1");
 	pl->setCollisionBounds(_playerCollisionVelue);
 	auto plS = pl->addComponent<ShapeComponent>();
@@ -65,7 +65,7 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	plM->setSpeed(500.f);
 	plM->setFloor(1);
 	// Create the player for middle floor
-	auto pl2 = makeEntity(5);
+	auto pl2 = makeEntity("player");
 	pl2->setNameTag("player2");
 	pl2->setCollisionBounds(_playerCollisionVelue);
 	auto plS2 = pl2->addComponent<ShapeComponent>();
@@ -79,7 +79,7 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	plM2->setSpeed(500.f);
 	plM2->setFloor(2);
 	// Create the player for top floor
-	auto pl3 = makeEntity(5);
+	auto pl3 = makeEntity("player");
 	pl3->setNameTag("player3");
 	pl3->setCollisionBounds(_playerCollisionVelue);
 	auto plS3 = pl3->addComponent<ShapeComponent>();
@@ -94,25 +94,25 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	plM3->setFloor(3);
 
 	// Create black frame
-	auto frame1 = makeEntity(4);
+	auto frame1 = makeEntity("");
 	auto sf1 = frame1->addComponent<ShapeComponent>();
 	sf1->setShape<RectangleShape>(Vector2f(tileBounds * 2, Engine::GetCentreSectorSize().y));
 	sf1->getShape().setFillColor(Color::Black);
 	sf1->getShape().setOrigin(Vector2f(tileBounds, Engine::GetCentreSectorSize().y/2));
 	frame1->setPosition(Vector2f((Engine::GetWindowSize().x / 2 - Engine::GetCentreSectorSize().x / 2 - tileBounds - 5.f), Engine::GetWindowSize().y / 2));
-	auto frame2 = makeEntity(4);
+	auto frame2 = makeEntity("");
 	auto sf2 = frame2->addComponent<ShapeComponent>();
 	sf2->setShape<RectangleShape>(Vector2f(tileBounds * 2, Engine::GetCentreSectorSize().y));
 	sf2->getShape().setFillColor(Color::Black);
 	sf2->getShape().setOrigin(Vector2f(tileBounds, Engine::GetCentreSectorSize().y / 2));
 	frame2->setPosition(Vector2f((Engine::GetWindowSize().x / 2 + Engine::GetCentreSectorSize().x / 2 + tileBounds + 5.f), Engine::GetWindowSize().y / 2));
-	auto frame3 = makeEntity(4);
+	auto frame3 = makeEntity("");
 	auto sf3 = frame3->addComponent<ShapeComponent>();
 	sf3->setShape<RectangleShape>(Vector2f(Engine::GetCentreSectorSize().x, tileBounds * 2));
 	sf3->getShape().setFillColor(Color::Black);
 	sf3->getShape().setOrigin(Vector2f(Engine::GetCentreSectorSize().x / 2, tileBounds));
 	frame3->setPosition(Vector2f((Engine::GetWindowSize().x / 2), Engine::GetWindowSize().y / 2 - Engine::GetCentreSectorSize().y / 2 - tileBounds - 5.f));
-	auto frame4 = makeEntity(4);
+	auto frame4 = makeEntity("");
 	auto sf4 = frame4->addComponent<ShapeComponent>();
 	sf4->setShape<RectangleShape>(Vector2f(Engine::GetCentreSectorSize().x, tileBounds * 2));
 	sf4->getShape().setFillColor(Color::Black);
@@ -120,21 +120,21 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	frame4->setPosition(Vector2f((Engine::GetWindowSize().x / 2), Engine::GetWindowSize().y / 2 + Engine::GetCentreSectorSize().y / 2 + tileBounds + 5.f));
 
 	// Create a time limit var
-	auto timeLim = makeEntity(4);
+	auto timeLim = makeEntity("");
 	timeLim->setPosition(Vector2f((Engine::GetWindowSize().x / 2) - 30, 100));
 	timeLim->setNameTag("timeLimit");
 	auto tL = timeLim->addComponent<TextComponent>("");
 	_timeLimit = timeLim;
 
 	// Create score
-	auto scoreTxt = makeEntity(4);
+	auto scoreTxt = makeEntity("");
 	scoreTxt->setPosition(Vector2f((Engine::GetWindowSize().x / 2) - 30, _sectorBorders.bottom + 10));
 	scoreTxt->setNameTag("score");
 	auto sT = scoreTxt->addComponent<TextComponent>("");
 	_scoreEnt = scoreTxt;
 
 	// Score icon
-	auto coin = makeEntity(4);
+	auto coin = makeEntity("");
 	coin->setNameTag("coinIcon");
 	coin->setPosition(Vector2f((Engine::GetWindowSize().x / 2) - 50, _sectorBorders.bottom + 28));
 	auto coinS = coin->addComponent<ShapeComponent>();
@@ -145,7 +145,7 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	coinS->getShape().setOutlineThickness(2.f);
 
 	// Create instructions
-	auto instructions = makeEntity(8);
+	auto instructions = makeEntity("temp");
 	instructions->setNameTag("instructions");
 	instructions->setPosition(Vector2f((Engine::GetWindowSize().x / 2) - 550, (Engine::GetWindowSize().y - 150)));
 	auto instrT = instructions->addComponent<TextComponent>("\t\t\t\t\tMove by using " + Engine::Key2String(_currentControls["up"]) + ", " + 

@@ -3,7 +3,7 @@
 #include "LevelSystem.h"
 
 // Entity
-Entity::Entity(int orderNum) : _orderNum(orderNum), _alive(true), _visible(true), _rotation(1.f) {}
+Entity::Entity() : _alive(true), _visible(true), _rotation(1.f) {}
 
 Entity::~Entity() {
 	for (const auto& c : _components) {

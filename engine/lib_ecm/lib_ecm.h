@@ -19,12 +19,10 @@ protected:
 	bool _visible; 
 	bool _fordeletion = false; 
 	string _nameTag;
-	int _orderNum;
 	float _collisionBounds;
 
 public:
-	Entity() = delete;
-	Entity(int orderNum);
+	Entity();
 	virtual ~Entity();
 	virtual void Update(double dt);
 	virtual void Render();

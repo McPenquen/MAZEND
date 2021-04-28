@@ -51,22 +51,22 @@ Scene::~Scene() {
 	UnLoad();
 }
 
-shared_ptr<Entity> Scene::makeEntity(int orderNum) {
-	auto en = make_shared<Entity>(orderNum);
+shared_ptr<Entity> Scene::makeEntity(string enName) {
+	auto en = make_shared<Entity>();
 	// number 5 means the player list
-	if (orderNum == 5) {
+	if (enName == "player") {
 		ents.players.push_back(en);
 	}
 	// number 6 means an enemy list
-	else if (orderNum == 6) {
+	else if (enName == "enemy") {
 		ents.enemies.push_back(en);
 	}
     // number 7 means collectable
-    else if (orderNum == 7) {
+    else if (enName == "collectable") {
 		ents.collectables.push_back(en);
 	}
     // number 8 means the temp list
-    else if (orderNum == 8) {
+    else if (enName == "temp") {
         ents.temp_list.push_back(en);
     }
 	else {

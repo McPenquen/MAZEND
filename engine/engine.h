@@ -22,7 +22,7 @@ public:
 	bool isLoaded() const;
 
 	EntityManager getEnts();
-	shared_ptr<Entity> makeEntity(int orderNum);
+	shared_ptr<Entity> makeEntity(string enName);
 
 	string getSceneName() const;
 	void setSceneName(const string);

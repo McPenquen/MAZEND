@@ -47,7 +47,7 @@ void Level1Scene::Load() {
 
 	// Create collectables
 	for (int ci = 0; ci < COLLECTABLES_NUM; ++ci) {
-		auto en = makeEntity(7);
+		auto en = makeEntity("collectable");
 		en->setNameTag("collectable");
 		en->setCollisionBounds(tileBounds);
 		en->setVisible(false);
@@ -72,7 +72,7 @@ void Level1Scene::Load() {
 	}
 
 	// Create an enemy
-	auto en = makeEntity(6);
+	auto en = makeEntity("enemy");
 	en->setNameTag("enemy1");
 	en->setCollisionBounds(tileBounds);
 	en->setVisible(false);
@@ -92,7 +92,7 @@ void Level1Scene::Load() {
 	enSm->changeState("casual");
 	
 	// Pause instructions
-	auto txt = makeEntity(4);
+	auto txt = makeEntity("");
 	auto t = txt->addComponent<TextComponent>(
 		"ESC for PAUSE"
 		);
