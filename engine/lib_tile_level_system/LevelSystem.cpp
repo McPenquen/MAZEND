@@ -21,8 +21,9 @@ vector<LevelSystem::TILE> LevelSystem::_stairs = { TOPSTAIRUP, TOPSTAIRDOWN, TOP
         BOTSTAIRUP, BOTSTAIRDOWN, BOTSTAIRRIGHT, BOTSTAIRLEFT };
 
 map<LevelSystem::TILE, Color> LevelSystem::_colours{ {TOPHORIZONTAL, Color::Blue },{TOPVERTICAL, Color::Blue} };
-Texture spriteSheet;
-
+Texture topspriteSheet;
+Texture midspriteSheet;
+Texture botspriteSheet;
 map<LevelSystem::TILE, Vector2f> LevelSystem::_textures{ 
     {TOPHORIZONTAL, Vector2f(192, 192)}, {TOPVERTICAL,Vector2f(128, 192)},
     {TOPSTAIRUP,Vector2f(0, 64)},{TOPSTAIRDOWN,Vector2f(64, 0)},
@@ -30,22 +31,22 @@ map<LevelSystem::TILE, Vector2f> LevelSystem::_textures{
     {TOPCORNERLEFT,Vector2f(0, 128)},{TOPCORNERRIGHT,Vector2f(64, 128)},
     {TOPCORNERUP,Vector2f(64, 192)},{TOPCORNERDOWN,Vector2f(0, 192)},
     {TTUP,Vector2f(192, 128)},{TTDOWN,Vector2f(128, 64)},
-    {TTLEFT,Vector2f(128, 64)},{TTRIGHT,Vector2f(128, 128)},
-    {TXJUNCTION,Vector2f(256, 64)} , {MIDHORIZONTAL, Vector2f(192, 192)}, {MIDVERTICAL,Vector2f(128, 192)},
+    {TTLEFT,Vector2f(192, 64)},{TTRIGHT,Vector2f(128, 128)},
+    {TXJUNCTION,Vector2f(64, 64)} , {MIDHORIZONTAL, Vector2f(192, 192)}, {MIDVERTICAL,Vector2f(128, 192)},
     {MIDSTAIRUP,Vector2f(0, 64)},{MIDSTAIRDOWN,Vector2f(64, 0)},
     {MIDSTAIRLEFT,Vector2f(128, 0)},{MIDSTAIRRIGHT,Vector2f(192, 0)},
     {MIDCORNERLEFT,Vector2f(0, 128)},{MIDCORNERRIGHT,Vector2f(64, 128)},
     {MIDCORNERUP,Vector2f(64, 192)},{MIDCORNERDOWN,Vector2f(0, 192)},
     {MTUP,Vector2f(192, 128)},{MTDOWN,Vector2f(128, 64)},
-    {MTLEFT,Vector2f(128, 64)},{MTRIGHT,Vector2f(128, 128)},
-    {MXJUNCTION,Vector2f(256, 64)}, {BOTHORIZONTAL, Vector2f(192, 192)}, {BOTVERTICAL,Vector2f(128, 192)},
-    {BOTSTAIRUP,Vector2f(0, 64)},{BOTSTAIRDOWN,Vector2f(64, 0)},
-    {BOTSTAIRLEFT,Vector2f(128, 0)},{BOTSTAIRRIGHT,Vector2f(192, 0)},
+    {MTLEFT,Vector2f(192, 64)},{MTRIGHT,Vector2f(128, 128)},
+    {MXJUNCTION,Vector2f(64, 64)}, {BOTHORIZONTAL, Vector2f(192, 192)}, {BOTVERTICAL,Vector2f(128, 192)},
+    {BOTSTAIRUP,Vector2f(0, 0)},{BOTSTAIRDOWN,Vector2f(0, 0)},
+    {BOTSTAIRLEFT,Vector2f(0, 0)},{BOTSTAIRRIGHT,Vector2f(0, 0)},
     {BOTCORNERLEFT,Vector2f(0, 128)},{BOTCORNERRIGHT,Vector2f(64, 128)},
     {BOTCORNERUP,Vector2f(64, 192)},{BOTCORNERDOWN,Vector2f(0, 192)},
     {BTUP,Vector2f(192, 128)},{BTDOWN,Vector2f(128, 64)},
     {BTLEFT,Vector2f(128, 64)},{BTRIGHT,Vector2f(128, 128)},
-    {BXJUNCTION,Vector2f(256, 64)}
+    {BXJUNCTION,Vector2f(64, 64)}
 };
 
 
@@ -526,15 +527,15 @@ void LevelSystem::buildSprites(int levelNum)
 {
     if (level == 1)
     {
-        spriteSheet.loadFromFile("res/sprites/spriteSheet.png");
+        botspriteSheet.loadFromFile("res/sprites/botspriteSheet.png");
     }
     if (level == 2)
     {
-        spriteSheet.loadFromFile("res/sprites/midspriteSheet.png");
+        midspriteSheet.loadFromFile("res/sprites/midspriteSheet.png");
     }
     if (level == 3)
     {
-        spriteSheet.loadFromFile("res/sprites/spriteSheet.png");
+        topspriteSheet.loadFromFile("res/sprites/spriteSheet.png");
     }
 
     _sprites[levelNum].clear();
@@ -557,7 +558,18 @@ void LevelSystem::buildSprites(int levelNum)
             auto s = make_shared<RectangleShape>();
             s->setPosition(tilePos);
             s->setSize(Vector2f(_tileSize, _tileSize));
-            s->setTexture(&spriteSheet);
+            if (level == 1)
+            {
+                s->setTexture(&botspriteSheet);
+            }
+            if (level == 2)
+            {
+                s->setTexture(&midspriteSheet);
+            }
+            if (level == 3)
+            {
+                s->setTexture(&topspriteSheet);
+            }
             
             float g = getTexture(getTile({ x, y }, level)).x;
             float p = getTexture(getTile({ x, y }, level)).y;
