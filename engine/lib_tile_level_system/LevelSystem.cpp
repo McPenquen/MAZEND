@@ -20,7 +20,6 @@ vector<LevelSystem::TILE> LevelSystem::_stairs = { TOPSTAIRUP, TOPSTAIRDOWN, TOP
         MIDSTAIRUP, MIDSTAIRDOWN, MIDSTAIRRIGHT, MIDSTAIRLEFT,
         BOTSTAIRUP, BOTSTAIRDOWN, BOTSTAIRRIGHT, BOTSTAIRLEFT };
 
-map<LevelSystem::TILE, Color> LevelSystem::_colours{ {TOPHORIZONTAL, Color::Blue },{TOPVERTICAL, Color::Blue} };
 Texture topspriteSheet;
 Texture midspriteSheet;
 Texture botspriteSheet;
@@ -97,20 +96,6 @@ void LevelSystem::addTilePosition(TILE tile, Vector2ul pos, int levelNum, Vector
         _tile_positions[levelNum][getIntSectorId(sectorId)][tile].push_back(screenPos);
     }
 
-}
-
-Color LevelSystem::getColor(LevelSystem::TILE t) 
-{
-    auto it = _colours.find(t);
-    if (it == _colours.end()) {
-        _colours[t] = Color::Transparent;
-    }
-    return _colours[t];
-}
-
-void LevelSystem::setColor(LevelSystem::TILE t, Color c) 
-{
-    _colours.insert({t, c});
 }
 
 Vector2f LevelSystem::getTexture(LevelSystem::TILE t)
@@ -574,7 +559,6 @@ void LevelSystem::buildSprites(int levelNum)
             float g = getTexture(getTile({ x, y }, level)).x;
             float p = getTexture(getTile({ x, y }, level)).y;
             s->setTextureRect(IntRect(g, p ,64,64));
-            //s->setFillColor(getColor(getTile({x, y})));
             _sprites[levelNum][getIntSectorId(sectorId)].push_back(move(s));
             
             // Update sector Id X counter
@@ -599,11 +583,6 @@ void LevelSystem::buildSprites(int levelNum)
 Vector2f LevelSystem::getTilePosition(Vector2ul p) 
 {
     return (Vector2f(p.x, p.y)) * _tileSize;
-}
-
-Vector2f LevelSystem::getTileOrigin(Vector2ul p) 
-{
-    return (Vector2f(p.x, p.y)) * _tileSize + Vector2f(_tileSize, _tileSize) * 0.5f;
 }
 
 LevelSystem::TILE LevelSystem::getTile(Vector2ul p, int floor) 
