@@ -35,13 +35,11 @@ void Scene::setLoaded(bool new_bool) {
 }
 
 void Scene::UnLoad() {
-	ents.floor1_list.clear();
-	ents.floor2_list.clear();
-	ents.floor3_list.clear();
-	ents.floor4_list.clear();
+	ents.ui_list.clear();
 	ents.players.clear();
 	ents.enemies.clear();
     ents.collectables.clear();
+    ents.temp_list.clear();
 	setLoaded(false);
 }
 
@@ -53,31 +51,23 @@ Scene::~Scene() {
 	UnLoad();
 }
 
-shared_ptr<Entity> Scene::makeEntity(int orderNum) {
-	auto en = make_shared<Entity>(orderNum);
-	// number 5 means the player list
-	if (orderNum == 5) {
+shared_ptr<Entity> Scene::makeEntity(string enName) {
+	auto en = make_shared<Entity>();
+	if (enName == "player") {
 		ents.players.push_back(en);
 	}
-	// number 6 means an enemy list
-	else if (orderNum == 6) {
+	else if (enName == "enemy") {
 		ents.enemies.push_back(en);
 	}
-    // number 7 means collectable
-    else if (orderNum == 7) {
+    else if (enName == "collectable") {
 		ents.collectables.push_back(en);
 	}
-	else if (orderNum == 1) {
-		ents.floor1_list.push_back(en);
-	}
-	else if (orderNum == 2) {
-		ents.floor2_list.push_back(en);
-	}
-	else if (orderNum == 3) {
-		ents.floor3_list.push_back(en);
-	}
+    else if (enName == "temp") {
+        ents.temp_list.push_back(en);
+    }
+    // Else it belongs to UI
 	else {
-		ents.floor4_list.push_back(en);
+		ents.ui_list.push_back(en);
 	}
 	return move(en);
 }
@@ -111,9 +101,7 @@ static float loadingTime;
 static RenderWindow* _window;
 
 void LoadingUpdate(double dt, const Scene* const scene) {
-	cout << "Eng: Loading Screen\n";
 	if (scene->isLoaded()) {
-		cout << "Eng: Exiting Loading Screen\n";
 		loading = false;
 	}
 	else {
@@ -125,7 +113,6 @@ void LoadingUpdate(double dt, const Scene* const scene) {
 static Font loadingFont;
 
 void LoadingRender() {
-	cout << "Eng: Loading Screen Render\n";
 	static CircleShape octagon(80, 8);
 	octagon.setOrigin(80, 80);
 	octagon.setRotation(loadingProgress);
@@ -142,28 +129,12 @@ void LoadingRender() {
 	Renderer::Queue(&octagon);
 }
 
-float frametimes[256] = {};
-uint8_t ftc = 0;
-
 // - Engine
 void Engine::Update() {
 	static Clock clock;
 	float dt = clock.restart().asSeconds();
 
 	scnSwitchTimer += dt;
-
-	{
-    frametimes[++ftc] = dt;
-    static string avg = _gameName + " FPS:";
-    if (ftc % 60 == 0) {
-      double davg = 0;
-      for (const auto t : frametimes) {
-        davg += t;
-      }
-      davg = 1.0 / (davg / 255.0);
-      _window->setTitle(avg + toStrDecPt(2, davg));
-    }
-  }
 
 	if (loading) {
 		LoadingUpdate(dt, _activeScene);
@@ -259,7 +230,6 @@ void Engine::SetVsync(bool bo) {
 void Engine::ChangeScene(Scene* s) {
 	if (scnSwitchTimer >= sceneSwithTime) {
 		scnSwitchTimer = 0;
-		cout << "Eng: changing scene: " << s << endl;
 		_previousScene = _activeScene;
 		_activeScene = s;
 
@@ -268,7 +238,6 @@ void Engine::ChangeScene(Scene* s) {
 		}
 
 		if (!s->isLoaded()) {
-			cout << "Eng: Entering Loading Screen\n";
 			loadingTime = 0;
 			_activeScene->LoadAsync();
 			loading = true;
@@ -279,12 +248,10 @@ void Engine::ChangeScene(Scene* s) {
 void Engine::PauseScene(Scene* s) {
 	if (scnSwitchTimer >= sceneSwithTime) {
 		scnSwitchTimer = 0;
-		cout << "Eng: changing scene: " << s << endl;
 		_previousScene = _activeScene;
 		_activeScene = s;
 
 		if (!s->isLoaded()) {
-			cout << "Eng: Entering Loading Screen\n";
 			loadingTime = 0;
 			_activeScene->LoadAsync();
 			loading = true;
@@ -770,20 +737,4 @@ string Engine::Key2String(const Keyboard::Key k) {
         break;
     }
     return ret;
-}
-
-// Timing
-namespace timing {
-	// Return time since epoch
-	long long now() {
-		return chrono::high_resolution_clock::now().time_since_epoch().count();
-	}
-	// Return the time since it was last called
-	long long last() {
-		auto cn = now();
-		static auto then = now();
-		auto dt = cn - then;
-		then = cn;
-		return dt;
-	}
 }

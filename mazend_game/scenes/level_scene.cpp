@@ -13,10 +13,15 @@
 static float secSwitchTimer = 0.0f;
 static float stairSwitchTimer = 0.0f;
 map<string, Keyboard::Key> LevelScene::_currentControls;
+TimeLimit LevelScene::_timeLimitValue;
+bool isFirstSector = true;
 
 void LevelScene::Load(string const s, string const s1, string const s2) {
 	// Get the controls
 	_currentControls = Engine::GetControls();
+
+	// Reset score
+	CollectableComponent::resetCollectedAmount();
 
 	// Set the centre sector dimensions
 	Engine::SetCentreSectorSize(Vector2f(tileBounds * 20, tileBounds * 20));
@@ -32,7 +37,7 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
     LS::loadLevelFile(s2, 2 * tileBounds); // level 3 file loading
 
 	// Create the mid sector
-	auto sector = makeEntity(4);
+	auto sector = makeEntity("");
 	sector->setNameTag("sectorFrame");
 	auto ss = sector->addComponent<ShapeComponent>();
 	ss->setShape<RectangleShape>(Engine::GetCentreSectorSize());
@@ -46,7 +51,7 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	const Color plColor = { 222, 120, 31 }; // #DE781F
 
 	// Create the player for bottom floor
-	auto pl = makeEntity(5);
+	auto pl = makeEntity("player");
 	pl->setNameTag("player1");
 	pl->setCollisionBounds(_playerCollisionVelue);
 	auto plS = pl->addComponent<ShapeComponent>();
@@ -60,7 +65,7 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	plM->setSpeed(500.f);
 	plM->setFloor(1);
 	// Create the player for middle floor
-	auto pl2 = makeEntity(5);
+	auto pl2 = makeEntity("player");
 	pl2->setNameTag("player2");
 	pl2->setCollisionBounds(_playerCollisionVelue);
 	auto plS2 = pl2->addComponent<ShapeComponent>();
@@ -74,7 +79,7 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	plM2->setSpeed(500.f);
 	plM2->setFloor(2);
 	// Create the player for top floor
-	auto pl3 = makeEntity(5);
+	auto pl3 = makeEntity("player");
 	pl3->setNameTag("player3");
 	pl3->setCollisionBounds(_playerCollisionVelue);
 	auto plS3 = pl3->addComponent<ShapeComponent>();
@@ -89,25 +94,25 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	plM3->setFloor(3);
 
 	// Create black frame
-	auto frame1 = makeEntity(4);
+	auto frame1 = makeEntity("");
 	auto sf1 = frame1->addComponent<ShapeComponent>();
 	sf1->setShape<RectangleShape>(Vector2f(tileBounds * 2, Engine::GetCentreSectorSize().y));
 	sf1->getShape().setFillColor(Color::Black);
 	sf1->getShape().setOrigin(Vector2f(tileBounds, Engine::GetCentreSectorSize().y/2));
 	frame1->setPosition(Vector2f((Engine::GetWindowSize().x / 2 - Engine::GetCentreSectorSize().x / 2 - tileBounds - 5.f), Engine::GetWindowSize().y / 2));
-	auto frame2 = makeEntity(4);
+	auto frame2 = makeEntity("");
 	auto sf2 = frame2->addComponent<ShapeComponent>();
 	sf2->setShape<RectangleShape>(Vector2f(tileBounds * 2, Engine::GetCentreSectorSize().y));
 	sf2->getShape().setFillColor(Color::Black);
 	sf2->getShape().setOrigin(Vector2f(tileBounds, Engine::GetCentreSectorSize().y / 2));
 	frame2->setPosition(Vector2f((Engine::GetWindowSize().x / 2 + Engine::GetCentreSectorSize().x / 2 + tileBounds + 5.f), Engine::GetWindowSize().y / 2));
-	auto frame3 = makeEntity(4);
+	auto frame3 = makeEntity("");
 	auto sf3 = frame3->addComponent<ShapeComponent>();
 	sf3->setShape<RectangleShape>(Vector2f(Engine::GetCentreSectorSize().x, tileBounds * 2));
 	sf3->getShape().setFillColor(Color::Black);
 	sf3->getShape().setOrigin(Vector2f(Engine::GetCentreSectorSize().x / 2, tileBounds));
 	frame3->setPosition(Vector2f((Engine::GetWindowSize().x / 2), Engine::GetWindowSize().y / 2 - Engine::GetCentreSectorSize().y / 2 - tileBounds - 5.f));
-	auto frame4 = makeEntity(4);
+	auto frame4 = makeEntity("");
 	auto sf4 = frame4->addComponent<ShapeComponent>();
 	sf4->setShape<RectangleShape>(Vector2f(Engine::GetCentreSectorSize().x, tileBounds * 2));
 	sf4->getShape().setFillColor(Color::Black);
@@ -115,18 +120,38 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	frame4->setPosition(Vector2f((Engine::GetWindowSize().x / 2), Engine::GetWindowSize().y / 2 + Engine::GetCentreSectorSize().y / 2 + tileBounds + 5.f));
 
 	// Create a time limit var
-	auto timeLim = makeEntity(4);
+	auto timeLim = makeEntity("");
 	timeLim->setPosition(Vector2f((Engine::GetWindowSize().x / 2) - 30, 100));
 	timeLim->setNameTag("timeLimit");
 	auto tL = timeLim->addComponent<TextComponent>("");
 	_timeLimit = timeLim;
 
 	// Create score
-	auto scoreTxt = makeEntity(4);
+	auto scoreTxt = makeEntity("");
 	scoreTxt->setPosition(Vector2f((Engine::GetWindowSize().x / 2) - 30, _sectorBorders.bottom + 10));
 	scoreTxt->setNameTag("score");
 	auto sT = scoreTxt->addComponent<TextComponent>("");
 	_scoreEnt = scoreTxt;
+
+	// Score icon
+	auto coin = makeEntity("");
+	coin->setNameTag("coinIcon");
+	coin->setPosition(Vector2f((Engine::GetWindowSize().x / 2) - 50, _sectorBorders.bottom + 28));
+	auto coinS = coin->addComponent<ShapeComponent>();
+	coinS->setShape<CircleShape>(tileBounds / 2);
+	coinS->getShape().setOrigin(Vector2f(tileBounds / 2, tileBounds / 2));
+	coinS->getShape().setFillColor(Color::Yellow);
+	coinS->getShape().setOutlineColor({ 222, 120, 31 });
+	coinS->getShape().setOutlineThickness(2.f);
+
+	// Create instructions
+	auto instructions = makeEntity("temp");
+	instructions->setNameTag("instructions");
+	instructions->setPosition(Vector2f((Engine::GetWindowSize().x / 2) - 550, (Engine::GetWindowSize().y - 150)));
+	auto instrT = instructions->addComponent<TextComponent>("\t\t\t\t\tMove by using " + Engine::Key2String(_currentControls["up"]) + ", " + 
+		Engine::Key2String(_currentControls["down"]) + ", " + Engine::Key2String(_currentControls["left"]) + ", " + Engine::Key2String(_currentControls["right"]) + "\nClimb down and up a staircase and jump down one floor\n"+ "\t\t\t\t\t\t\t\t\t\tby " + Engine::Key2String(_currentControls["jump"]) +
+		"\nCollect all coins and avoid enemies before the time runs out" 
+		);
 }
 
 void LevelScene::Render() {
@@ -231,7 +256,6 @@ void LevelScene::Update(double const dt) {
 		for (const auto &e : ents.enemies) {
 			if (_activeSector == e->GetComponents<EnemyMovementComponent>()[0]->getSector()) {
 				if (length(_activePlayer->getPosition() - e->getPosition()) <= tileBounds * 1.5f) {
-					CollectableComponent::resetCollectedAmount();
 					Engine::ChangeScene(&gameOverScn);
 					break;
 				}
@@ -248,33 +272,27 @@ void LevelScene::Update(double const dt) {
 
 	// Check if the player has collected all collectables
 	if (_score == ents.collectables.size()) {
-		CollectableComponent::resetCollectedAmount();
 		Engine::ChangeScene(&victoryScn);
 	}
 
 	// Check if the time limit has reached 0
 	if (_timeLimitValue.minutes <= 0.0f && (_timeLimitValue.seconds - dt) <= 0.0f) {
-		CollectableComponent::resetCollectedAmount();
 		Engine::ChangeScene(&gameOverScn);
 	}
 }
 
 void LevelScene::UnLoad() {
-	cout << "Level Unload" << endl;
 	Scene::UnLoad();
 	LS::UnLoad();
 }
 
-void LevelScene::DisplaySector() {
-	auto txt = makeEntity(1);
-	txt->setPosition(Vector2f((Engine::GetWindowSize().x / 2) + 50, 100));
-	string str = "Sector " + to_string(_activeSector.x) + ", " + to_string(_activeSector.y);
-	auto t = txt->addComponent<TextComponent>(str);
-}
-
 void LevelScene::ChangeSector(Vector2i sectorId) {
-	// Reset the path tiles and collectables
-	UnLoadSector();
+	// Empty the instructions from the entity manager after the first sector
+	if (isFirstSector) {
+		isFirstSector = false;
+		ents.temp_list.clear();
+	}
+
 	// Move player to the other side of the square
 	MovePlayerOnNewSector(_activeSector, sectorId);
 	_activeSector = sectorId;
@@ -283,14 +301,6 @@ void LevelScene::ChangeSector(Vector2i sectorId) {
 	for (auto& p : ents.players) {
 		p->GetComponents<PlayerMovementComponent>()[0].get()->setSector(_activeSector);
 	}
-
-	DisplaySector();
-}
-
-void LevelScene::UnLoadSector() {
-	ents.floor1_list.clear();
-	ents.floor2_list.clear();
-	ents.floor3_list.clear();
 }
 
 // If there is a change in sectors it eturns the id of the new sector, with no change returns {0,0}
@@ -384,4 +394,8 @@ void LevelScene::changeFloor(int newFloor) {
 	_activePlayerFloor = newFloor;
 	setActivePlayer();
 	_activePlayer->GetComponents<PlayerMovementComponent>()[0].get()->setFloor(newFloor);
+}
+
+TimeLimit LevelScene::getTimeLimit() {
+	return _timeLimitValue;
 }

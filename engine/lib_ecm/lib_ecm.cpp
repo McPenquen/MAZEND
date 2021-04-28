@@ -3,7 +3,7 @@
 #include "LevelSystem.h"
 
 // Entity
-Entity::Entity(int orderNum) : _orderNum(orderNum), _alive(true), _visible(true), _rotation(1.f) {}
+Entity::Entity() : _alive(true), _visible(true), _rotation(1.f) {}
 
 Entity::~Entity() {
 	for (const auto& c : _components) {
@@ -96,23 +96,14 @@ void Component::Update(double dt) {
 // EntityManager
 void EntityManager::Render(Vector2i sectorID) {
 	LS::Render(Engine::GetWindow(), 1, sectorID);
-	for (const auto& e : floor1_list) {
-		e->Render();
-	}
 	if (players.size() > 0) {
 		players[0]->Render();
 	}
 	LS::Render(Engine::GetWindow(), 2, sectorID);
-	for (const auto& e : floor2_list) {
-		e->Render();
-	}
 	if (players.size() > 1) {
 		players[1]->Render();
 	}
 	LS::Render(Engine::GetWindow(), 3, sectorID);
-	for (const auto& e : floor3_list) {
-		e->Render();
-	}
 	if (players.size() > 2) {
 		players[2]->Render();
 	}
@@ -122,22 +113,16 @@ void EntityManager::Render(Vector2i sectorID) {
 	for (const auto& e : enemies) {
 		e->Render();
 	}
-	for (const auto& e : floor4_list) {
+	for (const auto& e : ui_list) {
+		e->Render();
+	}
+	for (const auto& e : temp_list) {
 		e->Render();
 	}
 }
 
 void EntityManager::Update(double dt) {
-	for (auto& e : floor1_list) {
-		e->Update(dt);
-	}
-	for (auto& e : floor2_list) {
-		e->Update(dt);
-	}
-	for (auto& e : floor3_list) {
-		e->Update(dt);
-	}
-	for (auto& e : floor4_list) {
+	for (auto& e : ui_list) {
 		e->Update(dt);
 	}
 	for (auto& e : collectables) {
@@ -149,78 +134,7 @@ void EntityManager::Update(double dt) {
 	for (auto& e : enemies) {
 		e->Update(dt);
 	}
-}
-
-vector<shared_ptr<Entity>> EntityManager::find(const string& tag, int floor) const {
-	vector<shared_ptr<Entity>> result;
-	if (floor == 1) {
-		for (auto& e : floor1_list) {
-			if (e->getNameTag() == tag) {
-				result.push_back(e);
-			}
-		}
+	for (auto& e : temp_list) {
+		e->Update(dt);
 	}
-	else if (floor == 2) {
-		for (auto& e : floor2_list) {
-			if (e->getNameTag() == tag) {
-				result.push_back(e);
-			}
-		}
-	}
-	else if (floor == 3) {
-		for (auto& e : floor3_list) {
-			if (e->getNameTag() == tag) {
-				result.push_back(e);
-			}
-		}
-	}
-	else {
-		for (auto& e : floor4_list) {
-			if (e->getNameTag() == tag) {
-				result.push_back(e);
-			}
-		}
-	}
-	return result;
-}
-
-vector<shared_ptr<Entity>> EntityManager::find(const vector<string>& tags, int floor) const {
-	vector<shared_ptr<Entity>> result;
-	if (floor == 1) {
-		for (auto& e : floor1_list) {
-			for (auto tag : tags) {
-				if (e->getNameTag() == tag) {
-					result.push_back(e);
-				}
-			}
-		}
-	}
-	else if (floor == 2) {
-		for (auto& e : floor1_list) {
-			for (auto tag : tags) {
-				if (e->getNameTag() == tag) {
-					result.push_back(e);
-				}
-			}
-		}
-	}
-	else if (floor == 3){
-		for (auto& e : floor3_list) {
-			for (auto tag : tags) {
-				if (e->getNameTag() == tag) {
-					result.push_back(e);
-				}
-			}
-		}
-	}
-	else {
-		for (auto& e : floor4_list) {
-			for (auto tag : tags) {
-				if (e->getNameTag() == tag) {
-					result.push_back(e);
-				}
-			}
-		}
-	}
-	return result;
 }

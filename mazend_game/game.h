@@ -7,7 +7,7 @@
 
 // Window specs
 constexpr size_t gameWidth = 1200;
-constexpr size_t gameHeight = 700;
+constexpr size_t gameHeight = 800;
 
 // SCENES
 extern MainMenuScene mainMenu;

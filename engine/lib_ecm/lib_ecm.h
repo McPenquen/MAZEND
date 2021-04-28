@@ -19,12 +19,10 @@ protected:
 	bool _visible; 
 	bool _fordeletion = false; 
 	string _nameTag;
-	int _orderNum;
 	float _collisionBounds;
 
 public:
-	Entity() = delete;
-	Entity(int orderNum);
+	Entity();
 	virtual ~Entity();
 	virtual void Update(double dt);
 	virtual void Render();
@@ -100,16 +98,11 @@ public:
 
 // Entity Manager
 struct EntityManager {
-	vector<shared_ptr<Entity>> floor1_list;
-	vector<shared_ptr<Entity>> floor2_list;
-	vector<shared_ptr<Entity>> floor3_list;
-	vector<shared_ptr<Entity>> floor4_list;
+	vector<shared_ptr<Entity>> ui_list;
 	vector<shared_ptr<Entity>> players;
 	vector<shared_ptr<Entity>> enemies;
 	vector<shared_ptr<Entity>> collectables;
+	vector<shared_ptr<Entity>> temp_list;
 	void Update(double dt);
 	void Render(Vector2i sectorId);
-
-	vector<shared_ptr<Entity>> find(const string& tag, int floor) const;
-	vector<shared_ptr<Entity>> find(const vector<string>& tags, int floor) const;
 };

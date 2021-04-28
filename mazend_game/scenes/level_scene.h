@@ -17,9 +17,7 @@ public:
 	void Render() override;
 
 	// Sector movement
-	void UnLoadSector();
 	void ChangeSector(Vector2i);
-	virtual void DisplaySector();
 	Vector2i getNewSector() const;
 	void MovePlayerOnNewSector(Vector2i, Vector2i);
 
@@ -28,6 +26,9 @@ public:
 	void setActivePlayer();
 	void changeFloor(int);
 
+	// Score
+	static TimeLimit getTimeLimit();
+
 protected:
 	shared_ptr<Entity> _activePlayer;
 	float _playerCollisionVelue;
@@ -35,7 +36,7 @@ protected:
 	Vector2i _activeSector;
 	int _activePlayerFloor;
 
-	TimeLimit _timeLimitValue;
+	static TimeLimit _timeLimitValue;
 	shared_ptr<Entity> _timeLimit;
 
 	int _score;

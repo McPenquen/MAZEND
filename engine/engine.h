@@ -22,7 +22,7 @@ public:
 	bool isLoaded() const;
 
 	EntityManager getEnts();
-	shared_ptr<Entity> makeEntity(int orderNum);
+	shared_ptr<Entity> makeEntity(string enName);
 
 	string getSceneName() const;
 	void setSceneName(const string);
@@ -93,11 +93,3 @@ private:
 	static bool _isObservingControlChange;
 	static string _observingControlName; // empty string is no, a string with contents marks the control to change
 };
-
-// Timing
-namespace timing {
-	// Return time since Epoc
-	long long now();
-	// Return time since last() was last called.
-	long long last();
-}
