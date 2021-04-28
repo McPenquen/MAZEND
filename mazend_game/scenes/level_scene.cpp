@@ -267,8 +267,6 @@ void LevelScene::UnLoad() {
 }
 
 void LevelScene::ChangeSector(Vector2i sectorId) {
-	// Reset the path tiles and collectables
-	UnLoadSector();
 	// Move player to the other side of the square
 	MovePlayerOnNewSector(_activeSector, sectorId);
 	_activeSector = sectorId;
@@ -277,12 +275,6 @@ void LevelScene::ChangeSector(Vector2i sectorId) {
 	for (auto& p : ents.players) {
 		p->GetComponents<PlayerMovementComponent>()[0].get()->setSector(_activeSector);
 	}
-}
-
-void LevelScene::UnLoadSector() {
-	ents.floor1_list.clear();
-	ents.floor2_list.clear();
-	ents.floor3_list.clear();
 }
 
 // If there is a change in sectors it eturns the id of the new sector, with no change returns {0,0}

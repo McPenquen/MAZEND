@@ -4,7 +4,7 @@
 
 // Game Over
 void GameOverScene::Load() {
-	auto txt = makeEntity(1);
+	auto txt = makeEntity(4);
 	txt->setPosition(Vector2f(Engine::GetWindowSize().x/2 - 100, Engine::GetWindowSize().y/2 - 100));
 	auto t = txt->addComponent<TextComponent>(
 		"GAME OVER\n\nPress ESC"
@@ -22,7 +22,7 @@ void GameOverScene::Update(const double dt) {
 
 // Victory
 void VictoryScene::Load() {
-	auto txt = makeEntity(1);
+	auto txt = makeEntity(4);
 	txt->setPosition(Vector2f(Engine::GetWindowSize().x / 2 - 100, Engine::GetWindowSize().y / 2 - 100));
 	TimeLimit tl = LevelScene::getTimeLimit();
 	auto t = txt->addComponent<TextComponent>(

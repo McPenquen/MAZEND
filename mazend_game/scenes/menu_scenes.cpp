@@ -6,7 +6,7 @@
 
 // Main Menu
 void MainMenuScene::Load() {
-	auto txt = makeEntity(1);
+	auto txt = makeEntity(4);
 	auto t = txt->addComponent<TextComponent>(
 		"MAIN MENU\n\nPlay Levels - Press 1\nOptions - Press 2\nExit - Press 3"
 		);
@@ -39,7 +39,7 @@ bool OptionsScene::_isChangingControl = false;
 string OptionsScene::_changingKeyName = "";
 
 void OptionsScene::Load() {
-	auto txt = makeEntity(1);
+	auto txt = makeEntity(4);
 	auto activeControls = Engine::GetControls();
 
 	string menuStr1 = "OPTIONS\n\nWindow Mode:\n   Window Mode (Press W+1) VS Full Screen (Press W+2)\n\Controls:\n   MOVE UP: ";
@@ -51,7 +51,7 @@ void OptionsScene::Load() {
 	txt->setPosition(Vector2f(2* tileBounds, 2* tileBounds));
 
 	if (_isChangingControl) {
-		auto changingMessage = makeEntity(1);
+		auto changingMessage = makeEntity(4);
 		auto cmt = changingMessage->addComponent<TextComponent>("Press a key to be your " + _changingKeyName + " movement\n\t\t\t\tIt cannot be ESC");
 		auto winSize = Engine::GetWindowSize();
 		changingMessage->setPosition({float(winSize.x) / 5, float(winSize.y) - 100.0f});
@@ -118,7 +118,7 @@ void OptionsScene::Update(const double dt) {
 
 // Levels
 void LevelsScene::Load() {
-	auto txt = makeEntity(1);
+	auto txt = makeEntity(4);
 	auto t = txt->addComponent<TextComponent>(
 		"LEVELS\n\nLevel 1 - Press 1\nBack - Press 2"
 		);

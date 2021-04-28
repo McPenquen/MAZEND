@@ -72,7 +72,7 @@ void Level1Scene::Load() {
 	}
 
 	// Create an enemy
-	/*auto en = makeEntity(6);
+	auto en = makeEntity(6);
 	en->setNameTag("enemy1");
 	en->setCollisionBounds(tileBounds);
 	en->setVisible(false);
@@ -90,7 +90,7 @@ void Level1Scene::Load() {
 	enSm->addState("casual", make_shared<CasualState>(_activePlayer));
 	enSm->addState("hunting", make_shared<HuntingState>(_activePlayer));
 	enSm->changeState("casual");
-	*/
+	
 	// Pause instructions
 	auto txt = makeEntity(4);
 	auto t = txt->addComponent<TextComponent>(

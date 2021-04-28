@@ -35,10 +35,7 @@ void Scene::setLoaded(bool new_bool) {
 }
 
 void Scene::UnLoad() {
-	ents.floor1_list.clear();
-	ents.floor2_list.clear();
-	ents.floor3_list.clear();
-	ents.floor4_list.clear();
+	ents.ui_list.clear();
 	ents.players.clear();
 	ents.enemies.clear();
     ents.collectables.clear();
@@ -67,17 +64,8 @@ shared_ptr<Entity> Scene::makeEntity(int orderNum) {
     else if (orderNum == 7) {
 		ents.collectables.push_back(en);
 	}
-	else if (orderNum == 1) {
-		ents.floor1_list.push_back(en);
-	}
-	else if (orderNum == 2) {
-		ents.floor2_list.push_back(en);
-	}
-	else if (orderNum == 3) {
-		ents.floor3_list.push_back(en);
-	}
 	else {
-		ents.floor4_list.push_back(en);
+		ents.ui_list.push_back(en);
 	}
 	return move(en);
 }
@@ -142,28 +130,12 @@ void LoadingRender() {
 	Renderer::Queue(&octagon);
 }
 
-float frametimes[256] = {};
-uint8_t ftc = 0;
-
 // - Engine
 void Engine::Update() {
 	static Clock clock;
 	float dt = clock.restart().asSeconds();
 
 	scnSwitchTimer += dt;
-
-	{
-    frametimes[++ftc] = dt;
-    static string avg = _gameName + " FPS:";
-    if (ftc % 60 == 0) {
-      double davg = 0;
-      for (const auto t : frametimes) {
-        davg += t;
-      }
-      davg = 1.0 / (davg / 255.0);
-      _window->setTitle(avg + toStrDecPt(2, davg));
-    }
-  }
 
 	if (loading) {
 		LoadingUpdate(dt, _activeScene);
@@ -770,20 +742,4 @@ string Engine::Key2String(const Keyboard::Key k) {
         break;
     }
     return ret;
-}
-
-// Timing
-namespace timing {
-	// Return time since epoch
-	long long now() {
-		return chrono::high_resolution_clock::now().time_since_epoch().count();
-	}
-	// Return the time since it was last called
-	long long last() {
-		auto cn = now();
-		static auto then = now();
-		auto dt = cn - then;
-		then = cn;
-		return dt;
-	}
 }

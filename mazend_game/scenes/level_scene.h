@@ -17,7 +17,6 @@ public:
 	void Render() override;
 
 	// Sector movement
-	void UnLoadSector();
 	void ChangeSector(Vector2i);
 	Vector2i getNewSector() const;
 	void MovePlayerOnNewSector(Vector2i, Vector2i);
