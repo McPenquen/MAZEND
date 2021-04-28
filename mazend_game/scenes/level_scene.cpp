@@ -14,6 +14,7 @@ static float secSwitchTimer = 0.0f;
 static float stairSwitchTimer = 0.0f;
 map<string, Keyboard::Key> LevelScene::_currentControls;
 TimeLimit LevelScene::_timeLimitValue;
+bool isFirstSector = true;
 
 void LevelScene::Load(string const s, string const s1, string const s2) {
 	// Get the controls
@@ -133,15 +134,24 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	_scoreEnt = scoreTxt;
 
 	// Score icon
-	auto en = makeEntity(4);
-	en->setNameTag("coinIcon");
-	en->setPosition(Vector2f((Engine::GetWindowSize().x / 2) - 50, _sectorBorders.bottom + 28));
-	auto enS = en->addComponent<ShapeComponent>();
-	enS->setShape<CircleShape>(tileBounds / 2);
-	enS->getShape().setOrigin(Vector2f(tileBounds / 2, tileBounds / 2));
-	enS->getShape().setFillColor(Color::Yellow);
-	enS->getShape().setOutlineColor({ 222, 120, 31 });
-	enS->getShape().setOutlineThickness(2.f);
+	auto coin = makeEntity(4);
+	coin->setNameTag("coinIcon");
+	coin->setPosition(Vector2f((Engine::GetWindowSize().x / 2) - 50, _sectorBorders.bottom + 28));
+	auto coinS = coin->addComponent<ShapeComponent>();
+	coinS->setShape<CircleShape>(tileBounds / 2);
+	coinS->getShape().setOrigin(Vector2f(tileBounds / 2, tileBounds / 2));
+	coinS->getShape().setFillColor(Color::Yellow);
+	coinS->getShape().setOutlineColor({ 222, 120, 31 });
+	coinS->getShape().setOutlineThickness(2.f);
+
+	// Create instructions
+	auto instructions = makeEntity(8);
+	instructions->setNameTag("instructions");
+	instructions->setPosition(Vector2f((Engine::GetWindowSize().x / 2) - 550, (Engine::GetWindowSize().y - 150)));
+	auto instrT = instructions->addComponent<TextComponent>("\t\t\t\t\tMove by using " + Engine::Key2String(_currentControls["up"]) + ", " + 
+		Engine::Key2String(_currentControls["down"]) + ", " + Engine::Key2String(_currentControls["left"]) + ", " + Engine::Key2String(_currentControls["right"]) + "\nClimb down and up a staircase and jump down one floor\n"+ "\t\t\t\t\t\t\t\t\t\tby " + Engine::Key2String(_currentControls["jump"]) +
+		"\nCollect all coins and avoid enemies before the time runs out" 
+		);
 }
 
 void LevelScene::Render() {
@@ -278,6 +288,12 @@ void LevelScene::UnLoad() {
 }
 
 void LevelScene::ChangeSector(Vector2i sectorId) {
+	// Empty the instructions from the entity manager after the first sector
+	if (isFirstSector) {
+		isFirstSector = false;
+		ents.temp_list.clear();
+	}
+
 	// Move player to the other side of the square
 	MovePlayerOnNewSector(_activeSector, sectorId);
 	_activeSector = sectorId;

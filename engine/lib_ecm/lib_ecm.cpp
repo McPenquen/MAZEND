@@ -116,6 +116,9 @@ void EntityManager::Render(Vector2i sectorID) {
 	for (const auto& e : ui_list) {
 		e->Render();
 	}
+	for (const auto& e : temp_list) {
+		e->Render();
+	}
 }
 
 void EntityManager::Update(double dt) {
@@ -129,6 +132,9 @@ void EntityManager::Update(double dt) {
 		e->Update(dt);
 	}
 	for (auto& e : enemies) {
+		e->Update(dt);
+	}
+	for (auto& e : temp_list) {
 		e->Update(dt);
 	}
 }

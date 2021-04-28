@@ -39,6 +39,7 @@ void Scene::UnLoad() {
 	ents.players.clear();
 	ents.enemies.clear();
     ents.collectables.clear();
+    ents.temp_list.clear();
 	setLoaded(false);
 }
 
@@ -64,6 +65,10 @@ shared_ptr<Entity> Scene::makeEntity(int orderNum) {
     else if (orderNum == 7) {
 		ents.collectables.push_back(en);
 	}
+    // number 8 means the temp list
+    else if (orderNum == 8) {
+        ents.temp_list.push_back(en);
+    }
 	else {
 		ents.ui_list.push_back(en);
 	}
