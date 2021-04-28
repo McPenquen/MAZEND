@@ -53,22 +53,19 @@ Scene::~Scene() {
 
 shared_ptr<Entity> Scene::makeEntity(string enName) {
 	auto en = make_shared<Entity>();
-	// number 5 means the player list
 	if (enName == "player") {
 		ents.players.push_back(en);
 	}
-	// number 6 means an enemy list
 	else if (enName == "enemy") {
 		ents.enemies.push_back(en);
 	}
-    // number 7 means collectable
     else if (enName == "collectable") {
 		ents.collectables.push_back(en);
 	}
-    // number 8 means the temp list
     else if (enName == "temp") {
         ents.temp_list.push_back(en);
     }
+    // Else it belongs to UI
 	else {
 		ents.ui_list.push_back(en);
 	}
