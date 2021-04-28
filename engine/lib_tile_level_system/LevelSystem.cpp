@@ -225,8 +225,6 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
             default:
                 unknownTile = true;
                 realI--;
-                std::cout << i << " - Unknown tile: " << c << endl;
-
             }
             if (!unknownTile)
             {
@@ -315,8 +313,6 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
             default:
                 unknownTile = true;
                 realI--;
-                std::cout << i << " - Unknown tile: " << c << endl;
-
             }
             if (!unknownTile)
             {
@@ -406,7 +402,6 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
             default:
                 unknownTile = true;
                 realI--;
-                std::cout << i << " - Unknown tile: " << c << endl;
 
             }
             if (!unknownTile)
@@ -431,7 +426,6 @@ void LevelSystem::loadLevelFile(const string &path, float tileSize)
     _width = w;
     _height = h;
     std::copy(temp_tiles.begin(), temp_tiles.end(), &_tiles[level - 1][0]);
-    std::cout << "Level " << path << " loaded. " << w << "x" << h << endl;
     buildSprites(level - 1);
 }
 
@@ -552,7 +546,6 @@ void LevelSystem::Render(RenderWindow& window, int floor, Vector2i sectorId) {
 }
 
 void LevelSystem::UnLoad() {
-    cout << "LevelSystem unloading" << endl;
     _sprites.clear();
     _tiles.clear();
     _width = 0;

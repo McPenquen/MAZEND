@@ -282,7 +282,6 @@ void LevelScene::Update(double const dt) {
 }
 
 void LevelScene::UnLoad() {
-	cout << "Level Unload" << endl;
 	Scene::UnLoad();
 	LS::UnLoad();
 }

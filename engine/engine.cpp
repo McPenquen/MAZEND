@@ -101,9 +101,7 @@ static float loadingTime;
 static RenderWindow* _window;
 
 void LoadingUpdate(double dt, const Scene* const scene) {
-	cout << "Eng: Loading Screen\n";
 	if (scene->isLoaded()) {
-		cout << "Eng: Exiting Loading Screen\n";
 		loading = false;
 	}
 	else {
@@ -115,7 +113,6 @@ void LoadingUpdate(double dt, const Scene* const scene) {
 static Font loadingFont;
 
 void LoadingRender() {
-	cout << "Eng: Loading Screen Render\n";
 	static CircleShape octagon(80, 8);
 	octagon.setOrigin(80, 80);
 	octagon.setRotation(loadingProgress);
@@ -233,7 +230,6 @@ void Engine::SetVsync(bool bo) {
 void Engine::ChangeScene(Scene* s) {
 	if (scnSwitchTimer >= sceneSwithTime) {
 		scnSwitchTimer = 0;
-		cout << "Eng: changing scene: " << s << endl;
 		_previousScene = _activeScene;
 		_activeScene = s;
 
@@ -242,7 +238,6 @@ void Engine::ChangeScene(Scene* s) {
 		}
 
 		if (!s->isLoaded()) {
-			cout << "Eng: Entering Loading Screen\n";
 			loadingTime = 0;
 			_activeScene->LoadAsync();
 			loading = true;
@@ -253,12 +248,10 @@ void Engine::ChangeScene(Scene* s) {
 void Engine::PauseScene(Scene* s) {
 	if (scnSwitchTimer >= sceneSwithTime) {
 		scnSwitchTimer = 0;
-		cout << "Eng: changing scene: " << s << endl;
 		_previousScene = _activeScene;
 		_activeScene = s;
 
 		if (!s->isLoaded()) {
-			cout << "Eng: Entering Loading Screen\n";
 			loadingTime = 0;
 			_activeScene->LoadAsync();
 			loading = true;
