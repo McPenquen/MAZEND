@@ -24,8 +24,9 @@ void GameOverScene::Update(const double dt) {
 void VictoryScene::Load() {
 	auto txt = makeEntity(1);
 	txt->setPosition(Vector2f(Engine::GetWindowSize().x / 2 - 100, Engine::GetWindowSize().y / 2 - 100));
+	TimeLimit tl = LevelScene::getTimeLimit();
 	auto t = txt->addComponent<TextComponent>(
-		"VICTORY\n\nPress ESC"
+		"VICTORY\n\nScore: " + to_string(int(tl.minutes)) + "," + to_string(int(tl.seconds)) + "\n\nPress ESC"
 		);
 	setSceneName("victoryScene");
 	setLoaded(true);

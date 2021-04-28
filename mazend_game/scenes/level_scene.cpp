@@ -13,10 +13,14 @@
 static float secSwitchTimer = 0.0f;
 static float stairSwitchTimer = 0.0f;
 map<string, Keyboard::Key> LevelScene::_currentControls;
+TimeLimit LevelScene::_timeLimitValue;
 
 void LevelScene::Load(string const s, string const s1, string const s2) {
 	// Get the controls
 	_currentControls = Engine::GetControls();
+
+	// Reset score
+	CollectableComponent::resetCollectedAmount();
 
 	// Set the centre sector dimensions
 	Engine::SetCentreSectorSize(Vector2f(tileBounds * 20, tileBounds * 20));
@@ -231,7 +235,6 @@ void LevelScene::Update(double const dt) {
 		for (const auto &e : ents.enemies) {
 			if (_activeSector == e->GetComponents<EnemyMovementComponent>()[0]->getSector()) {
 				if (length(_activePlayer->getPosition() - e->getPosition()) <= tileBounds * 1.5f) {
-					CollectableComponent::resetCollectedAmount();
 					Engine::ChangeScene(&gameOverScn);
 					break;
 				}
@@ -248,13 +251,11 @@ void LevelScene::Update(double const dt) {
 
 	// Check if the player has collected all collectables
 	if (_score == ents.collectables.size()) {
-		CollectableComponent::resetCollectedAmount();
 		Engine::ChangeScene(&victoryScn);
 	}
 
 	// Check if the time limit has reached 0
 	if (_timeLimitValue.minutes <= 0.0f && (_timeLimitValue.seconds - dt) <= 0.0f) {
-		CollectableComponent::resetCollectedAmount();
 		Engine::ChangeScene(&gameOverScn);
 	}
 }
@@ -263,13 +264,6 @@ void LevelScene::UnLoad() {
 	cout << "Level Unload" << endl;
 	Scene::UnLoad();
 	LS::UnLoad();
-}
-
-void LevelScene::DisplaySector() {
-	auto txt = makeEntity(1);
-	txt->setPosition(Vector2f((Engine::GetWindowSize().x / 2) + 50, 100));
-	string str = "Sector " + to_string(_activeSector.x) + ", " + to_string(_activeSector.y);
-	auto t = txt->addComponent<TextComponent>(str);
 }
 
 void LevelScene::ChangeSector(Vector2i sectorId) {
@@ -283,8 +277,6 @@ void LevelScene::ChangeSector(Vector2i sectorId) {
 	for (auto& p : ents.players) {
 		p->GetComponents<PlayerMovementComponent>()[0].get()->setSector(_activeSector);
 	}
-
-	DisplaySector();
 }
 
 void LevelScene::UnLoadSector() {
@@ -384,4 +376,8 @@ void LevelScene::changeFloor(int newFloor) {
 	_activePlayerFloor = newFloor;
 	setActivePlayer();
 	_activePlayer->GetComponents<PlayerMovementComponent>()[0].get()->setFloor(newFloor);
+}
+
+TimeLimit LevelScene::getTimeLimit() {
+	return _timeLimitValue;
 }

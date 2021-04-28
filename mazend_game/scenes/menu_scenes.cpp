@@ -160,7 +160,6 @@ void PauseMenuScene::Update(const double dt) {
 	}
 	else if (Keyboard::isKeyPressed(Keyboard::Num2)) {
 		Engine::UnloadPreviousScene();
-		CollectableComponent::resetCollectedAmount();
 		Engine::ChangeScene(&levels);
 	}
 	Scene::Update(dt);
