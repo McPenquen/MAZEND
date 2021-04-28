@@ -131,6 +131,17 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	scoreTxt->setNameTag("score");
 	auto sT = scoreTxt->addComponent<TextComponent>("");
 	_scoreEnt = scoreTxt;
+
+	// Score icon
+	auto en = makeEntity(4);
+	en->setNameTag("coinIcon");
+	en->setPosition(Vector2f((Engine::GetWindowSize().x / 2) - 50, _sectorBorders.bottom + 28));
+	auto enS = en->addComponent<ShapeComponent>();
+	enS->setShape<CircleShape>(tileBounds / 2);
+	enS->getShape().setOrigin(Vector2f(tileBounds / 2, tileBounds / 2));
+	enS->getShape().setFillColor(Color::Yellow);
+	enS->getShape().setOutlineColor({ 222, 120, 31 });
+	enS->getShape().setOutlineThickness(2.f);
 }
 
 void LevelScene::Render() {

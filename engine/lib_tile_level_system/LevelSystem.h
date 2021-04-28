@@ -39,8 +39,6 @@ public:
     static size_t getHeight();
     static size_t getWidth();
 
-    static vector<Vector2ul> findTiles(TILE, int, Vector2i);
-
     static float getTileSize();
 
     static void buildSprites(int levelNum);
@@ -66,9 +64,7 @@ protected:
 
     // Division into 3 layers vector[0]/[1]/[2], and each into sectoins with id of int version of the Vector2i id -> Vector2i(1,1)==int(11)
     static vector<map<int, vector<shared_ptr<RectangleShape>>>> _sprites; // array of sfml sprites of each tile
-    static vector<map<int, map<TILE, vector<Vector2ul>>>> _tile_positions; // positions of the tiles
     
-    static void addTilePosition(TILE, Vector2ul, int, Vector2i);
     // Tiles that are considered stairs
     static vector<TILE> _stairs;
     
