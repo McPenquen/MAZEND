@@ -3,6 +3,7 @@
 #include "../game.h"
 #include "../components/cmp_shape.h"
 #include "../components/cmp_victory_collectable.h"
+#include "../components/cmp_random_movement.h"
 
 // Main Menu
 void MainMenuScene::Load() {
@@ -18,6 +19,22 @@ void MainMenuScene::Load() {
 	tt->SetColour({22,117,161});
 	auto scale = Engine::GetWindowSize().x / 15;
 	tt->SetSize(scale);
+
+	// Create entities to move around
+	for (int i = 0; i < 3; ++i) {
+		auto en = makeEntity("");
+		auto rad = tileBounds / (i + 1);
+		en->setCollisionBounds(rad);
+		auto enS = en->addComponent<ShapeComponent>();
+		enS->setShape<CircleShape>(rad);
+		enS->getShape().setFillColor({ 222, 120, 31 });
+		enS->getShape().setOutlineColor(Color::Black);
+		enS->getShape().setOutlineThickness(2.f);
+		enS->getShape().setOrigin(Vector2f(rad, rad));
+		en->setPosition(Vector2f(100.0f + i * 300.0f, Engine::GetWindowSize().y / 2 + i * 150.0f));
+		auto enM = en->addComponent<RandomMovementComponent>();
+	}
+
 	setSceneName("mainMenu");
 	setLoaded(true);
 }
@@ -137,6 +154,22 @@ void LevelsScene::Load() {
 		"LEVELS\n\nLevel 1 - Press 1\nBack - Press 2"
 		);
 	txt->setPosition(Vector2f(2* tileBounds, 2* tileBounds));
+
+	// Create entities to move around
+	for (int i = 0; i < 3; ++i) {
+		auto en = makeEntity("");
+		auto rad = tileBounds / (i + 1);
+		en->setCollisionBounds(rad);
+		auto enS = en->addComponent<ShapeComponent>();
+		enS->setShape<CircleShape>(rad);
+		enS->getShape().setFillColor({ 222, 120, 31 });
+		enS->getShape().setOutlineColor(Color::Black);
+		enS->getShape().setOutlineThickness(2.f);
+		enS->getShape().setOrigin(Vector2f(rad, rad));
+		en->setPosition(Vector2f(100.0f + i * 300.0f, Engine::GetWindowSize().y / 2 + i * 150.0f));
+		auto enM = en->addComponent<RandomMovementComponent>();
+	}
+
 	setSceneName("levels");
 	setLoaded(true);
 }
@@ -171,6 +204,22 @@ void PauseMenuScene::Load() {
 		"PAUSE\n\nResume - Press 1\nLeave the level - Press 2"
 		);
 	txt->setPosition(Vector2f(2* tileBounds, 2* tileBounds));
+
+	// Create entities to move around
+	for (int i = 0; i < 3; ++i) {
+		auto en = makeEntity("");
+		auto rad = tileBounds / (i + 1);
+		en->setCollisionBounds(rad);
+		auto enS = en->addComponent<ShapeComponent>();
+		enS->setShape<CircleShape>(rad);
+		enS->getShape().setFillColor({ 222, 120, 31 });
+		enS->getShape().setOutlineColor(Color::Black);
+		enS->getShape().setOutlineThickness(2.f);
+		enS->getShape().setOrigin(Vector2f(rad, rad));
+		en->setPosition(Vector2f(100.0f + i * 300.0f, Engine::GetWindowSize().y / 2 + i * 150.0f));
+		auto enM = en->addComponent<RandomMovementComponent>();
+	}
+
 	setSceneName("pauseMenu");
 	setLoaded(true);
 }
