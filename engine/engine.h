@@ -68,12 +68,16 @@ public:
 	static Vector2f GetCentreSectorSize();
 	static void SetCentreSectorSize(const Vector2f);
 
-	//Controls
+	// Controls
 	static map<string, Keyboard::Key> GetControls();
 	static void SetControl(const string controlName, const Keyboard::Key);
 	static string Key2String(const Keyboard::Key);
 	static void ObserveControlChange(const string keyName); // mark to start detecting key to change a control from the string to
 	static bool isObservingControlChange();
+
+	// Saving
+	static bool SaveScore(const int level, const string); // returns false if it isn't a new high score, else return true
+	//static void SaveControls();
 
 private:
 	static Scene* _activeScene;
