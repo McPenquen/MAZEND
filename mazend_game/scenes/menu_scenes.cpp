@@ -10,7 +10,14 @@ void MainMenuScene::Load() {
 	auto t = txt->addComponent<TextComponent>(
 		"MAIN MENU\n\nPlay Levels - Press 1\nOptions - Press 2\nExit - Press 3"
 		);
-	txt->setPosition(Vector2f(2* tileBounds, 2* tileBounds));
+	txt->setPosition(Vector2f(2 * tileBounds, 2 * tileBounds));
+	auto title = makeEntity("");
+	auto tt = title->addComponent<TextComponent>("M\nA\nZ\nE\nN\nD");
+	title->setPosition(Vector2f(Engine::GetWindowSize().x /2 + Engine::GetWindowSize().x / 6, 
+		Engine::GetWindowSize().y / 8.0f));
+	tt->SetColour({22,117,161});
+	auto scale = Engine::GetWindowSize().x / 15;
+	tt->SetSize(scale);
 	setSceneName("mainMenu");
 	setLoaded(true);
 }
@@ -118,6 +125,13 @@ void OptionsScene::Update(const double dt) {
 
 // Levels
 void LevelsScene::Load() {
+	auto title = makeEntity("");
+	auto tt = title->addComponent<TextComponent>("M\nA\nZ\nE\nN\nD");
+	title->setPosition(Vector2f(Engine::GetWindowSize().x / 2 + Engine::GetWindowSize().x / 6,
+		Engine::GetWindowSize().y / 8.0f));
+	tt->SetColour({ 22,117,161 });
+	auto scale = Engine::GetWindowSize().x / 15;
+	tt->SetSize(scale);
 	auto txt = makeEntity("");
 	auto t = txt->addComponent<TextComponent>(
 		"LEVELS\n\nLevel 1 - Press 1\nBack - Press 2"
@@ -145,6 +159,13 @@ void PauseMenuScene::Load() {
 	cs->getShape().setFillColor(Color::Black);
 	cs->getShape().setOrigin(Vector2f(Engine::GetWindowSize().x / 2, Engine::GetWindowSize().y / 2));
 	curtain->setPosition(Vector2f(Engine::GetWindowSize().x / 2, Engine::GetWindowSize().y / 2));
+	auto title = makeEntity("");
+	auto tt = title->addComponent<TextComponent>("M\nA\nZ\nE\nN\nD");
+	title->setPosition(Vector2f(Engine::GetWindowSize().x / 2 + Engine::GetWindowSize().x / 6,
+		Engine::GetWindowSize().y / 8.0f));
+	tt->SetColour({ 22,117,161 });
+	auto scale = Engine::GetWindowSize().x / 15;
+	tt->SetSize(scale);
 	auto txt = makeEntity("");
 	auto t = txt->addComponent<TextComponent>(
 		"PAUSE\n\nResume - Press 1\nLeave the level - Press 2"
