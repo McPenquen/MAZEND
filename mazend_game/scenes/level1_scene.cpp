@@ -18,6 +18,9 @@ struct MazePosition {
 };
 
 void Level1Scene::Load() {
+	// Current level is 1
+	_currentLevel = 1;
+
 	// Load the initial sector and player position
 	_activeSector = Vector2i(2, 1);
 	_activePlayerFloor = 2;

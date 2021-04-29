@@ -2,6 +2,7 @@
 #include <chrono>
 #include <future>
 #include <iostream>
+#include <fstream>
 #include <stdexcept>
 #include "system_renderer.h"
 #include <maths.h>
@@ -314,6 +315,89 @@ void Engine::ObserveControlChange(const string keyName) {
 
 bool Engine::isObservingControlChange() {
     return _isObservingControlChange;
+}
+
+bool Engine::SaveScore(const int level, const string score) {
+    //Load in file
+    ifstream fs;
+    string buffer;
+    fs.open("res/database/scores.txt");
+    if (fs.good()) {
+        fs.seekg(0, ios::end);
+        buffer.resize(fs.tellg());
+        fs.seekg(0);
+        fs.read(&buffer[0], buffer.size());
+        fs.close();
+    }
+    else {
+        throw string("Couldn't open scores");
+    }
+
+    // Overwrite the file
+    ofstream ofs("res/database/scores.txt", ofstream::trunc);
+
+    // Variables for reading
+    string currentString = "";
+    bool isListeningFlag = true; // listening to the level id reading
+    bool isTaskFinished = false;
+    bool isReadingScore = false; // it is reading score now
+    string oldScore = "";
+    
+    // Read all the scores and find the right level
+    for (int i = 0; i < buffer.size(); ++i) {
+        const char c = buffer[i];
+        // if the level wasn't fo
+        if (!isTaskFinished) {
+            // if we have detected correct level id, we are reading the score to establish if it's higher
+            if (!isListeningFlag && isReadingScore) {
+                oldScore.push_back(c);
+            }
+            if (isListeningFlag) {
+                if (c == ',') {
+                    if (currentString == to_string(level)) {
+                        isReadingScore = true;
+                        ofs << c; // add the comma
+                    }
+                    currentString = "";
+                    isListeningFlag = false;
+                }
+                else {
+                    currentString.push_back(c);
+                }
+            }
+            // Listen again after a new line and stop recording score
+            else if (c == '\n') {
+                isListeningFlag = true;
+                if (isReadingScore) {
+                    // Compare scores and put the higher one into the database
+                    double oldScoreVal = atof(oldScore.c_str());
+                    double newScoreVal = atof(score.c_str());
+                    if (newScoreVal > oldScoreVal) {
+                        ofs << score;
+                    }
+                    else {
+                        ofs << oldScore;
+                    }
+                    // if we have found the right level the task ends
+                    isReadingScore = false;
+                    oldScore = "";
+                    isTaskFinished = true;
+                }
+            }
+        }
+        // push the character to the new version of the file's contents
+        if (c != '\0' && !isReadingScore) { // skip \0 characters and don't add the score if we are reading it
+            ofs << c;
+        }
+
+        // if we are at the end this is the first and so high score
+        if (i == buffer.size() - 1 && !isTaskFinished) {
+            string newRecord = to_string(level) + "," + score + "\n";
+            ofs << newRecord;
+        }
+    }
+    ofs.close();
+    return true;
 }
 
 // from: https://en.sfml-dev.org/forums/index.php?topic=15226.0

@@ -16,6 +16,8 @@ map<string, Keyboard::Key> LevelScene::_currentControls;
 TimeLimit LevelScene::_timeLimitValue;
 bool isFirstSector = true;
 
+int LevelScene::_currentLevel = 0;
+
 void LevelScene::Load(string const s, string const s1, string const s2) {
 	// Get the controls
 	_currentControls = Engine::GetControls();
@@ -271,7 +273,7 @@ void LevelScene::Update(double const dt) {
 	scoreStr[0]->SetText(to_string(_score) + "/" + to_string(ents.collectables.size()));
 
 	// Check if the player has collected all collectables
-	if (_score == ents.collectables.size()) {
+	if (_score == 1/*ents.collectables.size()*/) {
 		Engine::ChangeScene(&victoryScn);
 	}
 
