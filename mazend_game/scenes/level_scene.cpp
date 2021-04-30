@@ -273,7 +273,7 @@ void LevelScene::Update(double const dt) {
 	scoreStr[0]->SetText(to_string(_score) + "/" + to_string(ents.collectables.size()));
 
 	// Check if the player has collected all collectables
-	if (_score == 1/*ents.collectables.size()*/) {
+	if (_score == ents.collectables.size()) {
 		Engine::ChangeScene(&victoryScn);
 	}
 

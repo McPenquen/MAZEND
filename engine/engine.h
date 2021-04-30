@@ -77,6 +77,7 @@ public:
 
 	// Saving
 	static bool SaveScore(const int level, const string); // returns false if it isn't a new high score, else return true
+	static string GetScore(const int level);
 	//static void SaveControls();
 
 private:

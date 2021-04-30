@@ -318,6 +318,8 @@ bool Engine::isObservingControlChange() {
 }
 
 bool Engine::SaveScore(const int level, const string score) {
+    // bool to return
+    bool isNewHighScore = false;
     //Load in file
     ifstream fs;
     string buffer;
@@ -375,6 +377,7 @@ bool Engine::SaveScore(const int level, const string score) {
                     double newScoreVal = atof(score.c_str());
                     if (newScoreVal > oldScoreVal) {
                         ofs << score;
+                        isNewHighScore = true;
                     }
                     else {
                         ofs << oldScore;
@@ -395,10 +398,68 @@ bool Engine::SaveScore(const int level, const string score) {
         if (i == buffer.size() - 1 && !isTaskFinished) {
             string newRecord = to_string(level) + "," + score + "\n";
             ofs << newRecord;
+            isNewHighScore = true;
         }
     }
     ofs.close();
-    return true;
+    return isNewHighScore;
+}
+
+string Engine::GetScore(const int level) {
+    // Load in file
+    ifstream fs;
+    string buffer;
+    fs.open("res/database/scores.txt");
+    if (fs.good()) {
+        fs.seekg(0, ios::end);
+        buffer.resize(fs.tellg());
+        fs.seekg(0);
+        fs.read(&buffer[0], buffer.size());
+        fs.close();
+    }
+    else {
+        throw string("Couldn't open scores");
+    }
+
+    // Variables to control the reading
+    bool isWaiting = false; // if the level isn't right don't bother to check the other character until \n
+    string currentString = "";
+    bool isReadingScore = false;
+
+    // Find the level's score
+    for (int i = 0; i < buffer.size(); ++i) {
+        const char c = buffer[i];
+        if (!isReadingScore) {
+            if (!isWaiting) {
+                // After the comma the level part reading has been finished
+                if (c == ',') {
+                    if (currentString == to_string(level)) {
+                        isReadingScore = true;
+                    }
+                    else {
+                        // Wait until \n character
+                        isWaiting = true;
+                    }
+                    // Reset the string
+                    currentString = "";
+                }
+                else {
+                    currentString.push_back(c);
+                }
+            }
+            else if (c == '\n') {
+                isWaiting = false;
+            }
+        }
+        else { // isReadingScore is true because we have found the right level, now read the score
+            if (c == '\n') {
+                // After the \n return the score
+                return currentString;
+            }
+            currentString.push_back(c);
+        }
+    }
+    return "";
 }
 
 // from: https://en.sfml-dev.org/forums/index.php?topic=15226.0
