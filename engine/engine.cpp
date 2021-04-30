@@ -349,7 +349,7 @@ bool Engine::SaveScore(const int level, const string score) {
         // if the level wasn't fo
         if (!isTaskFinished) {
             // if we have detected correct level id, we are reading the score to establish if it's higher
-            if (!isListeningFlag && isReadingScore) {
+            if (!isListeningFlag && isReadingScore && c != '\n') {
                 oldScore.push_back(c);
             }
             if (isListeningFlag) {
@@ -370,6 +370,7 @@ bool Engine::SaveScore(const int level, const string score) {
                 isListeningFlag = true;
                 if (isReadingScore) {
                     // Compare scores and put the higher one into the database
+                    // inspired by: https://stackoverflow.com/questions/4754011/c-string-to-double-conversion
                     double oldScoreVal = atof(oldScore.c_str());
                     double newScoreVal = atof(score.c_str());
                     if (newScoreVal > oldScoreVal) {
