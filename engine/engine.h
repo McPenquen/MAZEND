@@ -72,6 +72,7 @@ public:
 	static map<string, Keyboard::Key> GetControls();
 	static void SetControl(const string controlName, const Keyboard::Key);
 	static string Key2String(const Keyboard::Key);
+	static Keyboard::Key String2Key(const string s);
 	static void ObserveControlChange(const string keyName); // mark to start detecting key to change a control from the string to
 	static bool isObservingControlChange();
 
@@ -79,6 +80,7 @@ public:
 	static bool SaveScore(const int level, const string); // returns false if it isn't a new high score, else return true
 	static string GetScore(const int level);
 	static void SaveControls();
+	static map<string, Keyboard::Key> GetSavedControls();
 	static void SaveWinMode(const bool);
 	static bool GetWinMode();
 
