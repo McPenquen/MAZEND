@@ -150,9 +150,13 @@ void LevelsScene::Load() {
 	auto scale = Engine::GetWindowSize().x / 15;
 	tt->SetSize(scale);
 	auto txt = makeEntity("");
-	auto t = txt->addComponent<TextComponent>(
-		"LEVELS\n\nLevel 1 - Press 1\nBack - Press 2"
-		);
+
+	// The level should display a score if there is any saved - only one level, level 1
+	string score = Engine::GetScore(1);
+	score = score == "" ? "" : "(" + score + ")"; // add brackets to the score
+	string levelsTxt = "LEVELS\n\nLevel 1 "+ score +" - Press 1\nBack - Press 2";
+
+	auto t = txt->addComponent<TextComponent>(levelsTxt);
 	txt->setPosition(Vector2f(2* tileBounds, 2* tileBounds));
 
 	// Create entities to move around

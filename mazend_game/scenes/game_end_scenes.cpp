@@ -43,10 +43,12 @@ void GameOverScene::Update(const double dt) {
 void VictoryScene::Load() {
 	TimeLimit tl = LevelScene::getTimeLimit();
 	string scoreStr = to_string(int(tl.minutes)) + "." + to_string(int(tl.seconds));
-	string txtString = "VICTORY\n\nScore: " + scoreStr + "\n\nPress ESC";
+	string txtString = "VICTORY\n\nScore: " + scoreStr;
 	
-	// Save the score if it is higher
-	bool isHighScore = Engine::SaveScore(LevelScene::getCurrentLevel(), scoreStr);
+	// Alter the message on the screen depending on if it was a high score or not
+	txtString.append(Engine::SaveScore(LevelScene::getCurrentLevel(), scoreStr) ? 
+		"\nHigh Score\n\nPress ESC" 
+		: "\n\nPress ESC");
 
 	// Display the score
 	auto txt = makeEntity("");
