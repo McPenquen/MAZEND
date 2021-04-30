@@ -185,10 +185,12 @@ void Engine::Start(unsigned int width, unsigned int height, const string& gameNa
 		if (_changingMode != "") {
 			if (_changingMode == "fullscreen") {
 				window.close();
+                SaveWinMode(true);
 				Engine::Start(width, height, gameName, scene, 1);
 			}
 			else {
 				window.close();
+                SaveWinMode(false);
 				Engine::Start(width, height, gameName, scene, 0);
 			}
 		}
@@ -460,6 +462,36 @@ string Engine::GetScore(const int level) {
         }
     }
     return "";
+}
+
+void Engine::SaveControls() {
+
+}
+
+void Engine::SaveWinMode(const bool isFullscreen) {
+    // Overwrite the file
+    ofstream ofs("res/database/isFullScreen.txt", ofstream::trunc);
+    string newText = isFullscreen ? "1" : "0";
+    ofs << newText;
+}
+
+bool Engine::GetWinMode() {
+    // Load in file
+    ifstream fs;
+    string buffer;
+    fs.open("res/database/isFullScreen.txt");
+    if (fs.good()) {
+        fs.seekg(0, ios::end);
+        buffer.resize(fs.tellg());
+        fs.seekg(0);
+        fs.read(&buffer[0], buffer.size());
+        fs.close();
+    }
+    else {
+        throw string("Couldn't open fullScreen file");
+    }
+    char c = buffer[0];
+    return c == '1' ? true : false;
 }
 
 // from: https://en.sfml-dev.org/forums/index.php?topic=15226.0
