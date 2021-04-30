@@ -165,7 +165,7 @@ void Engine::Start(unsigned int width, unsigned int height, const string& gameNa
 	}
 
 	RenderWindow window(VideoMode(width, height), gameName, isFullscreen ? Style::Fullscreen : Style::Default);
-    _controls = GetSavedControls();
+    UpdateSavedControls();
     _window = &window;
 	_gameName = gameName;
 	window.setMouseCursorVisible(false);
@@ -467,11 +467,64 @@ string Engine::GetScore(const int level) {
 }
 
 void Engine::SaveControls() {
-
+    // Overwrite the file
+    ofstream ofs("res/database/controls.txt", ofstream::trunc);
+    for (auto const pair : _controls) {
+        string fileLine = pair.first + "," + Key2String(pair.second) + "\n";
+        ofs << fileLine;
+    }
+    ofs.close();
 }
 
-map<string, Keyboard::Key> Engine::GetSavedControls() {
-    Keyboard::Key;
+void Engine::UpdateSavedControls() {
+    // Load in file
+    ifstream fs;
+    string buffer;
+    fs.open("res/database/controls.txt");
+    if (fs.good()) {
+        fs.seekg(0, ios::end);
+        buffer.resize(fs.tellg());
+        fs.seekg(0);
+        fs.read(&buffer[0], buffer.size());
+        fs.close();
+    }
+    else {
+        throw string("Couldn't open controls file");
+    }
+
+    // Empty controls
+    _controls.clear();
+
+    // Variables for the reading
+    string currentString1 = "";
+    string currentString2 = "";
+    bool isKey = true;
+
+    // Read the file line by line
+    for (int i = 0; i < buffer.size(); ++i) {
+        const char c = buffer[i];
+        if (c != '\n') {
+            if (c == ',') {
+                isKey = false; // comma means the value for the map is starting
+            }
+            else {
+                if (isKey) {
+                    currentString1.push_back(c);
+                }
+                else {
+                    currentString2.push_back(c);
+                }
+            }
+        }
+        else {
+            _controls.insert({currentString1, String2Key(currentString2)});
+
+            currentString1 = "";
+            currentString2 = "";
+            isKey = true;
+        }
+    }
+
 }
 
 void Engine::SaveWinMode(const bool isFullscreen) {
@@ -479,6 +532,7 @@ void Engine::SaveWinMode(const bool isFullscreen) {
     ofstream ofs("res/database/isFullScreen.txt", ofstream::trunc);
     string newText = isFullscreen ? "1" : "0";
     ofs << newText;
+    ofs.close();
 }
 
 bool Engine::GetWinMode() {
@@ -924,6 +978,21 @@ string Engine::Key2String(const Keyboard::Key k) {
 }
 
 Keyboard::Key Engine::String2Key(const string s) {
+    if (s == "Left") {
+        return Keyboard::Left;
+    }
+    if (s == "Right") {
+        return Keyboard::Right;
+    }
+    if (s == "Up") {
+        return Keyboard::Up;
+    }
+    if (s == "Down") {
+        return Keyboard::Down;
+    }
+    if (s == "Space") {
+        return Keyboard::Space;
+    }
     if (s == "A") {
         return Keyboard::A;
     }
@@ -1095,9 +1164,6 @@ Keyboard::Key Engine::String2Key(const string s) {
     if (s == "Dash") {
         return Keyboard::Dash;
     }
-    if (s == "Space") {
-        return Keyboard::Space;
-    }
     if (s == "Return") {
         return Keyboard::Return;
     }
@@ -1136,18 +1202,6 @@ Keyboard::Key Engine::String2Key(const string s) {
     }
     if (s == "Divide") {
         return Keyboard::Divide;
-    }
-    if (s == "Left") {
-        return Keyboard::Left;
-    }
-    if (s == "Right") {
-        return Keyboard::Right;
-    }
-    if (s == "Up") {
-        return Keyboard::Up;
-    }
-    if (s == "Down") {
-        return Keyboard::Down;
     }
     if (s == "Numpad0") {
         return Keyboard::Numpad0;

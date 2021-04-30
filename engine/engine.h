@@ -80,7 +80,7 @@ public:
 	static bool SaveScore(const int level, const string); // returns false if it isn't a new high score, else return true
 	static string GetScore(const int level);
 	static void SaveControls();
-	static map<string, Keyboard::Key> GetSavedControls();
+	static void UpdateSavedControls();
 	static void SaveWinMode(const bool);
 	static bool GetWinMode();
 
