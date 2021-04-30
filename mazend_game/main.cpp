@@ -16,6 +16,7 @@ GameOverScene gameOverScn;
 VictoryScene victoryScn;
 
 int main(){
-	Engine::Start(gameWidth, gameHeight, "MAZEND", &mainMenu, 0);
+	bool isFullScreen = Engine::GetWinMode();
+	Engine::Start(gameWidth, gameHeight, "MAZEND", &mainMenu, isFullScreen);
 	return 0;
 }
