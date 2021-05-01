@@ -22,6 +22,9 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 	// Get the controls
 	_currentControls = Engine::GetControls();
 
+	// Reset isFirstSector
+	isFirstSector = true;
+
 	// Reset score
 	CollectableComponent::resetCollectedAmount();
 
