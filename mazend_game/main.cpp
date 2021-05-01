@@ -21,7 +21,7 @@ int main(){
     // from: https://stackoverflow.com/questions/35042967/cannot-get-shgetknownfolderpath-function-working
     // & from: https://social.msdn.microsoft.com/Forums/en-US/5674a45e-5548-435e-9fe0-c1a76ae86944/get-path-as-stdstring-using-shgetknownfolderpath?forum=vclanguage
     PWSTR pwstrPath = NULL;
-    auto shg = SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &pwstrPath);
+    auto shg = SHGetKnownFolderPath(FOLDERID_RoamingAppData, 0, NULL, &pwstrPath);
     wstring strPath(pwstrPath);
     string finalString = "";
     for (int i = 0; i < strPath.length(); i++) {
