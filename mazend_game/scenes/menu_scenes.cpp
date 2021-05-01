@@ -3,9 +3,20 @@
 #include "../game.h"
 #include "../components/cmp_shape.h"
 #include "../components/cmp_victory_collectable.h"
-
+#include "SFML/Audio.hpp"
+sf::Sound select;
+sf::SoundBuffer buffer1;
+sf::Music music;
 // Main Menu
 void MainMenuScene::Load() {
+	if (!buffer1.loadFromFile("res/audio/select.wav"))
+	{
+		cout << "Error" << endl;
+	}
+	select.setBuffer(buffer1);
+	music.openFromFile("res/audio/music.wav");
+	music.setLoop(true);
+	music.play();
 	auto txt = makeEntity("");
 	auto t = txt->addComponent<TextComponent>(
 		"MAIN MENU\n\nPlay Levels - Press 1\nOptions - Press 2\nExit - Press 3"
@@ -16,11 +27,14 @@ void MainMenuScene::Load() {
 }
 
 void MainMenuScene::Update(const double dt) {
+
 	if (Keyboard::isKeyPressed(Keyboard::Num1)) {
 		Engine::ChangeScene(&levels);
+		select.play();
 	}
 	else if (Keyboard::isKeyPressed(Keyboard::Num2)) {
 		Engine::ChangeScene(&options);
+		select.play();
 	}
 	Scene::Update(dt);
 }
@@ -65,52 +79,62 @@ void OptionsScene::Update(const double dt) {
 	if (!_isChangingControl) {
 		if (Keyboard::isKeyPressed(Keyboard::W) && Keyboard::isKeyPressed(Keyboard::Num1)) {
 			Engine::ChangeWindowMode("default");
+			select.play();
 		}
 		if (Keyboard::isKeyPressed(Keyboard::W) && Keyboard::isKeyPressed(Keyboard::Num2)) {
 			Engine::ChangeWindowMode("fullscreen");
+			select.play();
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Q) && Keyboard::isKeyPressed(Keyboard::Num1)) {
 			Engine::SetControl("up", Keyboard::Escape);
 			_isChangingControl = true;
 			_changingKeyName = "up";
 			Engine::ChangeScene(&options);
+			select.play();
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Q) && Keyboard::isKeyPressed(Keyboard::Num2)) {
 			Engine::SetControl("down", Keyboard::Escape);
 			_isChangingControl = true;
 			_changingKeyName = "down";
 			Engine::ChangeScene(&options);
+			select.play();
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Q) && Keyboard::isKeyPressed(Keyboard::Num3)) {
 			Engine::SetControl("left", Keyboard::Escape);
 			_isChangingControl = true;
 			_changingKeyName = "left";
 			Engine::ChangeScene(&options);
+			select.play();
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Q) && Keyboard::isKeyPressed(Keyboard::Num4)) {
 			Engine::SetControl("right", Keyboard::Escape);
 			_isChangingControl = true;
 			_changingKeyName = "right";
 			Engine::ChangeScene(&options);
+			select.play();
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Q) && Keyboard::isKeyPressed(Keyboard::Num5)) {
 			Engine::SetControl("jump", Keyboard::Escape);
 			_isChangingControl = true;
 			_changingKeyName = "jump";
 			Engine::ChangeScene(&options);
+			select.play();
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Num9)) {
 			Engine::ChangeScene(&mainMenu);
+			select.play();
 		}
 	}
 	else {
 		if (_changingKeyName != "") {
 			Engine::ObserveControlChange(_changingKeyName);
 			_changingKeyName = "";
+			select.play();
 		}
 		if (!Engine::isObservingControlChange()) {
 			_isChangingControl = false;
 			Engine::ChangeScene(&options);
+			select.play();
 		}
 	}
 	Scene::Update(dt);
@@ -130,9 +154,11 @@ void LevelsScene::Load() {
 void LevelsScene::Update(const double dt) {
 	if (Keyboard::isKeyPressed(Keyboard::Num1)) {
 		Engine::ChangeScene(&level1);
+		select.play();
 	}
 	else if (Keyboard::isKeyPressed(Keyboard::Num2)) {
 		Engine::ChangeScene(&mainMenu);
+		select.play();
 	}
 	Scene::Update(dt);
 }
@@ -151,16 +177,19 @@ void PauseMenuScene::Load() {
 		);
 	txt->setPosition(Vector2f(2* tileBounds, 2* tileBounds));
 	setSceneName("pauseMenu");
+	select.play();
 	setLoaded(true);
 }
 
 void PauseMenuScene::Update(const double dt) {
 	if (Keyboard::isKeyPressed(Keyboard::Num1)) {
 		Engine::ChangeScene(&level1);
+		select.play();
 	}
 	else if (Keyboard::isKeyPressed(Keyboard::Num2)) {
 		Engine::UnloadPreviousScene();
 		Engine::ChangeScene(&levels);
+		select.play();
 	}
 	Scene::Update(dt);
 }

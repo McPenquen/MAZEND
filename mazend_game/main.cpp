@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "game.h"
 #include "../engine/engine.h"
-
+#include "SFML/Audio.hpp"
 // Menu
 MainMenuScene mainMenu;
 OptionsScene options;
@@ -17,5 +17,6 @@ VictoryScene victoryScn;
 
 int main(){
 	Engine::Start(gameWidth, gameHeight, "MAZEND", &mainMenu, 0);
+
 	return 0;
 }
