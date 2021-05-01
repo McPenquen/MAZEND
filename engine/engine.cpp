@@ -1,5 +1,6 @@
 #include "engine.h"
 #include <chrono>
+#include "shlobj_core.h"
 #include <future>
 #include <iostream>
 #include <fstream>
@@ -94,6 +95,7 @@ string Engine::_changingMode = "";
 map<string, Keyboard::Key> Engine::_controls;
 string Engine::_observingControlName = "";
 bool Engine::_isObservingControlChange = false;
+wstring Engine::_databaseLocation;
 
 // - Loading
 static bool loading = false;
@@ -165,6 +167,14 @@ void Engine::Start(unsigned int width, unsigned int height, const string& gameNa
 	}
 
 	RenderWindow window(VideoMode(width, height), gameName, isFullscreen ? Style::Fullscreen : Style::Default);
+    // Save the location of the database files
+    // from: https://stackoverflow.com/questions/35042967/cannot-get-shgetknownfolderpath-function-working
+    // & from: https://social.msdn.microsoft.com/Forums/en-US/5674a45e-5548-435e-9fe0-c1a76ae86944/get-path-as-stdstring-using-shgetknownfolderpath?forum=vclanguage
+    PWSTR pwstrPath = NULL;
+    auto shg = SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &pwstrPath);
+    wstring strPath(pwstrPath);
+    _databaseLocation = strPath;
+    
     UpdateSavedControls();
     _window = &window;
 	_gameName = gameName;

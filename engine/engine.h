@@ -101,4 +101,7 @@ private:
 	static map<string, Keyboard::Key> _controls;
 	static bool _isObservingControlChange;
 	static string _observingControlName; // empty string is no, a string with contents marks the control to change
+
+	// Location of the database
+	static wstring _databaseLocation;
 };
