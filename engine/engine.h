@@ -84,6 +84,9 @@ public:
 	static void SaveWinMode(const bool);
 	static bool GetWinMode();
 
+	// Database
+	static void SetDatabaseLocation(const string s) { _databaseLocation = s; }
+
 private:
 	static Scene* _activeScene;
 	static Scene* _previousScene;
@@ -103,5 +106,5 @@ private:
 	static string _observingControlName; // empty string is no, a string with contents marks the control to change
 
 	// Location of the database
-	static wstring _databaseLocation;
+	static string _databaseLocation;
 };

@@ -1,6 +1,5 @@
 #include "engine.h"
 #include <chrono>
-#include "shlobj_core.h"
 #include <future>
 #include <iostream>
 #include <fstream>
@@ -95,7 +94,7 @@ string Engine::_changingMode = "";
 map<string, Keyboard::Key> Engine::_controls;
 string Engine::_observingControlName = "";
 bool Engine::_isObservingControlChange = false;
-wstring Engine::_databaseLocation;
+string Engine::_databaseLocation;
 
 // - Loading
 static bool loading = false;
@@ -167,14 +166,6 @@ void Engine::Start(unsigned int width, unsigned int height, const string& gameNa
 	}
 
 	RenderWindow window(VideoMode(width, height), gameName, isFullscreen ? Style::Fullscreen : Style::Default);
-    // Save the location of the database files
-    // from: https://stackoverflow.com/questions/35042967/cannot-get-shgetknownfolderpath-function-working
-    // & from: https://social.msdn.microsoft.com/Forums/en-US/5674a45e-5548-435e-9fe0-c1a76ae86944/get-path-as-stdstring-using-shgetknownfolderpath?forum=vclanguage
-    PWSTR pwstrPath = NULL;
-    auto shg = SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &pwstrPath);
-    wstring strPath(pwstrPath);
-    _databaseLocation = strPath;
-    
     UpdateSavedControls();
     _window = &window;
 	_gameName = gameName;
@@ -337,7 +328,7 @@ bool Engine::SaveScore(const int level, const string score) {
     //Load in file
     ifstream fs;
     string buffer;
-    fs.open("res/database/scores.txt");
+    fs.open(_databaseLocation + "scores.txt");
     if (fs.good()) {
         fs.seekg(0, ios::end);
         buffer.resize(fs.tellg());
@@ -350,7 +341,7 @@ bool Engine::SaveScore(const int level, const string score) {
     }
 
     // Overwrite the file
-    ofstream ofs("res/database/scores.txt", ofstream::trunc);
+    ofstream ofs(_databaseLocation + "scores.txt", ofstream::trunc);
 
     // Variables for reading
     string currentString = "";
@@ -423,7 +414,7 @@ string Engine::GetScore(const int level) {
     // Load in file
     ifstream fs;
     string buffer;
-    fs.open("res/database/scores.txt");
+    fs.open(_databaseLocation + "scores.txt");
     if (fs.good()) {
         fs.seekg(0, ios::end);
         buffer.resize(fs.tellg());
@@ -478,7 +469,7 @@ string Engine::GetScore(const int level) {
 
 void Engine::SaveControls() {
     // Overwrite the file
-    ofstream ofs("res/database/controls.txt", ofstream::trunc);
+    ofstream ofs(_databaseLocation + "controls.txt", ofstream::trunc);
     for (auto const pair : _controls) {
         string fileLine = pair.first + "," + Key2String(pair.second) + "\n";
         ofs << fileLine;
@@ -490,7 +481,7 @@ void Engine::UpdateSavedControls() {
     // Load in file
     ifstream fs;
     string buffer;
-    fs.open("res/database/controls.txt");
+    fs.open(_databaseLocation + "controls.txt");
     if (fs.good()) {
         fs.seekg(0, ios::end);
         buffer.resize(fs.tellg());
@@ -539,7 +530,7 @@ void Engine::UpdateSavedControls() {
 
 void Engine::SaveWinMode(const bool isFullscreen) {
     // Overwrite the file
-    ofstream ofs("res/database/isFullScreen.txt", ofstream::trunc);
+    ofstream ofs(_databaseLocation + "isFullScreen.txt", ofstream::trunc);
     string newText = isFullscreen ? "1" : "0";
     ofs << newText;
     ofs.close();
@@ -549,7 +540,7 @@ bool Engine::GetWinMode() {
     // Load in file
     ifstream fs;
     string buffer;
-    fs.open("res/database/isFullScreen.txt");
+    fs.open(_databaseLocation + "isFullScreen.txt");
     if (fs.good()) {
         fs.seekg(0, ios::end);
         buffer.resize(fs.tellg());
