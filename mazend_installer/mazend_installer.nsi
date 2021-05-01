@@ -95,6 +95,10 @@ SetOutPath "$INSTDIR\res\fonts"
 File "mazend\res\fonts\ZenDots-Regular.ttf"
 SetOutPath "$INSTDIR\res\database"
 File "mazend\res\database\scores.txt"
+SetOutPath "$INSTDIR\res\database"
+File "mazend\res\database\isFullScreen.txt"
+SetOutPath "$INSTDIR\res\database"
+File "mazend\res\database\controls.txt"
 SectionEnd
 
 ######################################################################
@@ -158,6 +162,8 @@ Delete "$INSTDIR\res\maps\lvl1\midMap.txt"
 Delete "$INSTDIR\res\maps\lvl1\topMap.txt"
 Delete "$INSTDIR\res\fonts\ZenDots-Regular.ttf"
 Delete "$INSTDIR\res\database\scores.txt"
+Delete "$INSTDIR\res\database\isFullScreen.txt"
+Delete "$INSTDIR\res\database\controls.txt"
 
  
 RmDir "$INSTDIR\res\database"
