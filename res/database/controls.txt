@@ -1,5 +1,0 @@
-up,Up
-down,Down
-left,Left
-right,Right
-jump,Space
