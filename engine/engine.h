@@ -68,12 +68,24 @@ public:
 	static Vector2f GetCentreSectorSize();
 	static void SetCentreSectorSize(const Vector2f);
 
-	//Controls
+	// Controls
 	static map<string, Keyboard::Key> GetControls();
 	static void SetControl(const string controlName, const Keyboard::Key);
 	static string Key2String(const Keyboard::Key);
+	static Keyboard::Key String2Key(const string s);
 	static void ObserveControlChange(const string keyName); // mark to start detecting key to change a control from the string to
 	static bool isObservingControlChange();
+
+	// Saving
+	static bool SaveScore(const int level, const string); // returns false if it isn't a new high score, else return true
+	static string GetScore(const int level);
+	static void SaveControls();
+	static void UpdateSavedControls();
+	static void SaveWinMode(const bool);
+	static bool GetWinMode();
+
+	// Database
+	static void SetDatabaseLocation(const string s) { _databaseLocation = s; }
 
 private:
 	static Scene* _activeScene;
@@ -92,4 +104,7 @@ private:
 	static map<string, Keyboard::Key> _controls;
 	static bool _isObservingControlChange;
 	static string _observingControlName; // empty string is no, a string with contents marks the control to change
+
+	// Location of the database
+	static string _databaseLocation;
 };

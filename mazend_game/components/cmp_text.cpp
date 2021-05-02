@@ -21,3 +21,11 @@ void TextComponent::SetText(const string& str) {
   _string = str;
   _text.setString(_string);
 }
+
+void TextComponent::SetSize(const int i) {
+    _text.setCharacterSize(i);
+}
+
+void TextComponent::SetColour(const Color c) {
+    _text.setColor(c);
+}

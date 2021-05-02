@@ -16,9 +16,14 @@ map<string, Keyboard::Key> LevelScene::_currentControls;
 TimeLimit LevelScene::_timeLimitValue;
 bool isFirstSector = true;
 
+int LevelScene::_currentLevel = 0;
+
 void LevelScene::Load(string const s, string const s1, string const s2) {
 	// Get the controls
 	_currentControls = Engine::GetControls();
+
+	// Reset isFirstSector
+	isFirstSector = true;
 
 	// Reset score
 	CollectableComponent::resetCollectedAmount();

@@ -28,6 +28,7 @@ public:
 
 	// Score
 	static TimeLimit getTimeLimit();
+	static int getCurrentLevel() { return _currentLevel; }
 
 protected:
 	shared_ptr<Entity> _activePlayer;
@@ -47,4 +48,6 @@ protected:
 
 	//Controls
 	static map<string, Keyboard::Key>_currentControls;
+
+	static int _currentLevel;
 };

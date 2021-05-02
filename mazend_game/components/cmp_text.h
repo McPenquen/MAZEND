@@ -13,6 +13,8 @@ public:
   void Render() override;
 
   void SetText(const string& str);
+  void SetSize(const int);
+  void SetColour(const Color);
 
 protected:
   shared_ptr<Font> _font;
