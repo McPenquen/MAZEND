@@ -94,6 +94,7 @@ string Engine::_changingMode = "";
 map<string, Keyboard::Key> Engine::_controls;
 string Engine::_observingControlName = "";
 bool Engine::_isObservingControlChange = false;
+string Engine::_databaseLocation;
 
 // - Loading
 static bool loading = false;
@@ -327,7 +328,7 @@ bool Engine::SaveScore(const int level, const string score) {
     //Load in file
     ifstream fs;
     string buffer;
-    fs.open("res/database/scores.txt");
+    fs.open(_databaseLocation + "scores.txt");
     if (fs.good()) {
         fs.seekg(0, ios::end);
         buffer.resize(fs.tellg());
@@ -340,7 +341,7 @@ bool Engine::SaveScore(const int level, const string score) {
     }
 
     // Overwrite the file
-    ofstream ofs("res/database/scores.txt", ofstream::trunc);
+    ofstream ofs(_databaseLocation + "scores.txt", ofstream::trunc);
 
     // Variables for reading
     string currentString = "";
@@ -413,7 +414,7 @@ string Engine::GetScore(const int level) {
     // Load in file
     ifstream fs;
     string buffer;
-    fs.open("res/database/scores.txt");
+    fs.open(_databaseLocation + "scores.txt");
     if (fs.good()) {
         fs.seekg(0, ios::end);
         buffer.resize(fs.tellg());
@@ -468,7 +469,7 @@ string Engine::GetScore(const int level) {
 
 void Engine::SaveControls() {
     // Overwrite the file
-    ofstream ofs("res/database/controls.txt", ofstream::trunc);
+    ofstream ofs(_databaseLocation + "controls.txt", ofstream::trunc);
     for (auto const pair : _controls) {
         string fileLine = pair.first + "," + Key2String(pair.second) + "\n";
         ofs << fileLine;
@@ -480,7 +481,7 @@ void Engine::UpdateSavedControls() {
     // Load in file
     ifstream fs;
     string buffer;
-    fs.open("res/database/controls.txt");
+    fs.open(_databaseLocation + "controls.txt");
     if (fs.good()) {
         fs.seekg(0, ios::end);
         buffer.resize(fs.tellg());
@@ -529,7 +530,7 @@ void Engine::UpdateSavedControls() {
 
 void Engine::SaveWinMode(const bool isFullscreen) {
     // Overwrite the file
-    ofstream ofs("res/database/isFullScreen.txt", ofstream::trunc);
+    ofstream ofs(_databaseLocation + "isFullScreen.txt", ofstream::trunc);
     string newText = isFullscreen ? "1" : "0";
     ofs << newText;
     ofs.close();
@@ -539,7 +540,7 @@ bool Engine::GetWinMode() {
     // Load in file
     ifstream fs;
     string buffer;
-    fs.open("res/database/isFullScreen.txt");
+    fs.open(_databaseLocation + "isFullScreen.txt");
     if (fs.good()) {
         fs.seekg(0, ios::end);
         buffer.resize(fs.tellg());
