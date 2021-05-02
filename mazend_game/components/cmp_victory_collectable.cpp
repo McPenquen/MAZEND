@@ -3,7 +3,8 @@
 #include <LevelSystem.h>
 
 int CollectableComponent::collectedAmount = 0;
-
+int CollectableComponent::speedUp = 0;
+bool CollectableComponent::collison = false;
 CollectableComponent::CollectableComponent(Entity* p, Vector2i sectorID, vector<shared_ptr<Entity>> players, int activePlayerIndx) : Component(p) {
 	_sectorId = sectorID;
 	_players = players;
@@ -22,6 +23,8 @@ void CollectableComponent::Update(double dt) {
 		if (length(_players[_activePlayerIndex]->getPosition() - _parent->getPosition()) <= _parent->getCollisionBounds()) {
 			_parent->setAlive(false);
 			collectedAmount++;
+			speedUp =+ 5;
+			collison = true;
 		}
 	}
 }

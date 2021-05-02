@@ -1,5 +1,6 @@
 #include <algorithm>
 #include "level1_scene.h"
+#include "menu_scenes.h"
 #include "../components/cmp_shape.h"
 #include "../game.h"
 #include "../components/cmp_player_movement.h"
@@ -15,11 +16,13 @@ static float stairSwitchTimer = 0.0f;
 map<string, Keyboard::Key> LevelScene::_currentControls;
 TimeLimit LevelScene::_timeLimitValue;
 bool isFirstSector = true;
-
+int speedup = 0;
 void LevelScene::Load(string const s, string const s1, string const s2) {
 	// Get the controls
 	_currentControls = Engine::GetControls();
 
+	CollectableComponent::resetSpeedUp();
+	CollectableComponent::resetCollison();
 	// Reset score
 	CollectableComponent::resetCollectedAmount();
 
@@ -250,7 +253,16 @@ void LevelScene::Update(double const dt) {
 			}
 		}
 	}
-
+		if (CollectableComponent::getCollison() == true)
+		{
+			if (ents.enemies.size() > 0) {
+				for (const auto& e : ents.enemies)
+				{
+					e->GetComponents<EnemyMovementComponent>()[0]->setSpeed(e->GetComponents<EnemyMovementComponent>()[0]->getSpeed() + 7);
+				}
+			}
+		}
+	CollectableComponent::resetCollison();
 	// Check if the enemy has caught the player
 	if (ents.enemies.size() > 0) {
 		for (const auto &e : ents.enemies) {
@@ -265,7 +277,6 @@ void LevelScene::Update(double const dt) {
 
 	// Update score
 	_score = CollectableComponent::getCollectedAmount();
-
 	// Set the score to contain a new val
 	auto scoreStr = _scoreEnt->GetComponents<TextComponent>();
 	scoreStr[0]->SetText(to_string(_score) + "/" + to_string(ents.collectables.size()));

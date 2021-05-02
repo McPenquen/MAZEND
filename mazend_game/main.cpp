@@ -10,7 +10,7 @@ PauseMenuScene pauseMenu;
 
 // Levels
 Level1Scene level1;
-
+Level2Scene level2;
 // Game
 GameOverScene gameOverScn;
 VictoryScene victoryScn;

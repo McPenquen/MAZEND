@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "scenes/menu_scenes.h"
 #include "scenes/level1_scene.h"
+#include "scenes/level2_scene.h"
 #include "LevelSystem.h"
 #include "scenes/game_end_scenes.h"
 
@@ -17,6 +18,7 @@ extern PauseMenuScene pauseMenu;
 extern GameOverScene gameOverScn;
 extern VictoryScene victoryScn;
 extern Level1Scene level1;
+extern Level2Scene level2;
 
 // tile size
 static float tileBounds = 20.f;

@@ -117,6 +117,7 @@ void OptionsScene::Update(const double dt) {
 }
 
 // Levels
+int activeLevel = 0;
 void LevelsScene::Load() {
 	auto txt = makeEntity("");
 	auto t = txt->addComponent<TextComponent>(
@@ -130,6 +131,11 @@ void LevelsScene::Load() {
 void LevelsScene::Update(const double dt) {
 	if (Keyboard::isKeyPressed(Keyboard::Num1)) {
 		Engine::ChangeScene(&level1);
+		activeLevel = 1;
+	}
+	if (Keyboard::isKeyPressed(Keyboard::Num2)) {
+		Engine::ChangeScene(&level2);
+		activeLevel = 2;
 	}
 	else if (Keyboard::isKeyPressed(Keyboard::Num2)) {
 		Engine::ChangeScene(&mainMenu);
@@ -155,8 +161,12 @@ void PauseMenuScene::Load() {
 }
 
 void PauseMenuScene::Update(const double dt) {
-	if (Keyboard::isKeyPressed(Keyboard::Num1)) {
+	if (Keyboard::isKeyPressed(Keyboard::Num1) && activeLevel == 1) {
 		Engine::ChangeScene(&level1);
+	}
+	else if (Keyboard::isKeyPressed(Keyboard::Num1) && activeLevel == 2)
+	{
+		Engine::ChangeScene(&level2);
 	}
 	else if (Keyboard::isKeyPressed(Keyboard::Num2)) {
 		Engine::UnloadPreviousScene();
