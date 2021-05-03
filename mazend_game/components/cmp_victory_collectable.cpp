@@ -11,7 +11,7 @@ CollectableComponent::CollectableComponent(Entity* p, Vector2i sectorID, vector<
 	_activePlayerIndex = activePlayerIndx;
 	buffer.loadFromFile("res/audio/collection.wav");
 	collect.setBuffer(buffer);
-	collect.setVolume(4);
+	collect.setVolume(5);
 }
 
 void CollectableComponent::Update(double dt) {

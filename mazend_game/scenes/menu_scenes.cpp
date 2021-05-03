@@ -22,6 +22,7 @@ void MainMenuScene::Load() {
 
 	buffer1.loadFromFile("res/audio/select.wav");
 	select.setBuffer(buffer1);
+	select.setVolume(3);
 	auto txt = makeEntity("");
 	auto t = txt->addComponent<TextComponent>(
 		"MAIN MENU\n\nPlay Levels - Press 1\nOptions - Press 2\nExit - Press 3"

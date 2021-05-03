@@ -24,6 +24,7 @@ void LevelScene::Load(string const s, string const s1, string const s2) {
 
 	buffer7.loadFromFile("res/audio/select.wav");
 	select3.setBuffer(buffer7);
+	select3.setVolume(3);
 	// Get the controls
 	_currentControls = Engine::GetControls();
 

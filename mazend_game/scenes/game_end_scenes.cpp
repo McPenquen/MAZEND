@@ -58,9 +58,10 @@ void GameOverScene::Update(const double dt) {
 void VictoryScene::Load() {
 	buffer4.loadFromFile("res/audio/victory.wav");
 	victory.setBuffer(buffer4);
-	victory.setVolume(3);
+	victory.setVolume(5);
 	buffer5.loadFromFile("res/audio/select.wav");
 	select2.setBuffer(buffer5);
+	select2.setVolume(3);
 	victory.play();
 	TimeLimit tl = LevelScene::getTimeLimit();
 	string scoreStr = to_string(int(tl.minutes)) + "." + to_string(int(tl.seconds));
