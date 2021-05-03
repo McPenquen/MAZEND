@@ -13,6 +13,7 @@ constexpr size_t gameHeight = 800;
 extern MainMenuScene mainMenu;
 extern OptionsScene options;
 extern LevelsScene levels;
+extern CreditsScene credits;
 extern PauseMenuScene pauseMenu;
 extern GameOverScene gameOverScn;
 extern VictoryScene victoryScn;

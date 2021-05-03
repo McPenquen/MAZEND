@@ -8,6 +8,7 @@ MainMenuScene mainMenu;
 OptionsScene options;
 LevelsScene levels;
 PauseMenuScene pauseMenu;
+CreditsScene credits;
 
 // Levels
 Level1Scene level1;
