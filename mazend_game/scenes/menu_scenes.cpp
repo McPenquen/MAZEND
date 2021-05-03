@@ -4,9 +4,22 @@
 #include "../components/cmp_shape.h"
 #include "../components/cmp_victory_collectable.h"
 #include "../components/cmp_random_movement.h"
+#include "SFML/Audio.hpp"
+sf::Sound select;
+sf::SoundBuffer buffer1;
+sf::Music music;
 
 // Main Menu
 void MainMenuScene::Load() {
+
+	if (!buffer1.loadFromFile("res/audio/select.wav"))
+	{
+		cout << "Error" << endl;
+	}
+	select.setBuffer(buffer1);
+	music.openFromFile("res/audio/music.wav");
+	music.setLoop(true);
+	music.play();
 	auto txt = makeEntity("");
 	auto t = txt->addComponent<TextComponent>(
 		"MAIN MENU\n\nPlay Levels - Press 1\nOptions - Press 2\nExit - Press 3"
