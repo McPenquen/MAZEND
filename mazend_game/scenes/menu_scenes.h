@@ -42,3 +42,12 @@ public:
 	void Load() override;
 	void Update(const double dt) override;
 };
+
+class CreditsScene: public Scene{
+public:
+	CreditsScene() = default;
+	~CreditsScene() = default;
+
+	void Load() override;
+	void Update(const double dt) override;
+};

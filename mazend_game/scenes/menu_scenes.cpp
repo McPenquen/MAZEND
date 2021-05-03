@@ -25,7 +25,7 @@ void MainMenuScene::Load() {
 	select.setVolume(3);
 	auto txt = makeEntity("");
 	auto t = txt->addComponent<TextComponent>(
-		"MAIN MENU\n\nPlay Levels - Press 1\nOptions - Press 2\nExit - Press 3"
+		"MAIN MENU\n\nPlay Levels - Press 1\nOptions - Press 2\nCredits - Press 3\nExit - Press 4"
 		);
 	txt->setPosition(Vector2f(2 * tileBounds, 2 * tileBounds));
 	auto title = makeEntity("");
@@ -65,6 +65,13 @@ void MainMenuScene::Update(const double dt) {
 	}
 	else if (Keyboard::isKeyPressed(Keyboard::Num2)) {
 		Engine::ChangeScene(&options);
+		if (select.getStatus() != sf::SoundSource::Playing)
+		{
+			select.play();
+		}
+	}
+	else if (Keyboard::isKeyPressed(Keyboard::Num3)) {
+		Engine::ChangeScene(&credits);
 		if (select.getStatus() != sf::SoundSource::Playing)
 		{
 			select.play();
@@ -279,3 +286,29 @@ void PauseMenuScene::Update(const double dt) {
 	Scene::Update(dt);
 }
 
+// Credits
+void CreditsScene::Load() {
+	auto txt = makeEntity("");
+	string cred1 = "MUSIC\n\t@2007 Scotru, marbles.wav\n\t\thttps://freesound.org/people/scotru/sounds/34732/ ";
+	string cred2 = "\n\t@2016 ProjectsU012, 8-bit Video Game Sounds » Coins 1,\n\t\thttps://freesound.org/people/ProjectsU012/sounds/341695/ ";
+	string cred3 = "\n\t@2016 ProjectsU012, 8-bit Video Game Sounds » 8-bit \"failure\" sound,\n\t\thttps://freesound.org/people/ProjectsU012/sounds/333785/";
+	string cred4 = "\n\nFONT\n\tCopyright 2021 The Dots Project Authors\n\t\t(https://github.com/googlefonts/zen-dots)";
+	auto t = txt->addComponent<TextComponent>(
+		"CREDITS\nBack - Press 1\n\n" + cred1 + cred2 + cred3 + cred4
+		);
+	txt->setPosition(Vector2f(2 * tileBounds, 2 * tileBounds));
+	setSceneName("credits");
+	t->SetSize(25);
+	setLoaded(true);
+}
+
+void CreditsScene::Update(const double dt) {
+	if (Keyboard::isKeyPressed(Keyboard::Num1)) {
+		Engine::ChangeScene(&mainMenu);
+		if (select.getStatus() != sf::SoundSource::Playing)
+		{
+			select.play();
+		}
+	}
+	Scene::Update(dt);
+}

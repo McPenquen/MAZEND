@@ -180,7 +180,7 @@ void Engine::Start(unsigned int width, unsigned int height, const string& gameNa
 			}
 		}
         // Close the game
-		if (_activeScene->getSceneName() == "mainMenu" && (Keyboard::isKeyPressed(Keyboard::Num3))) {
+		if (_activeScene->getSceneName() == "mainMenu" && (Keyboard::isKeyPressed(Keyboard::Num4))) {
 			window.close();
 		}
         // Change Window mode
