@@ -17,6 +17,7 @@ void GameOverScene::Load() {
 	Defeat.play();
 	buffer5.loadFromFile("res/audio/select.wav");
 	select2.setBuffer(buffer5);
+	select2.setVolume(3);
 	// Create text GameOver
 	auto txt = makeEntity("");
 	txt->setPosition(Vector2f(Engine::GetWindowSize().x/2 - 100, Engine::GetWindowSize().y/2 - 100));
