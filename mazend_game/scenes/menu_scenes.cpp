@@ -12,14 +12,16 @@ sf::Music music;
 // Main Menu
 void MainMenuScene::Load() {
 
-	if (!buffer1.loadFromFile("res/audio/select.wav"))
+	if (music.getStatus() != sf::SoundSource::Playing)
 	{
-		cout << "Error" << endl;
+		music.openFromFile("res/audio/music.wav");
+		music.setLoop(true);
+		music.setVolume(2);
+		music.play();
 	}
+
+	buffer1.loadFromFile("res/audio/select.wav");
 	select.setBuffer(buffer1);
-	music.openFromFile("res/audio/music.wav");
-	music.setLoop(true);
-	music.play();
 	auto txt = makeEntity("");
 	auto t = txt->addComponent<TextComponent>(
 		"MAIN MENU\n\nPlay Levels - Press 1\nOptions - Press 2\nExit - Press 3"
@@ -55,9 +57,17 @@ void MainMenuScene::Load() {
 void MainMenuScene::Update(const double dt) {
 	if (Keyboard::isKeyPressed(Keyboard::Num1)) {
 		Engine::ChangeScene(&levels);
+		if (select.getStatus() != sf::SoundSource::Playing)
+		{
+			select.play();
+		}
 	}
 	else if (Keyboard::isKeyPressed(Keyboard::Num2)) {
 		Engine::ChangeScene(&options);
+		if (select.getStatus() != sf::SoundSource::Playing)
+		{
+			select.play();
+		}
 	}
 	Scene::Update(dt);
 }
@@ -138,6 +148,10 @@ void OptionsScene::Update(const double dt) {
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Num9)) {
 			Engine::ChangeScene(&mainMenu);
+			if (select.getStatus() != sf::SoundSource::Playing)
+			{
+				select.play();
+			}
 		}
 	}
 	else {
@@ -194,9 +208,17 @@ void LevelsScene::Load() {
 void LevelsScene::Update(const double dt) {
 	if (Keyboard::isKeyPressed(Keyboard::Num1)) {
 		Engine::ChangeScene(&level1);
+		if (select.getStatus() != sf::SoundSource::Playing)
+		{
+			select.play();
+		}
 	}
 	else if (Keyboard::isKeyPressed(Keyboard::Num2)) {
 		Engine::ChangeScene(&mainMenu);
+		if (select.getStatus() != sf::SoundSource::Playing)
+		{
+			select.play();
+		}
 	}
 	Scene::Update(dt);
 }
@@ -244,6 +266,10 @@ void PauseMenuScene::Load() {
 void PauseMenuScene::Update(const double dt) {
 	if (Keyboard::isKeyPressed(Keyboard::Num1)) {
 		Engine::ChangeScene(&level1);
+		if (select.getStatus() != sf::SoundSource::Playing)
+		{
+			select.play();
+		}
 	}
 	else if (Keyboard::isKeyPressed(Keyboard::Num2)) {
 		Engine::UnloadPreviousScene();
@@ -251,3 +277,4 @@ void PauseMenuScene::Update(const double dt) {
 	}
 	Scene::Update(dt);
 }
+

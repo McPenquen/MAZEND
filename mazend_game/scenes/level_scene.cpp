@@ -8,7 +8,8 @@
 #include "../components/cmp_victory_collectable.h"
 // The amount of dt allowed between sector switches
 #define TIME_DELAY_COUNTER 0.5f
-
+sf::Sound select3;
+sf::SoundBuffer buffer7;
 // Timing management
 static float secSwitchTimer = 0.0f;
 static float stairSwitchTimer = 0.0f;
@@ -19,6 +20,10 @@ bool isFirstSector = true;
 int LevelScene::_currentLevel = 0;
 
 void LevelScene::Load(string const s, string const s1, string const s2) {
+
+
+	buffer7.loadFromFile("res/audio/select.wav");
+	select3.setBuffer(buffer7);
 	// Get the controls
 	_currentControls = Engine::GetControls();
 
@@ -167,6 +172,10 @@ void LevelScene::Update(double const dt) {
 
 	if (Keyboard::isKeyPressed(Keyboard::Escape)) {
 		Engine::PauseScene(&pauseMenu);
+		if (select3.getStatus() != sf::SoundSource::Playing)
+		{
+			select3.play();
+		}
 	}
 
 	Scene::Update(dt);
