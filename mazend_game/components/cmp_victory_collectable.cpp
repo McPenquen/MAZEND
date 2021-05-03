@@ -3,11 +3,16 @@
 #include <LevelSystem.h>
 
 int CollectableComponent::collectedAmount = 0;
-
+//audio is from https://freesound.org/people/ProjectsU012/sounds/341695/ by ProjectsU012
+sf::Sound collect;
+sf::SoundBuffer buffer;
 CollectableComponent::CollectableComponent(Entity* p, Vector2i sectorID, vector<shared_ptr<Entity>> players, int activePlayerIndx) : Component(p) {
 	_sectorId = sectorID;
 	_players = players;
 	_activePlayerIndex = activePlayerIndx;
+	buffer.loadFromFile("res/audio/collection.wav");
+	collect.setBuffer(buffer);
+	collect.setVolume(5);
 }
 
 void CollectableComponent::Update(double dt) {
@@ -21,6 +26,7 @@ void CollectableComponent::Update(double dt) {
 	if (_parent->isVisible()) {
 		if (length(_players[_activePlayerIndex]->getPosition() - _parent->getPosition()) <= _parent->getCollisionBounds()) {
 			_parent->setAlive(false);
+			collect.play();
 			collectedAmount++;
 		}
 	}

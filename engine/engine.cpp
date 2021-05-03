@@ -250,6 +250,15 @@ void Engine::ChangeScene(Scene* s) {
 		}
 	}
 }
+void Engine::PlayAudio(Sound s)
+{
+    if (scnSwitchTimer >= sceneSwithTime) 
+    {
+        scnSwitchTimer = 0;
+        s.play();
+    }
+}
+
 
 void Engine::PauseScene(Scene* s) {
 	if (scnSwitchTimer >= sceneSwithTime) {

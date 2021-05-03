@@ -1,6 +1,6 @@
 #pragma once
 #include "engine.h"
-
+#include "SFML/Audio.hpp"
 class CollectableComponent : public Component {
 private:
 	vector<shared_ptr<Entity>> _players;

@@ -4,9 +4,28 @@
 #include "../components/cmp_shape.h"
 #include "../components/cmp_victory_collectable.h"
 #include "../components/cmp_random_movement.h"
+#include "SFML/Audio.hpp"
+//create sound effects
+//select sound is an edidted down version of https://freesound.org/people/scotru/sounds/34732/ by scotru
+sf::Sound select;
+sf::SoundBuffer buffer1;
+// the music is from https://www.bensound.com/royalty-free-music/track/psychedelic 
+sf::Music music;
 
 // Main Menu
 void MainMenuScene::Load() {
+	//loop the music for the game
+	if (music.getStatus() != sf::SoundSource::Playing)
+	{
+		music.openFromFile("res/audio/music.wav");
+		music.setLoop(true);
+		music.setVolume(2);
+		music.play();
+	}
+
+	buffer1.loadFromFile("res/audio/select.wav");
+	select.setBuffer(buffer1);
+	select.setVolume(3);
 	auto txt = makeEntity("");
 	auto t = txt->addComponent<TextComponent>(
 		"MAIN MENU\n\nPlay Levels - Press 1\nOptions - Press 2\nExit - Press 3"
@@ -42,9 +61,17 @@ void MainMenuScene::Load() {
 void MainMenuScene::Update(const double dt) {
 	if (Keyboard::isKeyPressed(Keyboard::Num1)) {
 		Engine::ChangeScene(&levels);
+		if (select.getStatus() != sf::SoundSource::Playing)
+		{
+			select.play();
+		}
 	}
 	else if (Keyboard::isKeyPressed(Keyboard::Num2)) {
 		Engine::ChangeScene(&options);
+		if (select.getStatus() != sf::SoundSource::Playing)
+		{
+			select.play();
+		}
 	}
 	Scene::Update(dt);
 }
@@ -125,6 +152,10 @@ void OptionsScene::Update(const double dt) {
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Num9)) {
 			Engine::ChangeScene(&mainMenu);
+			if (select.getStatus() != sf::SoundSource::Playing)
+			{
+				select.play();
+			}
 		}
 	}
 	else {
@@ -181,9 +212,17 @@ void LevelsScene::Load() {
 void LevelsScene::Update(const double dt) {
 	if (Keyboard::isKeyPressed(Keyboard::Num1)) {
 		Engine::ChangeScene(&level1);
+		if (select.getStatus() != sf::SoundSource::Playing)
+		{
+			select.play();
+		}
 	}
 	else if (Keyboard::isKeyPressed(Keyboard::Num2)) {
 		Engine::ChangeScene(&mainMenu);
+		if (select.getStatus() != sf::SoundSource::Playing)
+		{
+			select.play();
+		}
 	}
 	Scene::Update(dt);
 }
@@ -231,6 +270,10 @@ void PauseMenuScene::Load() {
 void PauseMenuScene::Update(const double dt) {
 	if (Keyboard::isKeyPressed(Keyboard::Num1)) {
 		Engine::ChangeScene(&level1);
+		if (select.getStatus() != sf::SoundSource::Playing)
+		{
+			select.play();
+		}
 	}
 	else if (Keyboard::isKeyPressed(Keyboard::Num2)) {
 		Engine::UnloadPreviousScene();
@@ -238,3 +281,4 @@ void PauseMenuScene::Update(const double dt) {
 	}
 	Scene::Update(dt);
 }
+

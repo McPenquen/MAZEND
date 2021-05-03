@@ -3,7 +3,7 @@
 #include <mutex>
 #include <future>
 #include "lib_ecm.h"
-
+#include "SFML/Audio.hpp"
 // Scene switch timer
 static float scnSwitchTimer = 1;
 
@@ -57,7 +57,7 @@ public:
 	static void ChangeScene(Scene*);
 	static void PauseScene(Scene*);
 	static void UnloadPreviousScene();
-
+	static void PlayAudio(Sound);
 	static RenderWindow& GetWindow();
 	static Vector2u GetWindowSize();
 	static void ChangeWindowMode(const string);
