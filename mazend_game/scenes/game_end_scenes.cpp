@@ -3,8 +3,12 @@
 #include "../components/cmp_text.h"
 #include "../components/cmp_shape.h"
 #include "../components/cmp_random_movement.h"
+//create sound effects
+// victory is from https://freesound.org/people/GameAudio/sounds/220184/
 sf::Sound victory;
 sf::SoundBuffer buffer4;
+//audio is from https://freesound.org/people/ProjectsU012/sounds/333785/ by ProjectsU012
+
 sf::Sound Defeat;
 sf::SoundBuffer buffer6;
 sf::Sound select2;

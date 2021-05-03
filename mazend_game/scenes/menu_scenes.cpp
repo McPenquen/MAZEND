@@ -5,13 +5,16 @@
 #include "../components/cmp_victory_collectable.h"
 #include "../components/cmp_random_movement.h"
 #include "SFML/Audio.hpp"
+//create sound effects
+//select sound is an edidted down version of https://freesound.org/people/scotru/sounds/34732/ by scotru
 sf::Sound select;
 sf::SoundBuffer buffer1;
+// the music is from https://www.bensound.com/royalty-free-music/track/psychedelic 
 sf::Music music;
 
 // Main Menu
 void MainMenuScene::Load() {
-
+	//loop the music for the game
 	if (music.getStatus() != sf::SoundSource::Playing)
 	{
 		music.openFromFile("res/audio/music.wav");
